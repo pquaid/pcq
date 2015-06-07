@@ -1,0 +1,11 @@
+/* This file is an AREXX program used to
+   exercise RexxHost.p a bit.  It just sends
+   these commands to the message port of that
+   program. */
+
+Options Results
+'Command This is the first command, from RexxHost.RXH'
+'Command This is the second one'
+'The Third Command'
+'Command RexxHost.p shaves off the first word, as if it were a command'
+'Quit'

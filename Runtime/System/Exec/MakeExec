@@ -1,0 +1,5 @@
+join IO.o Memory.o Devices.o Lists.o Resources.o to t:Exec1.lib
+join Interrupts.o Resident.o Tasks.o Semaphores.o to t:Exec2.lib
+join ExecOther.o Ports.o Alerts.o Libraries.o to t:Exec3.lib
+join t:Exec1.lib t:Exec2.lib t:Exec3.lib to Exec.lib
+delete t:Exec?.lib

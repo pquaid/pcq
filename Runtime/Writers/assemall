@@ -1,0 +1,13 @@
+a68k WriteArb.asm
+a68k writebool.asm
+a68k writechar.asm
+a68k WriteInt.asm
+a68k writeshort.asm
+a68k WriteString.asm
+a68k writeln.asm
+a68k Put.asm
+a68k writecharray.asm
+a68k WritePad.asm
+a68k writetext.asm
+a68k WriteReal.asm
+a68k flush.asm

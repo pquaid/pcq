@@ -1,0 +1,17 @@
+.key source,dest,error
+
+; This file is the PCQ error handler for Daniel Lawrence's
+; MicroEmacs (it will not work with Commodore's MEMACS).
+; To use this handler, include the following line in
+; your PCQ.CFG file:
+;
+;	CompilerError EMACS-ShowError \s \d \e
+;
+; Then attach the file EMACS.errors to the end of your EMACS.RC
+; file (the MicroEMACS configuration file).
+
+copy <error> T:EMACS-Error
+EMACS
+delete <dest>
+delete <error>
+delete T:EMACS-Error

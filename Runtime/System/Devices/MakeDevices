@@ -1,0 +1,1 @@
+join Timer.o Console.o to Devices.lib

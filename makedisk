@@ -1,0 +1,7 @@
+format drive df0: name PCQ
+copy :pascaldist/PCQ12b.LZH df0:
+copy :pascaldist/A68k271.LZH df0:
+copy :pascaldist/Blink67.LZH df0:
+copy :pascaldist/Debugger.LZH df0:
+copy :pascaldist/Mon.LZH df0:
+copy :pascaldist/LHArc df0:

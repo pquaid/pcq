@@ -1,0 +1,567 @@
+
+                 Amiga Monitor v1.24 instructions
+                 ================================
+
+  This is a machine code monitor/debugger program for the Amiga. The first
+  version was created over two years ago, and many of the features and
+  commands of the monitor were made similar to those of the monitors
+  available for the Commodore 64. However, because the Amiga is a very
+  different machine many new commands and features were needed. Later
+  versions of the monitor add many more useful features, as expressions
+  and variables. (But the monitor is still not a 'Symbolic debugger'.
+  Although you can define symbols, they cannot be read from executable
+  files and they are not automatically listed with disassembly etc.
+  This may change in some future version...)
+
+  The monitor can be started both from CLI and from workbench. If you want
+  to start the monitor from workbench, you must first make an icon for it.
+  (starting the monitor from workbench is not recommended, because the
+  programs that are run under the control of the monitor may require the
+  CLI environment or else they may wait for workbench startup message
+  forever...)
+
+  The monitor is re-entrant (pure) code and can be made resident with
+  (for example, using the Workbench 1.3 resident command or ARP 1.3 ares)
+
+
+ Input line editing and command line history:
+ --------------------------------------------
+  You can edit the input lines by using the left/right cursor keys to move
+  left and right, backspace to delete the character before the cursor and
+  del to delete the character under the cursor. You can use the up/down
+  cursor keys to get the old command lines (the monitor remembers 10 last
+  command lines). Shift-cursor-up gets the last command and enters it
+  automatically (you need not to press <CR>). In assembler mode you can
+  press Ctrl-E to edit the assembler instruction currently stored in that
+  address.
+
+
+ Stopping the output:
+ --------------------
+  In most cases the output of the monitor can be suspended by pressing SPACE
+  and continued by pressing SPACE again. To permanently stop the output,
+  press Ctrl-C.
+
+
+ Numbers:
+ --------
+  Default number base is hexadecimal but it can be changed with the ba-
+  command (the argument of the ba-command is always decimal).
+
+  the prefixes used to identify number bases are:
+   '$'   hexadecimal
+   '@'   octal
+   '%'   binary
+   '_'   decimal
+
+  Numbers can also be entered as ASCII strings, for example:
+   'FORM'  -->  hex 464f524d
+
+  Note that '+' was the decimal prefix in older versions. Now it is '_'.
+
+ Expressions:
+ ------------
+
+ This version accepts expressions in most places where you need a number.
+ The calculator ('?') command allows you to directly display
+ values of expressions.
+
+ The following operators are available:
+
+ +   addition
+ -   subtraction
+ *   multiplication
+ /   division (integer only, truncated)
+ %%  modulo
+ <<  left shift
+ >>  right shift
+
+ parenthesis can be used to group the operations in the expressions.
+
+ '*'           represents the 'current address'.
+
+ [reg_name]    represents the value of register 'reg_name'.
+
+ All calculations are done in 32-bit integer arithmetic. No overflow
+ checking is done.
+
+ Functions:
+ ----------
+
+ The expression parser currently accepts the following built-in functions:
+
+  hunk(n)  --  start address of nth hunk of currently loaded seglist
+  hlen(n)  --  length of nth hunk of currently loaded seglist
+  abs(x)   --  absolute value of a number  
+  peek(a)  --  8-bit contents of a memory location
+  peekw(a) --  16-bit contents of a memory location
+  peekl(a) --  32-bit contents of a memory location
+  avail(x) --  call AvailMem() with the argument x. for example
+		avail(0) returns total available memory,
+		avail(2) returns available chip memory
+		avail($20000) return largest available block.
+
+  Function names are not case sensitive.
+
+ Variables:
+ ----------
+
+ In addition to numbers and functions, variables can be used in expressions
+ if they are previously defined. Variables are defined with the set-command.
+ All variable values are 32-bit integers. Variable names can contain
+ alphanumeric characters and underscores ('_'), but they cannot begin
+ with a number. Variable names are not case sensitive in this version.
+
+ (There are still some problems using variables with the assembler.
+ Especially variables with names starting with 'a','d' or 's' may
+ not be accepted in the assembler because it tries to interpret them
+ as register names)
+
+
+ Strings:
+ --------
+  Strings are used in the fill command, the hunt command, the modify memory
+  command and the assembler directive dc.b .
+  Strings are series of bytes, represented by numbers or ASCII-characters
+  in single quotes or both together separated by commas.
+  Note: the single quote itself may be included in a quoted string if it
+  is duplicated.
+   examples:
+    'this is a string'
+    12,34,56
+    ''''  -- this means one single quote
+    'both',$0A,'text',10,'and','numbers'
+
+
+ Special Note:
+ -------------
+  There is a problem with the walk (trace) command and several instructions
+  that cause processor exceptions. These instructions are chk, trap #n,
+  trapv and divu/divs (with divisions by zero). If you try to trace these
+  instructions, a trace-exception occurs in supervisor-mode, out of the
+  control of the monitor and you get a guru meditation alert with number
+  00000009. This problem was with the earlier monitor versions as well.
+
+  Included with the monitor distribution is a program called patchtrace
+  that changes directly the processor hardware trace-exception vector to
+  point a new routine that removes the trap-trace problem.
+
+  (The monitor does not support executing code in supervisor mode, so there
+  is not normally any reason to trace any of the instructions that can
+  cause problems. However, because you can accidentally cause the machine
+  to crash by tracing these instructions, the patchtrace-program
+  may be useful.)
+
+ Stack usage:
+ ------------
+  The monitor now allocates 2K of stack for its own use and the rest
+  of the stack can be used by the program being debugged. If you
+  need a larger stack, you can use the CLI 'stack' command.
+
+
+ The following commands are available in the monitor:
+ ----------------------------------------------------
+
+h or the HELP key on the keyboard
+ displays a list of commands.
+
+i -- Info
+ displays a small info-message.
+
+o -- Redirect output
+ usage:
+  o name -- redirects monitor output to file or device 'name'
+  o      -- returns to normal, output comes to the monitor window
+ for example, to send the output to printer use 'o PRT:'.
+
+? [expr]  --  Calculator
+  Displays the value of the expression in hex, decimal, octal and binary.
+  If the number is negative, displays it as signed and unsigned.
+
+set [var[=expr]] -- Set/show variables
+  The set-command without parameters displays the values of all currently
+  defined variables. The form 'set var=expr' sets the value of 'var' to
+  the value of the expression. 'set var' removes the definition of 'var'.
+
+cv -- Clear all variables
+  Asks if you really want to do it, answer 'y' to clear them.
+
+ba [num]  --  Set/show current number base
+  ba without parameters displays the current number base. ba [num] sets
+  the base to [num] which is always decimal. this is the default base
+  used in number input if no base prefix is specified. initially it is 16
+  (hexadecimal).
+
+mi [addr] -- Display information about memory locations
+  The mi-command tells you if the address 'addr' is in the system memory
+  list, is it allocated or not and is it inside any of the hunks
+  of the currently loaded segment.
+
+m -- Display memory in hex and ASCII
+ Usage:
+  m                   -- display 20 lines from current address
+  m <addr>            -- display 20 lines from <addr>
+  m <addr> <end-addr> -- display from <addr> to <end-addr>
+
+: -- Modify memory
+ Usage:
+  : <addr> <string>
+  Puts the <string> in memory at <addr>
+  This can also be done with the command 'a <addr> dc.b <string>'
+  (but then <addr> must be even)
+
+f -- Fill memory with a byte or a string of bytes
+ Usage:
+  f <start-addr> <end-addr> <byte>   ;fills with <byte>
+  f <start-addr> <end-addr> <string> ;fills with the string
+ Example:
+  f $60000 $601FF $4E,$71 fills from $60000 to $601FF with NOP-instruction
+
+t -- Transfer (move) memory
+ Usage:
+  t <start-addr> <end-addr> <destination-addr>
+ The command works correctly even if the source and destination memory
+ blocks overlap. (if destination is at a higher address than source,
+  the block is moved backwards, starting at the end)
+
+h -- Hunt (find) string in memory
+ Usage:
+  h <start-addr> <end-addr> <string>
+  Displays all addresses in the range <start-addr>..<end-addr>
+  where the <string> is found.
+
+c -- Compare memory
+ Usage:
+  c <start-addr> <end-addr> <string>
+  Displays all addresses in the range <start-addr>..<end-addr>
+  where is corresponding byte in the destination block is different from
+  the source.
+
+a -- Assemble
+ usage:
+  a         : assemble to the current address
+  a <addr>  : assemble to <addr>
+  a <addr> <instruction> : assemble <instruction> at <addr>
+  After assembling an instruction the monitor prompts with the address of
+  the location following the instruction just assembled and waits a new
+  instruction to be entered. To exit this mode, simply press <CR> without
+  entering an instruction. To edit an existing instruction, press Ctrl-E when
+  the monitor is waiting an assembler instruction.
+
+   The assembler understands all the normal 68000 instructions and also
+  the 'pseudo-instructions' dc.b, dc.w and dc.l, which can be used to
+  directly put data in memory.
+
+ Some notes about using the assembler:
+ -------------------------------------
+   When entering assembler instructions which have an implicit size, no
+   size specifier is allowed in the monitor assembler. These instructions
+   are for example btst, bchg, bclr, btst, lea, move to/from sr/ccr/usp,
+   andi/ori/eori #data,sr/ccr Scc (set according to condition),
+   abcd/sbcd/nbcd and shifts with memory operands.
+
+   Instructions that can have different sizes must have the size specifier,
+   there is no 'default size' (normal assemblers use a default size of word.
+   the omission of default size is intentional, because it is so easy to
+   forget the size specifier when you really don't mean the size to be word).
+
+   Branch instructions with no size specifier or the .l-specifier assemble
+   to normal (16-bit offset) branches, if given the .s-size specifier they
+   assemble to the short form (8-bit offset). The dbxx-(decrement and branch)
+   -instructions allow no size specifier.
+
+   The assembler converts add/sub/and/or/eor with immediate data source
+   automatically to adda/addi/subi/andi/eori. It does not convert move or
+   add/sub to the quick form nor does it convert branches automatically to
+   the short form. You must specify those yourself (so you must use the
+   moveq/addq/subq- instructions or specify the size .s to branches
+   as noted above). Also cmp-memory instruction must be entered as cmpm,
+   the assembler does not convert cmp (an)+,(an)+ to cmpm.
+
+   The above conversion rules do not apply to andi/ori/eori with status
+   register or condition code register. In these cases you must enter the
+   instruction as andi/ori/eori (don't leave the 'i' out). Also, you
+   can't enter any size specifier in this case.
+
+  (In fact I want to make the assembler more flexible than it currently is,
+  but that is not an easy task...maybe in some future version...)
+
+d -- Disassemble
+ Usage:
+  d                   -- disassemble 20 lines from current address
+  d <addr>            -- disassemble 20 lines from <addr>
+  d <addr> <end-addr> -- disassemble from <addr> to <end-addr>
+
+r -- Show or change registers
+ Usage:
+  r        -- displays all registers
+  r <reg>=<number> or
+  r <reg> <number> -- puts the value <number> into <reg>
+   examples:
+    r D0=0
+    r A5 $60000
+
+b -- Set breakpoints
+ Usage:
+  b <addr> -- sets a breakpoint to <addr>
+   Breakpoints are implemented by putting an illegal opcode ($4AFC) in the
+  breakpoint locations when a G or J command is given. After returning to
+  the monitor the original contents of the breakpoints are restored. This
+  means that you can not put breakpoints to ROM (but you can trace ROM code).
+
+br -- Remove breakpoints
+ usage:
+  br <addr> -- removes the breakpoint at <addr>
+  br all    -- removes all breakpoints
+
+bl -- List breakpoints
+ Usage:
+  bl -- display a list of all breakpoints
+
+The g, j, w, q and e-commands use the current program counter value
+(displayed with the r-command) if you don't give them an address.
+The stack pointer is reset and a return address to the monitor is
+put in the stack if the stack pointer is out of range.
+
+g [addr] -- Go (execute machine code)
+
+j [addr] -- Jump to subroutine
+ As g-command but pushes return address first.
+
+w [addr] -- Walk (single step trace)
+ This single steps code using the 68000 processor built-in trace mode.
+ It works even with ROM code (but the e-command doesn't).
+
+ (This command does not activate breakpoints)
+
+e [addr] -- Extended trace (execute with temporary breakpoint)
+ This command allows you to execute subroutine calls in full speed
+ when tracing and you don't need to manually place a breakpoint after
+ the calls. when the e-command is executed, a temporary breakpoint is
+ placed in the location after the instruction to be executed. this break-
+ point is automatically removed after the control returns to the monitor.
+
+ The e-command can be used instead of the w-command to trace most of the
+ instructions, but it is recommended that you use the w-command for
+ tracing and when tracing code until you get to a subroutine call
+ instruction. then enter the e-command and the subroutine is executed
+ normally, but after that the monitor interrupts execution to the
+ invisible breakpoint.
+
+ Note that if you use the e-command in an address that contains a flow-
+ control instruction, the code flow may never come to the temporary
+ breakpoint. Normally it is better to trace using the w-instruction,
+ but for example, system calls cannot always be traced, and even if
+ they can, you most probably don't want to do it. In previous versions
+ of the monitor you had to manually insert a breakpoint after the call
+ and use the g-command. Now you can simply use the e-command.
+
+q [addr] -- QuickTrace (execute until flow-control instruction)
+ This command executes code one instruction at time (in the 68000 trace mode)
+ until it encounters a program flow control instruction (jump, branch,
+ subroutine call or return, trap).
+
+Note: there is no easy way to run BCPL programs (CLI commands) or other
+programs that use the internal BCPL library from the monitor.
+
+@ -- Enter command line
+ Usage:
+  @ [command line]. If you don't specify a command line (enter only @<cr>)
+  then the monitor will prompt for command line. The command line will
+  be put in a special memory area and the register a0 will contain pointer
+  to the string and d0 will contain length of the string (with a linefeed
+  appended to end of it). If you want an empty command line, enter the
+  @-command without parameters and press return on the 'Cmdline>'-prompt.
+  The purpose of this command is to specify a command line for the program
+  that you are running from the monitor.
+
+l -- Load segment
+ Usage:
+  l <name> -- loads the executable file <name> in memory and displays
+  the starting address of the first hunk, also sets PC to this address.
+  only one segment can be loaded at the same time. Before loading a new
+  segment you must unload the old segment with the u-command. To display
+  the starting & ending addresses of all the hunks in the file, use the
+  sl-command.
+
+u -- Unload segment
+ Usage:
+  u  -- unload the current segments (frees the memory of that segment)
+
+sl -- Segment list
+ Usage:
+  sl -- displays the starting & ending addresses and length of each hunk
+  of the currently loaded file.
+
+( -- Allocate memory
+ Usage:
+  ( <length>        -- allocate <length> bytes any type of memory
+  ( <length> C      -- allocate <length> bytes of chip memory
+  Displays the start & end addresses of the allocated memory block.
+
+& -- Allocate absolute memory location
+ Usage:
+  & <addr> <length> -- allocate <length> bytes at <addr>
+
+) -- Free memory
+ Usage:
+  ) <addr> -- frees the memory block starting at <addr>
+  ) all    -- frees all the memory allocated with the (- and &-commands
+
+sm -- Show allocated memory
+ Usage:
+  sm -- display all memory blocks allocated with the (- and &-commands
+
+[  -- Read file
+ Usage:
+  [ <addr> <name> -- reads the file <name> to memory starting at <addr>
+
+]  -- Write file
+ Usage:
+  ] <addr> <length> <name> -- creates a file named <name> and writes <length>
+ bytes of memory starting at <addr> to the file.
+
+<  -- Read disk sectors
+ Usage:
+  < <addr> <drive> <start-sector> <number-of-sectors>
+ Reads <number-of-sectors> sectors from the disk in unit <drive> to memory
+ starting at <addr>. <drive> is a number between 0..3,
+ corresponding the DOS devices DF0: -- DF3:
+
+ the read destination address does not need to be in chip memory.
+
+>  -- Write disk sectors
+ Usage:
+  > <addr> <drive> <start-sector> <number-of-sectors>
+ Writes <number-of-sectors> sectors to the disk in unit <drive> from memory
+ starting at <addr>. <drive> is a number between 0..3,
+ corresponding the DOS devices DF0: -- DF3:
+
+ the write source address does not need to be in chip memory.
+
+=  -- Corrects a disk block checksum
+ Usage:
+  = <addr> -- if there is a DOS-format disk block read into memory at <addr>,
+ calculates the correct checksum for the block and stores it in the block.
+ Displays old and new checksums. This command is useful if use use the
+ monitor as a disk editor.
+
+#  -- Corrects bootblock checksum
+ Usage:
+  # <addr> -- if there is a disk bootblock (2 disk blocks, 1024 bytes) read
+ into memory at <addr>, calculates a new checksum for the bootblock and stores
+ it in the bootblock (in memory). Displays old and new checksums.
+
+!  -- Play digisound
+ Usage:
+  ! <addr> <length> <period> [<count>]
+ Plays sound <length> bytes starting at <addr> and using sampling period
+ <period>. the sound repeats <count> times or until you stop it by
+ pressing Ctrl-C. <addr> must be in CHIP memory!.
+
+cls -- Clears the monitor window
+
+del <filename> -- Deletes a file
+
+cd  <dirname>  -- Sets the current directory
+
+dir [<name>]   -- Displays the directory
+  if you don't specify the name, then current directory
+  will be displayed.
+
+\ -- New CLI
+  Opens a new CLI window by executing a 'NewCLI'-command.
+
+x -- Exit
+  Cleanup and exit.
+
+
+
+Version history:
+----------------
+1.24 ->
+ - corrected a small bug in the assembler/disassembler mnemonic tables
+   (trap and tas-instructions were accidentally exchanged...)
+1.23 ->
+ - quicktrace-command
+ - now reserves separate areas of stack for the monitor itself and
+   the program being debugged.
+1.22 ->
+ - better handling of stack pointer with jump & go-commands
+ - extended trace command
+ - memory display can be used at odd addresses
+ - generally cleaned up the source code
+ - variables are now case-insensitive.
+1.20 ->
+ - added the '[register]'-syntax in the expression parser
+1.19 ->
+ - disassembler now uses new routines. this makes the monitor
+   executable little smaller than 1.17
+1.17 ->
+ - monitor is now re-entrant and can be made resident
+ - transfer no longer crashes if you transfer from location zero
+ - default base is again hexadecimal
+1.15 ->
+ - some minor bug fixes in assembler
+   (move sp,usp or exg Rx,sp did not work)
+ - 'memory info'-command
+ - underscores are allowed in variable names
+ - variable list is kept in alphabetical order
+1.12 ->
+ - expressions can now be used instead of numbers. also included
+   calculator-command.
+ - variables can be used in expressions.
+ - user-defineable default number base, default is now decimal.
+ - hunt-command no longer finds anything in the monitor code/data areas
+ - show seglist now displays hunk numbers
+ - chip memory allocation syntax has been changed.
+1.08 ->
+ - the monitor works ok with 68010/68020 processors. previous versions
+   left sometimes extra data in supervisor stack.
+1.07 ->
+ - The disassembler and assembler handle exg Dn,An correctly
+   (previously the data and address register numbers were reversed)
+ - The disassembler no more displays any invalid codes as valid
+   instructions (On the 68000 processor, of course. The monitor does
+   not currently support 68010/68020 extra instructions).
+ - The pc-relative indexed addressing mode now works with the assembler.
+ - Some little bugs were fixed in the assembler.
+    + And/or-instructions work with a pc-relative source operand. 
+    + cmpm works with all sizes
+    + most(if not all...) of the bugs that caused the assembler to
+      assemble invalid instructions have been fixed.
+ - 'sp' can be used instead of 'a7' in the assembler and the disassmbler
+   displays a7 as 'sp'.
+ - The assembler now unserstands blo/bhs, slo/shs and dblo/sbhs
+   and assembles them as bcs/bcc, scs/scc and dbcs/dbcc
+ - The disassembler displays address-register relative offsets and short
+   absolute addresses as signed numbers.
+ - The monitor works now better with 60-column default font (TOPAZ60).
+ - Disk read/write commands can be used with non-chip memory
+ - Play digisound command has an optional parameter to specify
+   how many times the sample is played.
+ - A new command has been added to specify a command line for programs
+   executed under the control of the monitor.
+ - Breakpoints work even if you jump into the code at to breakpoint.
+   The breakpoint does not activate until the instruction at the break
+   position is executed, so you don't get immediately interrupted.
+   (internally the monitor uses the trace-exception to skip the breakpoint
+   at the first time...)
+1.06 and older...
+ - prehistoric versions...
+
+
+
+Amiga Monitor v1.24 Copyright © 1987-1990 by Timo Rossi. The monitor
+can be freely distributed non-commercially. This document file and the
+'patchtrace'-program should be included in the distribution. Preferred
+way of distribution is the zoo-file 'mon124.zoo'.
+
+
+Send suggestions, bug reports etc. to:
+
+  Timo Rossi
+  Kellankoski			internet e-mail:
+  44300 Konnevesi		trossi@jyu.fi
+  FINLAND
+

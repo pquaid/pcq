@@ -1,0 +1,1345 @@
+
+    Hallo Leute,
+    hier die deutsche Übersetzung der PCQ-Anleitung.
+
+    Da das Copyright auf der deutschen Übersetzung weiter beim
+    Inhaber des Originalcopyrights (d.h. Pat) liegt, will ich erst
+    gar keins erheben und sage:
+
+	WEITERGEBEN - WEITERGEBEN - WEITERGEBEN - WEITERGEBEN
+
+    Aber: Haltet Euch an Pat Bestimmungen!
+
+    Vinorkis ^O^
+
+--------------------------------------------------------------------------
+
+	   Überarbeitet und an V1.1 angepasst von Ølli.
+
+	Diese Übersetzung ist bei weitem nicht vollständig
+	und enthält jede Menge Fehler. Im Zweifelsfalle also
+	immer auf die Originalanleitung ausweichen.
+
+	Dieser Text sollte aber für einen ersten Überblick reichen!
+
+---------------------------------------------------------------------------
+
+
+
+		       PCQ Version 1.1
+      Ein sehr einfacher Pascal Compiler für den Amiga
+		       von Patrick Quaid
+
+
+    PCQ (das bedeuted Pascal Compiler, ähem, Q.... Sehr, mir fiel kein Name
+ein, so habe ich einfach meine Initalien benutzt, ok?) ) ist ein einfacher
+Pascal Sub-Set Compiler, der Assembler-Code generiert. Er ist zwar kein
+Public-Domain-Program im eigentlichen Sinne (denn ich behalte mir das
+Copyright auf den Source Code, die Laufzeit Bibliothek mit deren Source
+Code, den Compiler und der Dokumentation vor), aber es darf weitergegeben
+werden, solange alle Files unverändert auf der Diskette verbleiben (mit
+Ausnahme des Assemblers und des Linkers). Der Compiler ist zwar langsam
+und hat Probleme mit einigen Sachen, aber er ist auf jeden Fall sein Geld
+wert. Um es zusammenzufassen:
+
+Das Schlechte:
+
+  Der Compiler ist sehr langsam.
+
+  Er unterstützt keine Sets.
+
+  Der Code wird nicht optimiert und ist deshalb langsam, groß und
+    sieht bescheürt aus.
+
+  Die meisten Fehler erzeugen eine Endlosschleife.
+
+
+Das Positive:
+
+  Er funktioniert, im großen und Ganzen...
+
+  Der Compiler unterstützt Include-Files
+
+  Er erlaubt externe Verweise (Referenzen), obwohl diese von Hand geprüft
+      werden müssen (das hier ist kein Modula-2)
+
+  Unterstützt Strukturen (Records), Aufzählungstypen (enumerated types),
+      Zeiger (Pointers), Arrays und Strings.
+
+  Typen-Konvertierungen wie in Modula-2 werden unterstützt. Mit anderen
+     Worten: Ausdrücke wie "integer('d')" sind möglich. Einige Besonderheiten
+
+  Einige Besonderheiten von Turbo und Quick-Pascal wie "Exit" innerhalb einer
+  Prozedur, Operatoren wie "Shl" und "Shr" und Typen-Konstanten sind
+  eingebaut worden.
+
+  Es können beliebig viele const, var, type, prcödure und function-Blöcke
+  definiert werden, in jeder Reihenfolge.
+
+  Er kostet nichts (solange sie nicht auf gewisse Sonderangebote deutscher
+  PD-Händler reinfallen, Anm. d. Übersetzers).
+
+
+		     IHNALTSVERZEICHNIS
+		     ------------------
+
+
+    Diese Bedienungsanleitung sollte mit einem sog. File-Reader, also einem
+speziellen ASCII-Datei-Leseprogramm oder einem Text-Editor gelesen werden.
+Deshalb hier keine Seiten-, sondern Zeilennummern (ohne Gewähr, Anm. d.
+Übersetzers :-)
+
+
+Abschnitt						      Zeile
+
+Arbeiten mit dem PCQ .......................................   128
+Beschreibung der Fehler ....................................   238
+Vordefinierte Elemente .....................................   271
+    Konstanten (Constants) .................................   302
+    Typen (Types) ..........................................   354
+    Variablen (Variables) ..................................   416
+    Funktionen (Functions) .................................   446
+    Prozeduren (Procedures) ................................   510
+    Spezielle Befehle ......................................   555
+Reservierte Worte ..........................................   592
+Ausdrücke ..................................................   617
+Fliesskomma-Arithmetik .....................................   637
+Die Grenzen des PCQ ........................................   660
+Zeichenketten (Strings) ....................................   647
+Compiler-Direktiven ........................................   734
+Typen-Konvertierungen ......................................   780
+Externe Verweisen (Referenzen)..............................   832
+Die Ein-und Ausgabe ........................................   900
+Fehlermeldungen ............................................  1064
+Laufzeit-Fehler ............................................  1091
+Quellennachweis ............................................  1117
+Einige Anmerkungen für Assembler-Programmierer .............  1176
+Zukünftige Erweiterungen ...................................  1189
+Updates ....................................................  3202
+Weitere Anmerkungen, Copyright und Adressen ................  1294
+
+
+
+
+
+		       Arbeiten mit dem PCQ
+
+    Auf dieser Diskette befinden sich eine ganze Menge Files, die Sie sich
+vor dem ersten Einsatz des PCQ erst einmal auf eine Arbeitsdiskette
+kopieren sollten. Eines davon ist natürlich der Compiler selbst (Pascal) -
+ich gebe die Dateinamen immer in Klammern an, in einem ReadMe-File sind
+alle File-Namen erklärt!), selbstverständlich ebenso die
+Laufzeit-Bibliothek (PCQ.lib). Sollten Sie den Assembler (A68k) und den
+Linker (Blink) noch nicht besitzen, dann kopieren Sie sich die beiden Files
+ebenso auf Ihre Arbeitsdisk. Diese hier aufgelisteten Files sind sogar für
+die einfachsten Programme unbedingt erforderlich.
+
+
+    Alle Files mit dem Suffix ".p" sind Pascal-Beispielprogramme, die Sie
+sich ebenfalls auf Ihre Arbeitsdisk kopieren können. Ich arbeitete
+natürlich wesentlich mehr am Compiler selbst, als an diesen Beispielen,
+einige von diesen sind jedoch vor allem für diejenigen von Ihnen
+interessant, die noch nie mit Pascal gearbeitet haben. Diese Programme
+demonstrieren alle Möglichkeiten des Compilers, die mir bis dato
+eingefallen sind, deswegen sollten sie sich diese Ansehen, bevor Sie sie
+löschen. Der Source-Code des Compilers besteht ebenfalls aus einer Anzahl
+Files mit dem Suffix ".p".
+
+    Alle Files mit dem Suffix ".i" sind Include-Files für einige System-
+Bibliotheken. Diese definieren die Typen, Konstanten, Prozeduren,
+Funktionen, Variablen und Records, die für System-Zugriffe erforderlich
+sind. Diese sollten Sie nach Möglichkeit mit auf Ihre Arbeitsdisk in ein
+Unterverzeichnis mit dem Namen "Include" kopieren. Auch einige
+Include-Files für Routinen in der "PCQ.lib" gehören dazu. Schaün Sie sich
+diese genaür an, da hier öfters etwas geändert wird. Der Code für diese
+Routinen ist in der "PCQ.lib".
+
+Um nun ein Programm zu compilieren, müssen Sie erst eines mit einem
+Texteditor (ich empfehle DME, Anm. d. Übersetzers) schreiben, oder eines
+der Beispielprogramme nehmen. Dann geben Sie ein:
+
+		  1> Pascal prog.p prog.asm {-q}
+
+wobei "Pascal" natürlich der Compiler selbst ist (den Namen können Sie
+nach belieben ändern). "prog.p" ist der Name der Quell-Datei des
+Pascalprogrammes, der natürlich auch beliebig sein kann. Der zweite
+Paramter ist dann der Name des zu erzeugenden Assembler-Files. Die "-q"-
+Direktive bewirkt, das der Compiler nur noch Fehlermeldungen ausgibt, und
+diese in komprimierter Form.
+
+Beim Compilieren der Beispielprogramme kann es Probleme mit der Struktur
+der Unterverzeichnisse geben. Die Beispiele verlangen alle die
+Include-Files in einem Verzeichnis ":Include/BlaBla.i". Falls das Probleme
+mit der Ihrer Konfiguratiön aufwirft, müßen Sie die Include-Befehle am
+Anfang der Programme ändern.
+
+Hat der Compiler keine Fehlermeldung ausgegeben, geben Sie ein:
+
+	    1> A68k prog.asm prog.o
+
+Der Assembler erzeugt dann den Object-Code. Sollte sich auf dieser Diskette
+der A68k-Assembler befinden, dann sollten Sie darauf auch die entsprechende
+englischsprachige Anleitung zu diesem Assembler finden ("A68k.doc"). Falls
+nicht, benutzen Sie die Version V2.6 des A68k-Assemblers von Charlie Gibbs.
+Dieser Assembler führt viele kleinere Optimierungen durch, auf die sich
+der PCQ mehr oder weniger verlässt. Deshalb kann ich nicht behaupten, daß
+der PCQ-Compiler auch mit anderen Assemblern zusammenarbeitet. Am Ende
+müssen Sie nun das Programm "Linken", also geben Sie nun ein:
+
+	1> Blink prog.o small.lib to prog library PCQ.lib
+
+Hier wird nun also endlich die eigentliche ausführbare Datei mit dem Namen
+'prog' erzeugt. Sämtliche Pascal-Laufzeit-Routinen, die Amiga-
+System-Routinen und meine eigene, kleine String-Bibliothek sind in der
+PCQ.lib enthalten. Sollten manche Namen von Routinen mit denjenigen, mit
+denen Sie selbst arbeiten, kollidieren, dann stellen Sie einfach Ihre
+eigenen Bibilothek-oder Object-Files in der Blink-Kommandozeile VOR die
+PCQ.lib. Sollten Sie noch Fragen zum Linken haben, dann sehen Sie bitte in
+der entsprechenden Dokumentation zu Blink mit dem Namen 'Blink.doc' nach,
+die sich ebenfalls auf dieser Diskette befindet.
+
+Ich selbst verwende die Version 6.7 von "Blink"  und zweifle auch hier, ob
+der PCQ auch mit anderen Versionen oder sogar anderen Linkern
+zusammenarbeitet. "Small.lib" ist eine kleine Offsetbibliothek, die von
+Matt Dillon geschrieben wurde. Da in "Blink" ein kleiner Fehler existiert,
+muß diese Datei als Object-File statt als Bibliothek eingebunden werden.
+Dies erhöht aber nicht die Code-Größe des Programms.
+
+Statt nun aber immer diese Folge von Befehlen eingeben zu müssen, können
+Sie auch die "make"-Batch-Datei aufrufen, die sich ebenfalls auf der
+Original-Pascal Diskette befinden müsste und Ihnen die eklige Tipparbeit
+abnimmt. Sie sollten sich dieses File jedoch vorher einmal ansehen, denn es
+könnte sein, dass Sie den ein oder anderen Pfad an die Verzeichnis-Strukutr
+Ihrer Arbeitsdiskette anpassen müssen. Es ist jedoch wichtig, die
+geänderte Version der "make"-Datei unbedingt wieder als Script-File
+kennzeichen ("protect make +s"), da diese sonst vom AmigaDOS 1.3 oder ARP
+nicht als Batch-Datei anerkannt wird. Aufgerufen wird diese dann wie folgt:
+
+		  1> make prog
+
+Dabei wird dann die Datei 'prog.p' automatisch compiliert, assembliert und
+anschliessend zur ausführbaren Datei 'prog' gelinkt, ohne dass Sie mehr
+eingeben müssen. Sollten Sie in Ihr Programm natürlich andere, gesondert
+compilierte Units eingebunden haben, dann müssen Sie diese Batch-Datei
+natürlich ändern oder eine neü schreiben. Ich schlage Ihnen vor, daß Sie
+sich für jedes Programm, das Sie mehr als einmal compilieren wollen oder
+müssen (vor allem in der Entwicklungsphase) eigene Batch-Dateien schreiben,
+die natürlich dann andere Namen haben. Sollten Sie damit Schwierigkeiten
+haben, dann wenden Sie sich bitte an mich. Ich kann Ihnen dann hoffentlich
+eine ausführlichere Antwort auf Ihre Fragen geben.
+
+
+
+
+
+	       Fehler und Kinderkrankheiten des PCQ
+
+
+Diesen Punkt könnte ich eigentich getrost überspringen, aber trotzdem...
+
+Wie schon erwähnt, arbeiten Sets und der "with"-Befehl überhaupt nicht.
+Eine Syntax, die ebenfalls nicht akzeptiert wird ist die folgende:
+
+    type
+	WindowPtr = ^Window;
+	Window = record
+	   NextWindow : WindowPtr;
+	    ...
+
+Dies bricht in der ersten Zeile mit einem "Unknown ID"-Fehler ab. Benutzen
+Sie stattdessen folgendes:
+
+   type
+       Window = record
+	   NextWindow : ^Window;
+	   ....
+       end;
+       WindowPtr = ^Window;
+
+Dies sollte in einer der nächsten Versionen beseitigt werden, aber da es
+nicht SOOO nötig ist...
+
+Auch variante Records sind immer noch verboten. Dies wird demnächst
+beseitigt. Der bekannte Syntax, um ein einzelnes Anführungszeichen zu
+erzeugen (''''), wird ebenfalls nicht akzeptiert. PCQ benutzt die
+C-Escape-Funktion: ('\''). Näheres darüber in dem Abschnitt "Strings".
+
+
+		Vordefinierte Elemente
+
+
+Ich habe nachfolgend eine Anordnung der Elemente gewählt, wie sie in Pascal
+üblich ist. Nur können Sie im PCQ diese Blocks in jeder beliebigen
+Reihenfolge schreiben, und vor allem mehr als einmal jeden Block
+definieren. Mit anderen Worten: Ihre Programme können z.B so aussehen:
+
+   Program name;
+   var
+       variable declarations
+   type
+       types
+   var
+       more variables
+   procedure
+       a procedure
+   var
+       still more variables....
+
+Und so weiter...Natürlich muß ein Element nach wie vor erst
+einmal deklariert werden, bevor es gebraucht wird. Ich habe dies
+zugelassen, da es wirklich übel ist, einen Rattenschwanz von Include-Files
+zu ordnen (jedes einzelne Include-File hätte sonst in vier Abschnitte
+zerlegt werden müssen: In die Konstanten, die Typen, die Variablen und die
+Prozeduren und Funktionen).
+
+
+
+
+
+CONST
+
+
+Die Werte für Trü und False werden als -1 und 0 definiert. Nil (Null)
+wird definiert als Zeiger mit dem konstanten Wert 0, ist jedoch kein
+reserviertes Wort wie im Standard-Pascal.
+
+Meist, wenn der Compiler eine Konstante verlangt, nimmt er dafür einen
+konstanten Ausdruck (der schon während der Compilierung ausgewertet wird).
+Beispielsweise funktioniert Folgendes:
+
+   const
+       first = 234;
+       second = first * 2;
+
+   type
+       thetype = array [first .. first + 7] of char;
+
+
+
+
+Leider können Sie noch keine Standardfunktionen, Typenkonvertierungen,
+Realzahlen oder andere ähliche Dinge benutzen, die sonst auf Ausdrücke im
+Hauptprogramm anwendbar sind. Bis jetzt stehen nur die fünf mathematischen
+Grundfunktionen (+, -, *, div und mod) zur Verfügung. Beachten Sie auch,
+daß "first + 7" oben während der Compilierung ausgewertet wird, wohingegen
+die Berechnung des gleichen Texts im Hauptprogramm erst während der
+Laufzeit erfolgt. Anders gesagt: Bis jetzt besteht noch keine
+Konstanten-Optimierung.
+
+Sollten Sie Integer-Konstanten verwenden, können Sie die Ziffern durch
+einen Unterstrich ähnlich wie bei ADA trennen:
+
+      const
+	  thousand = 1_000;
+	  tenthousand = 1_0_0_0_0;
+
+MaxInt ist als $7FFFFFFF definiert, was einen Wert über zwei Milliarden
+ergibt. Versuchen Sie nicht, dies zu schreiben. MaxShort ist 32767, oder
+$7FFF in hex.
+
+Eine andere Form von Konstanten sind "Typen-Konstanten". Dies sieht
+folgendermassen aus:
+
+	CONST
+	    Identifier : Type Description = Constant Expression;
+
+Typenkonstanten werden zu Beginn des Programms mit der "Constant
+Expression" initialisiert und können dann genauso wie Variablen benutzt
+werden. Dies wird im Abschnitt "Typenkonstanten" genaür beschrieben.
+
+
+TYPE
+
+Es gibt verschiedene vordefinierte Typen.
+
+Integer       4 Bytes, von +/- MaxInt
+
+Short	      2 Bytes. Zahlen innerhalb des Programmtexts
+	      werden als Short-Werte angesehen, sofern sie nicht
+	      grösser als 32767 oder kleiner als - 32767 sind.
+
+Byte	      1 Byte. Bei diesen drei Typen handelt es sich
+	      ausnahmslos um numerische Typen, sodaß Sie sie in normalen
+	      Ausdrücken verwenden können, ohne sich um
+	      Typenkonvertierungen Gedanken machen zu müssen. Der Compiler
+	      wandelt die kleinen Werte automatisch auf die verlangte
+	      Grösse um. Denken Sie aber daran, dass momentan noch kein
+	      Überlaufgeprüft wird. Ab Version 1.1 haben Byte-Werte den
+	      Bereich 0..255 statt -128..127.
+
+Real	      4 Bytes (FFP-Format).
+
+Char	      1 Byte.
+
+Boolean       1 Byte. False ist 0, Trü ist -1.
+
+String	      4 Bytes. Als "^char" definiert. Wird im
+	      Abschnitt "Strings" noch näher erläutert.
+
+Address       4 Bytes. Dies ist ein Zeiger auf keinen besonderen
+	      Typ und ist zu jedem anderen Zeiger typenkompatibel
+	      Tatsächlich ist die Konstante Nil vom Typ Address.
+
+Text	      32 Bytes. Dies ist nicht das gleiche wie ein "file
+	      of char". Die normale Eingabe und Ausgabe bezieht
+	      sich auf Textfiles. In Textfiles können Sie Integer-Zahlen,
+	      Zeichen, Datenfelder (Arrays) und Strings schreiben bzw.
+	      lesen. Auch Boolean-Werte können geschrieben werden.
+
+Enumerated    1 oder 2 Bytes, je nach Anzahl der Aufzählungen.
+
+Wie bereits oben erwähnt, können Sie Arrays, Zeiger, Records und Dateien,
+basierend auf den obengenannten Typen verwenden. Auch Synonymtypen sind
+einsetzbar (wie "type int = integer;").
+
+Beachten Sie ausserdem: Überall, wo Sie einen Typen benötigen, können Sie
+eine vollständige Typenbeschreibung verwenden. Einige Compiler haben
+hierbei Probleme, und ich bin mir auch nicht sicher, was das Standard-
+Pascal in diesem Zusammenhang sagt, aber das ist mir eigentlich auch
+ziemlich egal.
+
+In Version 1.0 mußten Mehrdimensionale Arrays ausgeschrieben werden. Es war
+also nicht möglich, folgendes zu schreiben:
+
+    Array [0..5, 0..11] of Integer;
+
+   Stattdessen mußte folgende Konstruktion benutzt werden:
+
+    Array [0..5] of Array [0..11] of Integer;
+
+   für die Definition, und "ArrayName[x][y]" im Programm. Da die meisten
+   Pascal-Compiler die Abkürzung mit Komma erlauben, ist dies nun auch in
+   PCQ möglich.
+
+
+VAR
+
+Ab V1.1 hat PCQ diverse neü Variablen.
+
+
+      CommandLine   : String;
+
+In V1.0 war dies ein Array of Char und eine Kopie der Originalzeile. Ab
+sofort handelt es sich dabei nur noch um einen Zeiger auf den Speicher der
+originalen Kommandozeile. Mit Routinen wie "GetParam" kann diese
+ausgewertet werden.
+
+
+      ExitProc	    : String;
+
+Diese Variable zeigt auf eine Kette von Prozeduren, die am Programmende
+aufgerufen werden.
+
+      ExitCode	    : Integer;
+
+Falls das Programm normal beendet wurde, ist dies 0. Falls Exit()
+aufgerufen wurde, ist es das Argument des Aufrufs, ansonsten die Nummer
+eines Run-Time-Fehlers.
+
+      ExitAddr	    : Address;
+
+Falls das Programm aufgrund eines Run-Time-Fehlers abgebrochen wurde,
+enthält diese Variable die Adresse des Befehls nach dem Fehler.
+
+
+FUNCTION
+
+
+Alle Standartfunktionen, die keine transzedentalen Funktionen benutzen,
+sind eingebaut.
+
+      function ord(x : jeder Ordinaltyp): integer;
+	 Übergibt die ordinale Position des Arguments.
+
+      function chr(x : numerischer Typ) : char;
+	 Übergibt das angegebene Zeichen.
+
+      function abs(x : numerischer Typ) : der gleiche Typ;
+	 Übergibt den absoluten Wert.
+
+      function succ(x : ordinaler Typ) : der gleiche Typ;
+	 Übergibt x + 1 des gleichen Typs.
+
+      function pred(x : ordinaler Typ) : der gleiche Typ;
+	 Übergibt x - 1 in jenem Typ.
+
+      function trunc(x : real) : integer;
+	 übergibt Ganzzahlanzeil
+
+      function float(x : integer, short oder byte) : real;
+	 verandelt x in FFP-Format.
+
+      function floor(x : real): real;
+	 übergibt die größte Ganzzahl kleiner als x
+
+      function ceil(x : real): real;
+	 übergibt die kleinste Ganzzahl größer als x
+
+      function odd(x : numerischer Typ) : boolean;
+	 Übergibt trü, falls Ziffer ungerade.
+
+      function eof(x : jedes File) : boolean;
+	 Übergibt trü, falls Sie sich am Ende einer Input-Datei
+	 befinden.
+
+      function adr(var x : jede Variable): Address;
+	 übergibt die Adresse von x
+
+      function SizeOf(t : name eines Types) : Integer;
+	 übergibt die Größe des spezifierten Types
+
+      function Bit(t : Integer) : Integer;
+	 übergibt die Zahl, die der Bit-Position entspricht.
+
+      function IOResult : Integer;
+	 übergibt den Code des letzten IO-Befehls. Falls ungleich 0,
+	 handelt es sich um einen AmigaDOS-Fehlercode. Der Aufruf löscht
+	 IOResult. Falls IO-Überprüfung ausgeschaltet ist und es tritt ein
+	 Fehler auf, wird IOResult ungleich 0 und nachfolgende IO-Befehle
+	 werden ignoriert.
+
+Abgesehen von den FFP-Routinen werden alle Routinen im Code eingebaut. Die
+anderen beiden Standardfunktionen dienen zum Öffnen von Dateien. Sie werden
+näher erklärt, sobald ich auf die Eingabe/Ausgabe zu sprechen komme. Von
+der Sprache wird auch eine Syntax wie "typename(ausdruck)" unterstÜtzt, die
+wie eine Funktion aussieht. Auch dies wird in einem späteren Abschnitt, der
+Typenkonvertierung, genaür erläutert.
+
+
+PROCEDURE
+
+
+Die Standard-Prozeduren lauten Write, Writeln, Read, Readln, Get, Put, New,
+Dispose, Exit und Trap. Die ersten fünf werden im Abschnitt IO behandelt.
+Die anderen vier sind:
+
+      procedure New(var x : Zeigervariable);
+
+Diese allokiert Speicher für den Platz des Variablentypes und speichert die
+Adresse in x. Die Speicherverwaltung beim PCQ geht mit Hilfe der
+AllocRemember()-Routine von Intuition vor sich, sodaß am Ende der
+Ausführung der ganze durch new() zugeordnete Speicher wieder an das System
+zurückgegeben wird. Das bedeutet, dass Sie für jedes new() nicht immer
+dispose() aufrufen brauchen, obwohl Sie es eigentlich sollten. Nebenbei
+bemerkt: Funktioniert die Zuordnung nicht, bricht das Programm ab.
+
+      procedure Dispose(var x : Zeigervariable);
+
+Dies gibt den zugeordneten Speicher zurück ans System. Sollte etwas
+durcheinander gekommen sein und Sie versuchen, Speicher zu benützen, den
+Sie nie zugeordnet haben, passiert nichts. Leider bedeutet das, dass Sie
+nie eine Fehlerdiagnose über ein Problem in Ihrem Programm erstellen
+können; zumindest wird aber nicht daürnd der Guru gerufen.
+
+      procedure Exit(error : Integer);
+
+Exit() unterbricht ein Programm vorzeitig und ist damit die einzig
+akzeptable Methode, ein Programm zu verlassen. Dabei wird der gleiche
+Vorgang wie beim normalen Abbruch eines Programms vollzogen und dann die
+Fehlernummer, die Sie übergeben, ans AmigaDOS übergeben. Diese Routine
+gibt den gesamten Speicher frei und schliesst die geöffneten Dateien. Die
+Fehlernummer sollte Null sein, wenn das Programm korrekt abgeschlossen
+wurde, 5 bei einer Warnung, 10 bei einem Fehler, und 20 bei einem
+katastrophalen Fehler.
+
+      procedure Trap(num : Integer);
+
+Das Argument für diese Prozedur muss ein konstanter Ausdruck sein, dessen
+Typ jedoch keine Rolle spielt. Hierbei wird einzig und allein eine
+68000-Trap-Anweisung in den Code eines Befehls eingefügt. Dies ist zwar
+sehr praktisch bei dem Debugger, den ich verwende, ansonsten aber ziemlich
+nutzlos. Effektiv fügt es einen Break-Point ins Programm ein.
+
+
+			    Spezielle Befehle
+
+Zunächst unterstützt der PCQ If-, While-, Repeat-, For-,  Case-,
+Goto- und With- Befehle.
+
+Die If-, While- und Repeat-Befehle arbeiten ziemlich so, wie sie
+sollten. Der Case-Befehl entspricht jetzt mehr dem Standard-Pascal als in
+V1.0. Hier einige Beispielausdrücke:
+
+    case Letter of		     case Number * 5 of
+	'a'      : statement1;          -MaxInt..0 : statement1;
+	'b'..'g' : statement2;          1..MaxInt  : statement2;
+	'j',                         end;
+	'm'..'o',
+	'h'      : statement3;
+    else
+	statement4;
+    end;
+
+Der For-Befehl unterstÜtzt "downto", was das Inkrement von 1 auf -1 ändert.
+Er unterstÜtzt auch "by" und erlaubt Ihnen damit, die Schrittweite
+festzulegen. Das Argument des "by"-Teils kann jeder reguläre Ausdruck sein,
+fÜr negative Schrittweitn mÜssen Sie aber "downto" statt "to" benÜtzen,
+oder die Schleife wird nur einmal ausgefÜhrt. Nebenbei bemerkt laufen
+For-Schleifen immer mindestens einmal ab. In jedem Fall sieht die Syntax
+ungefähr folgendermassen aus:
+
+      for <Variable> := <Ausdruck> to|downto <Ausdruck>
+			 [by <Ausdruck>]  do <Befehl>;
+
+Der letzte Befehl ist "return", der einfach eine PROCEDURE frühzeitig
+abbricht. Eine FUNCTION können Sie vorzeitig abbrechen, indem Sie den
+Funktionsnamen einem Wert zuordnen; "return" funktioniert also nur bei
+Prozeduren.
+
+
+
+			Reservierte Worte
+
+
+Folgende Worte sind beim PCQ reserviert:
+
+	    and 	for	    procedure
+	    array	forward     program
+	    begin	function    record
+	    by		goto	    repeat
+	    case	if	    return
+	    const	in	    set
+	    div 	label	    then
+	    do		mod	    to
+	    downto	not	    type
+	    else	of	    until
+	    end 	or	    var
+	    external	packed	    while
+	    file	private     with
+
+
+
+    Auch nichtimplementierte Wörter sind reserviert!
+
+
+
+			  Ausdrücke
+
+Der Compiler akzeptiert den normalen Ausdrucks-Syntax, wie die meisten
+anderen Programmiersprachen. Auch verschiedene neue Operatioren aus Turbo
+Pascal und C werden unterstützt, wie:
+
+    Xor     Ergibt die Exklusiv-Oder-Verknüpfung der zwei Operanden. Wie
+	    Turbo-Pascal "XOR" oder "^" in C. Priorität entspricht "+" und
+	    "-".
+
+    Shl     Schiebt das linke Argument um n Bitpositionen nach links (1 shl
+	    5 = 32). Priorität wie "*", "/" usw.
+
+    Shr     Schiebt nach rechts. Es wird logisch, nicht aritmethisch
+	    verschoeben, so ergeben negative Werte positve Resultate-
+
+Integer-Zahlen können überall in Hexadizimaler Schreibweise angegeben
+werden.
+
+
+		    Fliesskomma-Arithmetik
+
+Ab V1.0c werden Real-Zahlen voll unterstützt. Real-Zahlen im Programmtext
+müßen in normaler Schreibweise (1234.5678 o.ä.) angegeben werden, Formate
+wie "1.08E-4" usw. werden NICHT unterstützt.
+
+An mathematischen Operationen stehen nur "+", "-", "/" und "*" zur
+Verfügung. Der gesammte Rest der "MatfFFP.library" ist ebenfalls
+ansprechbar, ebenso die Funktionen Abs(), floor(), ceil(), trunc() und
+float().
+
+Die Funktionen wie sin(), cos() und sqrt() sind nicht in der mathffp.lib zu
+finden. Diese befinden sich in der mathtrans.lib im "LIBS"-Verzeichnis fast
+jeder normalen Diskette. Sollten Sie jemals ein Programm schreiben, welches
+diese Funktionen benötigt, muß dafür die System-Diskette eingelegt sein,
+auf welcher diese im oben schon erwähnten "LIBS"-Verzeichnis zu finden sein
+müsste. Lesen Sie bitte die Informationen in MathTrans.i, falls
+erforderlich. übrigens habe ich nicht vor, mir eine eigene "mathtrans.lib"
+zu schreiben, so werden Sie die Bibliothek in Zukunft immer benötigen, wenn
+Sie trigonometrische oder Exponential-Funktionen einsetzen wollen.
+
+
+
+		  Die Grenzen des PCQ
+
+
+Der Compiler akzeptiert jede beliebige Zeilenlänge, obwohl er nur die
+letzten 128 eingelesenen Zeichen anzeigt, falls er einmal durch einen
+Fehler aussteigen sollte. Was die Länge von Files angeht, so können diese,
+mit wenigen Einschränkungen, so lang sein, wie Sie wollen (Denn der einzige
+Teil Ihres Programmes, der sich währen der Compilierung im Speicher
+befindet, ist das gerade eingelesene Zeichen).
+
+Da der Compiler sehr langen Assembler-Code generiert, muss natürlich auch
+entsprechend Platz auf der Diskette sein. Der Assembler-Code ist immerhin
+ungefähr fünf Mal länger als der entsprechende Pascal-Source-Code.
+
+
+		   Zeichenkettenvariablen (Strings)
+
+
+Wie vorhin schon mal erwähnt wurde, sollten Strings als '^char'- Typen
+angesehen werden. Das stimmt aber nur zum Teil, denn Sie haben mit Strings
+noch zusätzliche, spezielle Möglichkeiten. Sie können nämlich dynamisch
+angelegt, dimensioniert und wieder gelöscht werden. Jedem String ist ein
+Null-Byte nachgestellt. Beachten Sie dies also, wenn Sie einen String
+weiterverarbeiten wollen, sonst bringen Sie alle übrigen String-Routinen
+durcheinander. Im Programmtext wird jeder String mit doppelten
+Anführungszeichen eingegrenzt, anstelle der einfachen, wie sie in
+"char"-Datenfeldern zu finden sind. Also:
+
+	"Ein String"   ist wirklich ein String, während
+	'Kein String'  ein array [1..11] of char ist
+
+Eine weitere interessante Tatsache bei der Stringbehandlung ist die
+Möglichkeit, C-ähnliche ESCAPE-Sequenzen einzubaün. Sobald Sie einen
+Backslash (\) schreiben, wird das unmittelbar folgende Zeichen besonders
+bearbeitet. Die Sprache C besitzt davon eine Unmenge von Möglichkeiten. Bis
+jetzt habe ich aber nur diejenigen eingebunden, die ich selbst am meisten
+benötige:
+
+	\n   wird als LineFeed -chr(10)- interpretiert
+	\t   wird als Tab -chr(9)- interpretiert
+
+Alles andere läuft ohne Umänderung durch den Compiler, sodass Sie hiermit
+die Möglichkeit haben, sogar doppelte Anführungszeichen in Ihre Stings mit
+einzubauenn. Ein String wie
+
+      "A\tboy\nand\\his \"dog.\""
+
+wird so ausgegeben:
+
+      |A       boy
+      |and\his "dog"
+
+Im Archiv der Original-Diskette befindet sich eine Include-Datei mit dem
+Namen StringLib.i, die ein paar String-Routinen behandelt, nämlich die,
+welche ich selbst für den Compiler benötigt habe. Lesen Sie sich die
+Informationen zu diesem File ruhig mal durch. Sollten Sie dadurch etwas
+verwirrt sein, dann denken immer daran, dass diese Strings sehr ähnlich
+denen in der Sprache C behandelt werden und auch in den meisten Fällen
+ebenso verwendet werden können. Bedenken Sie, wenn Sie einen String
+deklarieren, dass Sie keinen Platz für die Zeichen selbst bekommen, sondern
+nur Platz für die Adresse, wo die Zeichen zu finden sind. Deshalb müssen
+Sie AllocString() in der StringLib oder etwas ähnliches aufrufen, damit die
+genügend Platz bekommen. Sollten Ihre Programier-Kenntnisse auf der Sprache
+BASIC aufgebaut sein, dann werden Sie damit am Anfang etwas Probleme haben.
+Ich würde vorschlagen, sich in diesem Fall die Stringbehandlung in einer
+Anleitung zu C einmal durchzulesen, denn ich denke, daß ein solcher Autor
+die Situation besser erklären kann, als ich.
+
+Der Ausdruck "stringvar^" ist gültig und vom Typ "char". Ebenso können
+Strings als "stringvar[3]" angesprochen werden: Hier gilt Typ="char" und
+Wert = das vierte Zeichen des Strings (Index beginnt bei 0).
+
+
+
+
+		   Compiler-Direktiven
+
+Eventuell gibt es einmal Milliarden von verschiedenen Compiler-Befehlen,
+bis jetzt jedenfalls sind es nur ein paar. Sie arbeiten dabei
+folgendermaßen: ist das erste Zeichen im Kommentar ein Dollar-Zeichen ($),
+dann wird das darauffolgende Zeichen als Kommando interpretiert. Dabei
+dürfen keine Leerzeichen zwischen der Klammer, dem Dollar-Zeichen und dem
+Kommando-Zeichen sein. Ein Komma kann zum Trennen verschiedener Direktiven
+benutzt werden, das sieht dann so aus:
+
+    {$O-,R+)
+
+Nach den "I" und "A"-Direktiven können keine anderen mehr folgen, obwohl
+die Direktiven selber an Anderen angehangen sein können.
+
+{$I "fname"}  Dadurch wird das File "fname" mit eingebunden. Nach
+	      der Einbindung wird das Kommando beendet und fortgefahren
+	      (keine weiteren Befehle sind möglich). Ab V1.0c können
+	      Include-Files verschachtelt werden, außerdem wird automatisch
+	      überprüft, ob ein Include-File aus Versehen zweimal
+	      eingebunden wird.
+
+{§A	      Dieses Kommando bindet Assembler-Instruktionen mit
+INSTRUKTIONEN in das assemblierte File ein. Variablen und Unterprogramme zu
+	      ermitteln. Dieser Befehl fügt alles zwischen A und der
+	      Klammer in den Text ein.
+
+{$R+} oder    Die '+'-Option veranlasst den Compiler, eine
+{$R-}	      Bereichsprüfung für Arrays durchzuführen. Ab diesem Zeitpunkt
+	      wird jeder Array-Zugriff geprüft, ob der Index-Wert innerhalb
+	      der Grenzen des Datenfeldes liegt, bis diese Option wieder
+	      durch den Befehl {$R-} ausgeschaltet wird. Dies erweitert und
+	      verlangsamt den Code natürlich beträchtlich, weshalb ich dies
+	      nur in der Testphase eines Programmes durchführen würde.
+	      Liegt ein Index ausserhalb der Grenzen, dann bricht das
+	      Programm mit einer Fehlermeldung ab. Defaultmäßig ist diese
+	      Option abgeschaltet {$R-}
+
+{$O+} oder    Mit dieser Direktive wird die IO-Überprüfung ein bzw. aus-
+{$O-}	      geschaltet. Ist diese Option aktiviert (Voreinstellung), wird
+	      nach jedem IO-Zugriff auf Fehler geprüft und evt. das
+	      Programm abgebrochen.
+
+
+
+
+		     Typen-Konvertierungen
+
+
+Sollten Sie schon mal mit MODULA-2 gearbeitet haben, dann können Sie diesen
+Abschnitt überspringen. Während ich an diesem Compiler arbeitete, beschloss
+ich, die Syntax aus MODULA-2 zu übernehmen, um den Typ eines Ausdruckes
+verändern zu können. Dabei müssen Sie nur den Namen eines Typen wie eine
+Funktion ansehen. Das funktioniert folgendermassen:
+
+   IntegerVariable := integer(any ordinal expression);
+   CharVar := char(456 - 450);
+   if boolean('r') then ....
+
+Dies funktioniert nun nicht nur mit den eingebundenen Standard -Typen,
+sondern auch bei jedem Typ, den Sie selbst schaffen. Folgendes ist
+ebenfalls möglich:
+
+      type
+	 charptr = ^char;
+      var
+	 charvar : charptr;
+      ....
+	 charvar := charptr(0);
+	 charvar := charptr(integer(charvar) + 1);
+
+Beachten Sie jedoch, das der Typ geordnet sein muss, wenn es funktionieren
+soll. Etwas wie:
+
+   variable := array [1..4] of char(expression())
+
+
+wird nicht funkionieren. Dies ist der einzige Fall, in dem ein Typ möglich
+ist, Sie können jedoch keine Typen-Definition verwenden. In allen anderen
+Fällen können Sie, vielleicht...
+
+Beachten Sie auch, dass nicht alle Typen-Konvertierungen gültig sind. Dabei
+ist es natürlich schlecht, Typen unterschiedlicher Grösse zu konvertieren,
+also z.B. einen strukturierten Typ (Array oder Record) in einen einfachen
+Typ. Eigentlich sollte ich ja eine Warnung vor solchen Sachen ausgeben,
+aber Spaß muß sein...
+
+
+
+			Externe Verweise
+
+Ab V1.1 können Funktionen ähnlich wie in anderen Pascal-Compilern als
+Extern deklariert werden:
+
+	Procedure DefinedElsewhere;
+	    External;
+
+...erzeugt eine externe Referenz.
+
+Nun zu etwas weniger koscherem. Ich benötigte auch noch die entsprechende
+Syntax, um externen Routinen den Zugriff auf die selben globalen Variablen
+zu ermöglichen, wie sie im Hauptprogramm definiert wurden. Ich beschloß,
+ein anderes Datei-Format zu verwenden. Ein normales Pascal-Programm sieht
+so aus:
+
+      program Name;
+      declarations
+      procedures and functions
+      begin
+	  main program
+      end.
+
+    Das externe File sieht aber so aus:
+
+      external;
+      declarations (like normal)
+      procedure and functions (like normal)
+
+
+Dabei gibt es drei Dinge zu beachten: Erstens gibt es KEIN Hauptprogramm,
+zweitens gibt es keine END-Syntax, also nur eine Anordnung von Prozeduren
+und Funktionen bis ans Ende des Files. Und drittens gelten alle als global
+definierten Variablen als externe Verweise. Für den Compiler gibt es
+praktisch im Source-Code nur ein File, welches die globalen
+Variablen-Deklarationen enthält. Dieses File wird nun in sämtliche
+Quellfiles mit eingebunden, aber nur das Hauptprogramm reserviert den
+entsprechenden Speicherplatz für diese Variablen. Die anderen verweisen nur
+auf dieses File.
+
+Ich denke, nun ist es Zeit, mal ein paar Worte über die Compilierung mit
+Hilfe eines Assemblers zu verlieren:
+
+Erstens werden alle Prozeduren-, Funktionen- und Variablennamen als externe
+Verweise des Modules bestimmt, in welchem diese definiert wurden. Sollte
+nun eine äussere Routine auf einen von diesen Werten zugreifen wollen,
+sollte diese Routine zunächst nach einem File suchen, das mit einem
+Unterstrich "_" beginnt und ann den selben Namen hat, wie das Wort, als es
+das erste Mal im Programm genannt wurde. Natürlich kann Pascal dabei keine
+Fallunterscheidungen machen, aber ich sehe wegen dem Assembler und Linker
+keine andere Möglichkeit. Bedenken Sie ausserdem, daß es keine
+Typenüberprüfung wie in MODULA-2 durch die einzelnen Files hindurch gibt
+(wenn Sie dies unbedingt benötigen, dann nehmen Sie MODULA-2 für die
+Programmierung). Dies bedeutet, dass einer Prozedur, die einen String
+erwartet, auch ein Boolean-Wert zugewiesen werden kann, was wahrscheinlich
+einen Guru heraufbeschwört.
+
+Zweitens müssen Sie beachten, dass der Compiler die Argumente der
+Prozeduren und Funktionen von links nach recht auf den Stapel schiebt. Die
+meisten C-Compiler machen es gerade anders herum (einschließlich Lattice
+und PDC). Dies bedeutet nun nicht, dass Sie deren Code und Bibliotheken
+nicht benutzen können, sodern nur, dass Sie die Anordnung der Argumente
+tauschen müssen.
+
+Dazu noch zwei Anmerkungen:
+
+Erstens betrachet der Compiler die Register d0, d1, d2, a0 und a1 als sein
+freies Betätigungsfeld und zerstört diese nach Belieben. Beim Register d2
+könnte es manchmal zu Problemen kommen, aber bei den anderen nicht. Falls
+ja, dann schaün Sie sich einfach mal den Assembler-Code an.
+
+Die Zweite Anmerkung betrifft nur Leute, die Pascal-Programme mit anderen
+Sprachen linken wollen: Bedenken Sie, was der Ausdruck 'var' bedeutet und
+was er bewirkt und setzen Sie Ihn richtig ein.
+
+
+
+		       Ein- und Ausgabe
+
+
+Es gibt einige Routinen im PCQ, die die Ein- und Ausgabe betreffen. Lassen
+Sie mich aber zuvor noch schnell erklären, was passiert, wenn Sie ein File
+öffnen. Die aktuelle File-Variable, die Sie im Programm deklarieren, also:
+
+      var
+	 filevar : file of integer;
+
+ist in Wirklichkeit soetwas wie ein Record, der so aussehen würde:
+
+   file = record
+	HANDLE	: A DOS file handle
+	NEXT	: A pointer to the next file in the system list
+	BUFFER	: The address of the file's buffer
+	CURRENT : The current position within the buffer
+	LAST	: The Last position of a read.
+	MAX	: One byte past the last byte of the buffer
+	RECSIZE : The size of the file elements.
+	INTERACTIVE : A boolean value
+	EOF	: Another boolean value
+	ACCESS	: Either ModeNewFile or ModeOldFile.
+   end;
+
+Auf diese Felder können Sie nicht direkt zugreifen, trotzdem werden 32
+Bytes Speicherplatz reserviert. Sobald Sie ein File öffnen, werden alle
+Felder initialisiert und das erste Element wird in den Puffer gelesen. Auf
+diesen Puffer kann über die filevar^-Syntax zugegriffen werden. Beachten
+Sie ausserdem, dass automatisch Speicherplatz für den Puffer im Speicher
+belegt wird, sobald die Grösse der Elemente grösser als 4 ist oder wenn
+diese genau 3 ist. Sollte die Grösse genau 1, 2 oder genau 4 sein (so wie
+z.B. bei char, short und integers), verwendet das Programm statt dem Puffer
+selbst den Variablenpuffer und spart so etwas Zeit und Speicherplatz.
+Filevar^ jedoch greift in jedem Fall auf den Puffer zu.
+
+Sollten am Ende einer Ausführung noch einige Dateien geöffnet sein, wird
+der Shut-Down Code (normale Programmbeendigung oder Exit()) diese
+automatisch schliessen. Dies gilt jedoch nur für Files, die von Pascal aus
+geöffnet wurden und den Befehl open() verwendeten. Für alles, was Sie über
+das Amiga-DOS-Betriebssytem öffnen, sind Sie selbst verantwortlich.
+
+Dies sind nun die IO-Routinen:
+
+      function open(filename : string;
+		    filevar  : file of ..., oder Text
+		    {; BufferSize : Integer}): Boolean;
+
+Öffnet ein File für den Schreibzugriff. Sollte ein File gleichen Namens
+bereits existieren, dann wird es durch diesen Befehl automatisch gelöscht.
+Ist alles OK, wird True zurückgegeben, ansonsten False.
+
+     function reopen(filename : string;
+		     filevar  : file of ..., oder Text): boolean;
+
+Entsprechend dem open()-Befehl, nur wird hier ein existierendes File für
+einen Lesezugriff geöffnet.
+
+Die restlichen Routinen entsprechen den meisten anderen Pascal-Dialekten.
+Der Vollständigkeit halber sind diese nun hier aufgeführt:
+
+write()      Schreibt alles in eine Datei oder Standard-Output
+
+writeln()    Wie write(), nur mit anschliessendem LineFeed. Nur
+	     sinnvoll bei Text-Files.
+
+read()       Einlesen von einer Datei oder Standard-Input
+	     Der Befehl read(filevar,x) bewirkt:
+		     x:= filevar^;
+		     get(filevar);
+	     wie es auch in den meisten anderen Pascal-Dialekten
+	     der Fall ist.
+
+readln()     Liest ein, wie read(), erwartet jedoch am Ende ein
+	     LineFeed. Ist natürlich nur bei Text-Files sinnvoll.
+
+get()        Liest das nächste Element des Files in den Puffer
+
+put()        Schreibt Puffer auf Disk und setzt Zeiger höher
+
+Ist das erste Argument des Einlesens oder der Ausgabe eine Variable, wird
+der Input-Output auf ein File umgeleitet, und nicht an das Terminal
+weitergegeben. Dies entspricht dem normalen Pascal und sieht so aus:
+
+       writeln(outfile, 'Das Resultat ist ' 56 div 4);
+
+Feldergrössen werden zwar unterstützt, und können jeden normalen Ausdruck
+darstellen:
+
+      writeln((67 * 32) + 5:10);
+
+gibt das Ergebnis mit zehn Zeichen aus. Nicht benutzte Stellen werden links
+mit Space-Zeichen aufgefüllt. Sollte das Ergebnis mehr Stellen benötigen,
+werden nur die ersten aufgefüllt und der Rest abgeschnitten. Die Feldbreite
+kann dabei zwischen einer Stelle minimal und dem Wert von MaxShort maximal
+betragen. Die Feldbreite kann für jeden beliebigen Typ im Write-Befehl
+spezifizieren, obwohl Sie nur in ein Text-File schreiben können.
+
+Ich überschreite übrigens die Einschränkungen für Text-Files
+ innerhalb der IO mit verschiedenen Variablen-Typen:
+
+       Write char      Schreibt ein Zeichen
+
+       Write boolean   Schreibt True oder False ohne Leerzeichen
+
+       Write integer   Schreibt die Zahl ohne Leerzeichen, aber
+		       möglichem Minuszeichen
+
+       Write array of char
+		       Schreibt angegebenes Datenfeld vom ersten
+		       bis einschliesslich dem letzten Zeichen
+
+       Write string    Schreibt vom ersten Zeichen bis, aber nicht
+		       einschliesslich des Null-Bytes
+
+       Read char       Liest nächstes char
+
+       Read boolean    Funktioniert nicht
+
+       Read integer    Verarbeitet alle Leerzeichen und Tabs bis
+		       ein anderes Zeichen kommt, verarbeitet dann
+		       Ziffern bis eine Nicht-Ziffer kommt. Dabei
+		       wird diese Nicht-Ziffer nicht mit
+		       verarbeitet. Sollte die Routine ein EOLN
+		       (Zeilenende) finden, bevor es die erste
+		       Ziffer erhält, wird eine Null
+		       zurückgegeben.
+		       Sollten Buchstaben gefunden werden, bevor
+		       Ziffern erkannt werden, wird ebenfalls eine
+		       Null zurückgegeben.
+
+       Read array of char
+		       Liest solange Zeichen in das Datenfeld, bis
+		       das Datenfeld voll ist, oder ein EOLN
+		       gefunden wird. Sollten Sie dieses EOLN
+		       benötigen, dann verwenden Sie lieber den
+		       Befehl readln. Denn read array of char kann
+		       EOLN nicht verarbeiten. Sollte es nämlich
+		       ein EOLN finden, dann wird ab dieser Stelle
+		       der Rest des Datenfeldes mit Leerzeichen
+		       aufgefüllt.
+
+       Read string     Liest Zeichen ein, bis ein EOLN gefunden
+		       wird. Das EOLN steht immer am linken Ende
+		       des Datenflusses und wird dann automatisch
+		       durch eine Null ersetzt. Beachten Sie, dass
+		       diese Routine keine Längenüberprüfung
+		       durchführt. Sie müssen also
+		       sicherstellen, dass auch alle Zeichen des
+		       Strings eingelesen werden können.
+
+       Readln	       Liest alle Zeichen bis einschliesslich dem
+		       abschliessenden EOLN.
+
+Beachten Sie bitte auch das EOF(filevar) am Ende einer Function. Ausserdem
+gibt es kein dem get-Befehl entsprechenes put-Kommando. Am besten sehen Sie
+sich hierzu die entsprechenden Beispiele auf der Diskette an. Beachten Sie
+unbedingt, dass es hier eine Syntax gibt, die filevar^ heisst. Nicht einmal
+Turbo Pascal hat so etwas. Ich denke, dass dies eine grosse Hilfe für
+Programmierer sein wird.
+
+
+
+
+		       Fehlermeldungen
+
+
+Wie ich oben schon mal erwähnt habe, werden die meisten Fehler, die Sie
+machen, den Compiler total drucheinanderbringen. Dieser wird dann wohl
+Fehlermeldungen ausgeben, die überhaupt nicht existieren. Sollten Sie z.B.
+irgendwo einmal einmal einen Strichpunkt am Ende der Zeile vergessen, dann
+erhalten Sie eine ganze Reihe von Fehlermeldungen, obwohl der Rest des
+Programmes richtig compiliert wird. Auch andere Fehlerabfänge funktionieren
+auf ähnliche Weise nicht zufriedenstellend. Ich hoffe, den Compiler
+demnächst etwas besser gestalten zu können, aber bis jetzt bricht er immer
+nach mehr als fünf Fehlermeldungen ab. Ich sah mich gezwungen, dies
+einzubauen, da der Compiler manchmal nach einer Fehlermeldung selbst Fehler
+bei jedem Symbol produziert und dann sogar schon bei Symbolen sich
+aufhängt. Wirklich schrecklich, dieser Umstand.
+
+Meistens, wenn er einen Fehler erkennt, werden die beiden letzten Zeilen,
+die den Fehler verursacht haben, ausgegeben und der Teil hervorgehoben, an
+dem er zuletzt gearbeitet hat. Der Fehler trat dann häufig entweder direkt
+beim hervorgehobenen Symbol oder kurz davor auf. Beachten Sie auch, dass
+das hervorgehobene Zeichen auch ein Punkt sein kann, was dann nicht immer
+ohne weiteres erkennbar ist. In der nächsten Zeile steht die Zeilennummer,
+in welcher der Fehler aufgetreten ist. Momentan werden die Fehler noch mit
+Text beschrieben, also nicht nur Fehlernummern angegeben.
+
+
+
+		     Laufzeitfehler
+
+Einige Dinge verursachen Lauzeitfehler. Diejenigen, die schon jetzt
+abgefangen werden, sind:
+
+      Error   Explanation
+
+	50    No memory for IO buffer
+	51    Read past EOF
+	52    Input file not open
+	53    Could not open StdInName
+	54    New() failed
+	55    Integer divide by zero
+	56    Output file not open
+	57    Could not open StdOutName
+	58    Found EOF before first digit in reading an integer
+	59    No digits found in reading an integer
+	60    Range error
+
+Die Fehlernummer wird über die exit() Funktion ans Amiga-DOS übergeben.
+Läuft das Programm innerhalb einer Batch-Datei ab, können Sie anschliessend
+den Return-Code sehen. Ich hoffe auch hier bis zur nächsten Version die
+Fehlerbehandlung verbessert zu haben.
+
+
+
+		       Quellennachweis
+
+
+Wie ich vorhin schon sagte, schrieb ich diesen Compiler, um zu Lernen.
+Dabei habe ich natürlich bei in paar Leuten gespickt:
+
+1.
+ PDC ist ein frei verteilbarer C-Compiler von Jeff Lydiatt. Dies ist ein
+ ausgezeichnetes Programm und wohl zur Zeit einer der besten "umsonst" zu
+ habenden Compiler für den Amiga. (Der andere ist der Draco-Compiler von
+ Chris Gray). Ich lernte Vieles von diesem Compiler und verwendete diesen
+ auch häufig. Als ich mir den generierten Assembler Code dieses Compilers
+ angesehen habe, wurde ich inspiriert, selbst einen Compiler zu schreiben.
+
+2.
+ Pascal-S ist ein Pascal-Compiler der Elektro-Technischen- Hochschule
+ Zürich. Ich bekam einige Ideen über die Struktur des Compilers, aber nicht
+ allzu viele.
+
+3.
+ Small-C ist ein weiterer "frei verfügbarer" C-Compiler. Diese ist zwar
+ nicht annähernd so mächtig wie der PDC-Compiler, aber seine Einfachheit
+ half mir einige Dinge besser zu verstehen. Dieser besitzt wohl den besten
+ Compiler-Source-Code, um davon zu lernen. Diesen und den PDC verwendete
+ ich zum compilieren, bevor mein Compiler sich selbst compilieren konnte.
+ Dabei wurden einige Design-Gesichtspunkte des Small-C-Compilers mit in
+ meinen übernommen.
+
+4.
+ Ein Buch mit dem Titel "Brinch Hansen on Pascal Compilers" von Per Brinch
+ Hansen. Dieses Buch half mir mehr, als alle anderen Bücher, die ich zu
+ diesem Thema gelesen habe, während ich den Compiler geschrieben habe. Von
+ diesem Buch bekam ich vor allem gesagt, was ich alles falsch gemacht habe.
+ Echt gut!
+
+5.
+ Sozobon-C. Ein Freeware-C-Compiler für den Atart ST, der auf den Amiga
+ umgesetzt wurde. Daraus stammen die 32-Bit-Mathe-Routinen für PCQ, ebenso
+ wie ich evt. die FFP-Routinen daraus entnehmen werde.
+
+6.
+ Toy-Compiler-Series in Amiga-Transactor (Beste Amiga-Zeitschrift, Anm. d.
+ Übersetzers). Chris Gray, Autor von Draco, erklärt hier das Prinzip des
+ Compilerbaus.
+
+Wollen auch Sie die Idee der "freien" Software unterstützen, dann sehen Sie
+sich doch auch eimal den Draco-Compiler von Chris Gray auf den
+Fish-Disketten Nr. 76 & Nr. 77 (Update auf Fish 201), den PDC-Compiler von
+Jeff Lydiatt (eine ältere Version befindet sich auf der Fish-Disk Nr. 110)
+und Sozobon-C. Beide sind weit bessere Compiler als der PCQ, vor allem,
+wenn Sie sich außer mit Pascal auch noch mit anderen Sprachen befassen.
+Diese Compiler sind sogar besser als manche kommerziell erhältliche
+Compiler. Uebrigens ist die Syntax des Draco-Compilers der eines
+Pascal-Compilers sehr ähnlich.
+
+
+
+
+
+	  Einige Anmerkungen für Assembler-Programmierer
+
+
+Während des Ablaufs eines Programmes werden die Register d0, d1, a0 und a1
+benutzt. Bei IO-Aufrufen werden außerdem die Register d2 und d3 verwendet,
+d2 auch wenn große Daten-Strukturen verglichen oder auf diese zugegriffen
+wird. a7 ist natürlich der Stack-Zeiger und a5 der Frame-Zeiger. In a6 wird
+die Basis der Bibliothek gehalten, wenn ein Systemaufruf stattfindet, und
+die Belegung von a4 will ich mir für künftige Versionen des Compilers
+vorbehalten (Für den Zugriff auf die lokalen Variablen von übergeordneten
+Prozeduren). Die restlichen Register stehen zu Ihrer freien Verfügung.
+
+
+	      Zukünftige Erweiterungen
+
+V1.1 enthält alle Punkte, die ich hatte einbauen wollen. Eingebaut werden
+sollen nach und nach alle Besonderheiten von Turbo und Quick-Pacal. Ab V1.2
+wird die Ausdrucksverarbeitung mittels Baumspeicherung verbessert.
+Ansonsten werden nur noch Fehler verbessert.
+
+
+[Der folgende Part wurde nicht übersetzt, einmal aus Faulheit und zum
+ zweiten, weil er ziemlich sinnlos ist]
+
+		      Update History
+
+Version 1.1a, January 20, 1990:
+
+    Fixed a bug in the WriteArb routine that manifested itself
+whenever you wrote to a 'File of Something'.
+    Fixed a bug left in the floating point math library.  It
+seems that it had not been updated for the all the 1.1
+changes, so during linking it required objects that aren't
+around anymore.  Since floating point math is now handled by
+the compiler, I hadn't noticed it before.
+    Added the Sqr() function.  Sqr(n) is the same as n * n, but
+marginally faster and smaller.	Also, the compiler used to
+generate lots of errors when an include file was missing.  Now
+it skips the rest of the comment, like it should.
+
+Version 1.1, December 1, 1989:
+
+    This version is completely re-written, and has far too many
+changes to list them individually here.  The main changes are the
+with statement, the new IO system, a completely redesigned symbol
+table, nested procedures, and several new arithmetic operators.  In
+order to help port programs from Turbo Pascal and C, I added typed
+constants, the Goto statement, and the normal syntax for multi-
+dimensional arrays.
+
+Version 1.0c, May 21, 1989:
+
+    I changed the input routines around a bit, using DOS files rather
+than PCQ files.  I buffered the input, and made the structure more
+flexible so I could nest includes.  Rather than make up some IfNDef
+directive, I decided to keep track of the file names included and
+skip the ones already done.  Buffering the input cut compile times in
+half.  I would not have guessed buffering would be that significant,
+and I suppose I should rethink PCQ input/output in light of this.
+    I added code to check for the CTRL-C, so you can break out early
+but cleanly.  The Ports.i include file had a couple of errors, which
+I fixed, and I also fixed the routine that opens a console for
+programs programs that need one.  It used to have problems when there
+were several arguments in the first write().
+    I added the SizeOf() function, floating point math, and the
+standard functions related to floating point math.
+    There were several minor problems in the include files which I
+found when I got the 1.3 includes, the first official set I've had
+since 1.0.
+    I relaxed the AND, OR and NOT syntax to allow any ordinal type.
+This allows you to get bitwise operations on integers and whatever.
+I also added a standard function called Bit(), described above.
+These are all temporary until I can get sets into the language.
+    I finally added string indexing.  In doing so I found a bug in
+the addressing routine selector(), so I rewrote it to be more
+sensible.  I think it also produces larger code, but I'm not too
+worried because I'm going to add expression trees soon anyway.
+
+Version 1.0b, April 17, 1989:
+
+    I fixed a bug in the way complex structures were compared.	It
+seems that one too many bytes were considered, so quite often the
+comparison would fail.
+
+Version 1.0a, April 8, 1989:
+
+    This version added 32 bit math, and fixed the case statement.
+The math part was just a matter of getting the proper assembly
+source, but I changed the case statement completely.  Version 1.0
+of the compiler produced a table that was searched sequentially for
+the appropriate value, which if found was matched up with an
+address.  I thought all compilers did this, but when debugging a
+Turbo Pascal program at work I found that it just did a bunch of
+comparisons before each statement, as if it were doing a series of
+optimized if statements.  I had thought of this and rejected it as
+being too simplistic, but if it's good enough for Turbo it's good
+enough for me.
+    The next thing I changed in this release was the startup code.
+You can now run PCQ Pascal programs from the Workbench.  This was
+just a matter of taking care of the Workbench message, but I also
+fooled around with standard input and output.  If you try to read
+or write to standard in or out from a program launched from the
+Workbench, the run time code will open a window for you.
+    I also fixed one bug that I found: an array index that was not
+a numeric type had its type confused.  Nevermore.
+
+Version 1.0, February 1, 1989
+
+    Original release.
+
+
+
+
+
+
+
+	   Weitere Anmerkungen, Copyright und Adressen
+
+Wie bereits erwähnt, liegt das Copyright für die Anleitung (auch für die
+deutsche und alle anderen Übersetzungen!!!, Anm. der Übersetzers), für den
+Quellcode, den Compiler und der Run-Time-Library bei (Achtung!):
+
+    Copyright © 1989 Patrick Quaid
+
+Es ist erlaubt, das Paket frei zu vertreiben, solange alle Datein (mit
+Ausnahme des Linkers und des Assemblers, trotzdem bitte mitkopieren, falls
+möglich) unverändert beigefügt sind. Der Verkauf dieses Programmapkets ist
+explizit untersagt!! Es darf nur auf Disk-Sammlungen abgegeben werden, für
+die ein vernünftiger Preis genommen wird (Maximum ist DM 5,- in
+Deutschland). Eine Ausnahme:
+
+    Stefan Ossowski, Essen, West Germany
+
+ist es untersagt, PCQ in irgendeiner Form weiterzugeben, da er V1.0 zu
+einem weit überhöhten Preis verkauft hat.
+
+Sie können den Compiler jederzeit für Ihre eigenen Zwecke verändern, wenn
+Sie wollen. Ich wäre Ihnen jedoch dankbar, wenn Sie mir dann, falls Sie
+diese Version besser finden als das Original, eine Kopie zuschicken würden,
+damit ich dies dann in die nächste Version mit einbinden kann. Sollten Sie
+jedoch grundlegende Dinge am Compiler verändern, die nicht mehr dem
+Standard von Pascal oder der obigen Beschreibung entsprechen, dann geben
+Sie eine Kopie dieses modifizierten Compilers bitte NICHT unter dem Namen
+PCQ weiter, da sonst nur Mißverständnisse aufkommen.
+
+Dies ist kein ShareWare-Produkt, d.h. Sie müssen kein schlechtes Gewissen
+haben, falls nichts bezahlen, wenn Sie es verwenden. Wenn Sie mir wirklich
+helfen wollen, dann schreiben Sie mir über Ihre Erfahrungen und vor allem
+über die Fehler, die Sie entdeckt haben. Sollten Sie dennoch ein Bedürfnis
+verspüren, unbedingt Geld loswerden zu wollen, dann schicken Sie es an
+Charlie Gibbs, der den Assembler geschrieben hat oder an die Software
+Distillery, die den Linker geschrieben haben.
+
+Falls Sie die aktuelle Version von mir haben wollen, schicken Sie mir $2.25
+($.50 Umschlag, Postage $.75, Disks $1). Ab Anfang 1990 ist eine gedruckte,
+Ringgebunde (englische) Anleitung für ungefähr $10 erhältlich. Diese
+Anleitung ist nicht identisch mit der V1.1-Anleitung, sondern wird
+vollkommen neu strukturiert und mit Beispielen versehen sein.
+
+Sollten Sie irgendwelche Fragen, Kommentare oder wasauchimmer haben, dann
+schreiben Sie (Bitte in Englisch) an:
+
+	  Pat Quaid
+	  2250 Clarendon Blvd, Apt 1209
+	  Arlington, VA 22201
+	  (703) 524-8945
+
+Haben Sie Spaß mit dem Compiler! Falls Sie Beschwerden haben, denken Sie an
+den Preis! Falls Sie etwas bezahlt haben, wenden Sie Sich an den, der das
+Geld gekriegt hat!

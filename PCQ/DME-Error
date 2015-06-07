@@ -1,0 +1,3 @@
+.key source,dest,error
+echo >T:DME-Error-Files "<source> <dest> <error>"
+dme

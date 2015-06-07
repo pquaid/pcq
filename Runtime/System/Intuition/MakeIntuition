@@ -1,0 +1,4 @@
+join Gadgets.o Requests.o Images.o Windows.o to t:Intuition1.lib
+join Menus.o Screens.o Misc.o to t:Intuition2.lib
+join t:Intuition1.lib t:Intuition2.lib to Intuition.lib
+delete t:Intuition?.lib

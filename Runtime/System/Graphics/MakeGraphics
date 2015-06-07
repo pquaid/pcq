@@ -1,0 +1,5 @@
+join GELS.o Sprites.o Text.o Clip.o GfxBase.o to t:Graphics1.lib
+join Regions.o Copper.o View.o RastPort.o to t:Graphics2.lib
+join Layers.o GFX.o Pens.o Areas.o Blitter.o to t:Graphics3.lib
+join t:Graphics1.lib t:Graphics2.lib t:Graphics3.lib to Graphics.lib
+delete t:Graphics?.lib

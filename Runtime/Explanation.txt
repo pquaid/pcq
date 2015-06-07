@@ -1,0 +1,19 @@
+
+	The run time library is spread across a bunch of assembly
+source code files.  This is to keep them all in separate program
+hunks, which as far as I know cannot be done just through assembler
+tricks.  If there is a way, I'd sure love to hear about it.
+	In any case, the system is fairly simple.  You use the
+script files 'makesystem' or 'makewriters', etc., to create small
+sub-libraries, if you will, of related routines.  These groups of
+routines are organized into separate directories under Runtime, and
+can be joined together with 'makepcqlib', which creates the library.
+	If you need to change one routine, just assemble it.  Then
+create the sub-library that the module belongs to.  Then re-create
+the entire library.  Of course, in order for this to work you'll
+need to have object code versions of all the library files in this
+directory.  Just assemble them all.
+	It is only recently that I came across an object module
+librarian (who would think to look on the very early disks?).  I
+haven't tried it out yet, but it should make this process a bit
+easier.

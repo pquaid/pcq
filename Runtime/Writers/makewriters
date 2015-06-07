@@ -1,0 +1,5 @@
+join writearb.o writebool.o writechar.o writecharray.o to t:writers1.lib
+join writeint.o writeshort.o writeln.o writestring.o to t:writers2.lib
+join writepad.o writereal.o flush.o writetext.o put.o to t:writers3.lib
+join t:writers1.lib t:writers2.lib t:writers3.lib to writers.lib
+delete t:writers(1|2|3).lib

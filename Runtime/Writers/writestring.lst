@@ -1,0 +1,52 @@
+                                                        WriteString.asm        Page 1
+
+68000 Assembler - version 2.61 (January 11, 1990)
+Copyright 1985 by Brian R. Anderson.
+AmigaDOS conversion copyright 1989 by Charlie Gibbs.
+
+                                      1 
+                                      2 *       WriteString.asm (of PCQ Pascal runtime library)
+                                      3 *       Copyright (c) 1989 Patrick Quaid
+                                      4 
+                                      5 *       Writes a string to a text file.
+                                      6 
+                                      7 *       Upon entry, d0 holds the address of the string to write.
+                                      8 *       The word on top of the stack holds the minimum field width,
+                                      9 *       and the longword below that holds the address of the file
+                                     10 *       record
+                                     11 
+000000                               12         SECTION WriteString
+                                     13 
+                                     14         XREF    _p%WriteText
+                                     15         XREF    _p%PadOut
+                                     16         XREF    _p%IOResult
+                                     17 
+                                     18         XDEF    _p%WriteString
+000000                               19 _p%WriteString
+                                     20 
+000000  4AB9 00000000                21         tst.l   _p%IOResult     ; is IO system in order?
+000006  6632                         22         bne     3$
+000008  206F 0006                    23         move.l  6(sp),a0        ; get the file record address
+00000C  2240                         24         move.l  d0,a1           ; move string address
+00000E  302F 0004                    25         move.w  4(sp),d0        ; d0 holds the minimum field width
+000012  48C0                         26         ext.l   d0              ; make it 32 bits
+000014  76FF                         27 5$      move.l  #-1,d3
+000016  5283                         28 1$      addq.l  #1,d3           ; first find the length
+000018  4A31 3800                    29 2$      tst.b   0(a1,d3.l)
+00001C  66F8                         30         bne     1$              ; if not null byte, loop
+00001E  9083                         31         sub.l   d3,d0           ; subtract string length
+000020  6F0E                         32         ble.s   4$              ; if no extra padding needed, skip
+000022  48E71040                     33         movem.l a1/d3,-(sp)     ; save string address and length
+000026  4EB9 00000000                34         jsr     _p%PadOut       ; write padding spaces
+00002C  4CDF0208                     35         movem.l (sp)+,a1/d3     ; restore regs
+000030  4A83                         36 4$      tst.l   d3              ; is string zero length?
+000032  6706                         37         beq.s   3$              ; if so, skip the write
+000034  4EB9 00000000                38         jsr     _p%WriteText    ; write the string
+00003A  4E75                         39 3$      rts
+                                     40 
+00003C                               41         END
+
+End of assembly - no errors were found.
+Heap usage:  -w2047,66
+Total hunk sizes:  3c code, 0 data, 0 BSS
+

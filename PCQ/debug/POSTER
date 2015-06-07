@@ -1,0 +1,31 @@
+Article 282 of comp.binaries.amiga:
+Path: estinc!mcdphx!asuvax!cs.utexas.edu!uwm.edu!uakari.primate.wisc.edu!xanth!cs.odu.edu!Amiga-Request
+From: Amiga-Request@cs.odu.edu (Amiga Sources/Binaries Moderator)
+Newsgroups: comp.binaries.amiga
+Subject: v90i015: mon 1.24 - machine code monitor/debugger, Part01/01
+Message-ID: <11019@xanth.cs.odu.edu>
+Date: 17 Jan 90 03:18:31 GMT
+Sender: tadguy@cs.odu.edu
+Reply-To: trossi@jyu.fi (Timo Rossi)
+Lines: 632
+Approved: tadguy@cs.odu.edu (Tad Guy)
+
+Submitted-by: trossi@jyu.fi (Timo Rossi)
+Posting-number: Volume 90, Issue 015
+Archive-name: util/mon-1.24
+
+Here is a machine code monitor/debugger program that I'd like
+to submit to comp.binaries.amiga.
+
+ Timo Rossi     trossi@jyu.fi   (University of Jyvaskyla, Finland)
+
+-- 
+Submissions to comp.sources.amiga and comp.binaries.amiga should be sent to:
+	amiga@cs.odu.edu	
+or	amiga@xanth.cs.odu.edu	( obsolescent mailers may need this address )
+or	...!uunet!xanth!amiga	( very obsolescent mailers need this address )
+
+Comments, questions, and suggestions s should be addressed to ``amiga-request''
+(only use ``amiga'' for submissions) at the above addresses.
+
+

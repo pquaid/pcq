@@ -1,0 +1,7 @@
+join MinStart.o CheckIO.o Openers.o CheckRange.o StdInfo.o to t:Stuff1.lib
+join Exp.o IntToStr.o LMath.o Ln.o PCQEnd.o Memory.o IOResult.o to t:Stuff2.lib
+join PCQStart.o openstandards.o sqrt.o Input.o Output.o to t:Stuff3.lib
+join StdNames.o StringLib.o Trig.o FFP.o TransBase.o to t:Stuff4.lib
+join t:stuff1.lib t:stuff2.lib t:stuff3.lib t:stuff4.lib to Stuff.lib
+delete t:stuff(1|2|3|4).lib
+

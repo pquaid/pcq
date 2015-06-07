@@ -1,0 +1,106 @@
+
+; This is part of the error handler for the PCQ make utility and
+; Daniel Lawrence's MicroEMACS.  To use this system, add the
+; following line to your PCQ.CFG file:
+;
+;	CompilerError EMACS-ShowError \s \d \e
+;
+; Then attach this file to the end of your EMACS.RC file (that's
+; the configuration file for MicroEMACS).
+
+; When PCQ invokes MicroEMACS to display your source file, it will
+; position the cursor to the appropriate place in the file and write
+; an error message.  To see the next error message, press Shift-F9.
+; When you have seen all the errors, you will get the message
+; "No more errors".
+
+store-procedure nexterror
+
+    ; get current name in case we switch back
+
+    set %buffer $cbufname
+
+    ; switch to the buffer that holds our error commands
+
+    select-buffer EMACS-Error
+    beginning-of-line
+
+    ; if this line does not have the At string, we have done all the errors
+
+    !if &equal 0 &sindex $line "~" At "
+        write-message "No more errors"
+	select-buffer %buffer
+        !return
+    !endif
+
+    ; remember that the format of the error string will be:
+    ;       "sourcefilename" At #,# : Error Text
+
+    ; get the source file name into %errorline
+
+    set $curcol &sindex $line "~" At"
+    set %errorline &mid $line 2 &sub $curcol 2
+
+    ; get the line number into %line
+
+    set $curcol &add 4 &sindex $line " At "
+    set %line &sub &sindex $line "," $curcol
+    set %line &mid $line $curcol %line
+
+    ; get the column number into %column
+
+    set $curcol &add 1 &sindex $line ","
+    set %column &sub &sindex $line " : " $curcol
+    set %column &mid $line $curcol %column
+
+    ; get the error message into %errortext
+
+    set $curcol &add 2 &sindex $line " : "
+    set %errortext &add 1 &sub &length $line $curcol
+    set %errortext &mid $line $curcol %errortext
+
+    ; set up for next call to nexterror
+
+    next-line
+
+    ; display error in source file
+
+    find-file %errorline
+    goto-line %line
+
+    ; move right.  This makes tabs easier to work with
+
+    !while &greater %column 0
+        forward-character
+	set %column &sub %column 1
+    !endwhile
+
+    ; write the error message
+
+    write-message %errortext
+!endm
+
+
+; we will only set up the nexterror stuff if there is an
+; error file waiting to be processed.
+
+
+!if &exist T:EMACS-Error
+
+    ; load up the error file
+
+    find-file T:EMACS-Error
+    beginning-of-file
+
+    ; bind nexterror to the Shift-F9 key
+
+    11 store-macro
+	run nexterror
+    !endm
+    bind-to-key execute-macro-11 FNx
+
+    ; display the first error
+
+    run nexterror
+!endif
+

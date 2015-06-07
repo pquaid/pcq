@@ -1,0 +1,2 @@
+delete :PCQ.lib
+rename pcq.lib :PCQ.lib

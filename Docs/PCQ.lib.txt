@@ -1,0 +1,6343 @@
+
+
+    PCQ.LIB.DOC
+
+This file contains descriptions of all the routines that are
+either internal to PCQ Pascal, or defined in the Include:Utils
+directory.  The routines defined in other directories are all
+described in Commodore's AutoDocs, which I recommend that you get
+(see Pascal.DOC for information on ordering it from Commodore).
+
+This file is organized just like the AutoDocs, in a format that is
+compatible with DME's REF feature.  Each function takes the
+following form:
+
+
+
+Directory/RoutineName			Directory/RoutineNm
+
+NAME
+    The routine name, with a short description
+
+SYNOPSIS
+    The actual Pascal declaration of the routine
+
+DESCRIPTION
+    Comments about the routine
+
+EXAMPLE
+    A short example program, or a reference to one of the programs
+    in the Example directory.
+
+INPUT
+    A description of each of the parameters
+
+RESULT
+    For functions, a description of the returned value
+
+BUGS
+    Any known bugs of the function
+
+SEE ALSO
+    A list of related routines
+
+
+Note that procedures and functions defined internally in PCQ
+Pascal are listed as PCQ/RoutineName.
+
+
+
+
+
+
+
+                        TABLE OF CONTENTS
+
+PCQ/Abs
+PCQ/Adr
+Utils/StringLib/AllocString
+Utils/DOSUtils/APTRtoBPTR
+PCQ/ArcTan
+Utils/CRT/AttachConsole
+Utils/BuildMenu/AttachMenu
+PCQ/Bit
+Utils/DOSUtils/BPTRtoAPTR
+PCQ/Ceil
+Utils/Break/CheckBreak
+PCQ/Chr
+PCQ/Close
+Utils/ConsoleUtils/CloseConsoleDevice
+Utils/DoubleBuffer/CloseDoubleBuffer
+Utils/MathTransUtils/CloseMathTrans
+Utils/CRT/ClrEOL
+Utils/CRT/ClrScr
+Utils/ConsoleIO/ConGetChar
+Utils/ConsoleIO/ConPutChar
+Utils/ConsoleIO/ConPutStr
+Utils/ConsoleIO/ConWrite
+PCQ/Cos
+Utils/CRC16/CRCCheck
+Utils/IOUtils/CreatePort
+Utils/IOUtils/CreateStdIO
+Utils/TaskUtils/CreateTask
+Utils/TimerUtils/CreateTimer
+Utils/CRT/CursOff
+Utils/CRT/CursOn
+Utils/DeadKeyConvert/DeadKeyConvert
+PCQ/Dec
+Utils/IOUtils/DeletePort
+Utils/IOUtils/DeleteStdIO
+Utils/TaskUtils/DeleteTask
+Utils/TimerUtils/DeleteTimer
+Utils/CRT/DelLine
+Utils/CRT/DetachConsole
+Utils/BuildMenu/DetachMenu
+PCQ/Dispose
+Utils/BuildMenu/DisposeMenu
+PCQ/EOF
+PCQ/Exit
+PCQ/Exp
+Utils/RunProgram/FinishProgram
+PCQ/Float
+PCQ/Floor
+Utils/MathTransUtils/FlushMathTrans
+Utils/PCQMemory/FreePCQMem
+Utils/StringLib/FreeString
+PCQ/Get
+Utils/DateTools/GetDescription
+Utils/DOSUtils/GetFileHandle
+Utils/PCQMemory/GetMem
+Utils/Parameters/GetParam
+Utils/Parameters/GetStartupMsg
+Utils/TimerUtils/GetSysTime
+Utils/CRT/GotoXY
+Utils/StringLib/Hash
+PCQ/Inc
+Utils/BuildMenu/InitializeMenu
+Utils/CRT/InsLine
+Utils/StringLib/IntToStr
+Utils/StringLib/isalnum
+Utils/StringLib/isalpha
+Utils/StringLib/isdigit
+Utils/StringLib/islower
+Utils/StringLib/isspace
+Utils/StringLib/isupper
+Utils/CRT/KeyPressed
+PCQ/Ln
+Utils/CRT/MaxX
+Utils/CRT/MaxY
+PCQ/New
+Utils/BuildMenu/NewItem
+Utils/BuildMenu/NewMenu
+Utils/BuildMenu/NewSubItem
+PCQ/Open
+Utils/ConsoleUtils/OpenConsoleDevice
+Utils/DoubleBuffer/OpenDoubleBuffer
+Utils/MathTransUtils/OpenMathTrans
+PCQ/Ord
+PCQ/Pred
+Utils/RunProgram/ProgramFinished
+PCQ/Put
+Utils/ConsoleIO/QueueRead
+Utils/Random/RangeRandom
+PCQ/Read
+Utils/CRT/ReadKey
+PCQ/Readln
+Utils/Random/RealRandom
+PCQ/ReOpen
+PCQ/Reset
+PCQ/Rewrite
+PCQ/Round
+Utils/RunProgram/RunProgram
+Utils/RunProgram/RunProgramNW
+Utils/RunProgram/RunSegment
+Utils/RunProgram/RunSegmentNW
+Utils/SameName/SameName
+Utils/Random/SelfSeed
+Utils/TimerUtils/SetTimer
+PCQ/Sin
+PCQ/SizeOf
+PCQ/Sqr
+PCQ/Sqrt
+Utils/DateTools/StampDesc
+Utils/StringLib/strcat
+Utils/StringLib/strcmp
+Utils/StringLib/strcpy
+Utils/StringLib/strdup
+Utils/StringLib/streq
+Utils/StringLib/stricmp
+Utils/StringLib/strieq
+Utils/StringLib/strlen
+Utils/StringLib/strncat
+Utils/StringLib/strncmp
+Utils/StringLib/strncpy
+Utils/StringLib/strneq
+Utils/StringLib/strnicmp
+Utils/StringLib/strnieq
+Utils/StringLib/strpos
+Utils/StringLib/strrpos
+PCQ/Succ
+Utils/DoubleBuffer/SwapBuffers
+PCQ/Tan
+Utils/CRT/TextBackground
+Utils/CRT/TextColor
+Utils/DateTools/TimeDesc
+Utils/StringLib/tolower
+Utils/StringLib/toupper
+PCQ/Trap
+PCQ/Trunc
+Utils/CRC16/UpdCRC
+Utils/Random/UseSeed
+PCQ/VA_Arg
+PCQ/VA_Start
+Utils/TimerUtils/WaitTimer
+Utils/CRT/WhereX
+Utils/CRT/WhereY
+PCQ/Write
+PCQ/Writeln
+
+
+
+PCQ/Abs					PCQ/Abs
+
+    NAME
+	Abs - return the absolute value of a numeric expression
+
+    SYNOPSIS
+	Function Abs(Expr : Any numeric expression) : The same type;
+
+    DESCRIPTION
+	The Abs() function takes the absolute value of the
+	expression Expr.  If Expr is greater than or equal to
+	zero it returns Expr, and otherwise it returns -Expr.
+
+    EXAMPLE
+
+	Program ShowAbs;
+	var
+	    n : Real;
+	begin
+	    Write('Enter a number: ');
+	    Readln(n);
+	    Writeln('The absolute value is: ', Abs(n));
+	end.
+
+    INPUTS
+
+	Expr  : Any numeric expression
+
+    RESULTS
+	A non-negative number of the same type as Expr
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Adr					PCQ/Adr
+
+    NAME
+	Adr - return the address of a variable
+
+    SYNOPSIS
+	Function Adr(VAR V : Any type) : Address;
+
+    DESCRIPTION
+	The Adr function returns the address of the variable
+	V.  You can also use the address-of operator @ for
+	the same purpose.
+
+    EXAMPLE
+
+	Program ShowAdr;
+	var
+	    h : Char;
+	begin
+	    Writeln('Address of H is ', Integer(Adr(h)));
+	end.
+
+    INPUTS
+
+	V     : Any variable, of any type.
+
+    RESULTS
+	The address of V.
+
+    BUGS
+
+    SEE ALSO
+
+
+Utils/StringLib/AllocString		Utils/StringLib/AllocString
+
+    NAME
+	AllocString - allocate memory for a string
+
+    SYNOPSIS
+	Function AllocString(Size : Integer) : String;
+
+    DESCRIPTION
+	AllocString allocates a block of memory at least Size
+	bytes, and returns a pointer to it.  This memory is
+	allocated using PCQ's memory allocator, which means
+	that HeapError could come into play, and that the
+	memory will automatically be returned to the system
+	at the end of the program.
+
+	Since AllocString uses PCQ memory allocation, each
+	allocation will use from 12 to 20 extra bytes.  Thus
+	if you are allocating lots of strings and can keep
+	track of them through some other means, you might
+	want to call AllocMem directly.
+
+    EXAMPLE
+
+	Program Allocator;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	begin
+	    Str := AllocString(256);
+	end. { The memory is automatically freed }
+
+    INPUTS
+
+	Size : The number of bytes to allocate.
+
+    RESULTS
+	A pointer to the newly allocated memory, or possibly
+	Nil if you have set up HeapError appropriately.
+
+    BUGS
+
+    SEE ALSO
+	GetMem, AllocMem
+
+
+Utils/DOSUtils/APTRtoBPTR		Utils/DOSUtils/APTRtoBPTR
+
+    NAME
+	APTRtoBPTR - convert an Address into a BCPL pointer
+
+    SYNOPSIS
+	Function APTRtoBPTR(a : Address) : BPTR;
+
+    DESCRIPTION
+	This function converts a normal Amiga Address into its
+	equivalent BCPL pointer, or BPTR.  BCPL apparently
+	looks at memory as a big array of longwords, Addresses
+	have to be divided by four to be valid BPTRs.  This
+	also means that BPTRs should never point to a memory
+	location that is not longword aligned.
+
+    EXAMPLE
+
+	Program Convert;
+	{$I "Include:Utils/DOSUtils.i"}
+	var
+	    a : Address;
+	    b : Integer;
+	begin
+	    Write('Enter a decimal address: ');
+	    Readln(b);
+	    a := Address(b);
+	    Writeln('The equivalent BPTR is ', Integer(APTRtoBPTR(a)));
+	end.
+
+    INPUTS
+
+	a     : A normal Amiga Address
+
+    RESULTS
+	The equivalent BPTR, which is just (a shr 2)
+
+    BUGS
+
+    SEE ALSO
+	BPTRtoAPTR
+
+
+PCQ/ArcTan				PCQ/ArcTan
+
+    NAME
+	ArcTan - computes the arctangent in radians of the argument
+
+    SYNOPSIS
+	Function ArcTan(Value : Real) : Real;
+
+    DESCRIPTION
+	The ArcTan function computes the principal arctangent of the
+	specified value.  The result is in radians.
+
+	If you have used the $N+ option this value will be computed
+	by the mathtrans.library.  Otherwise, internal PCQ routines
+	will be used.
+
+    EXAMPLE
+
+	Program ShowArcTan;
+	var
+	    Value : Real;
+	begin
+	    Write('Please enter a value: ');
+	    Readln(Value);
+	    Writeln('ArcTan(', Value:0:3, ') = ', ArcTan(Value):0:3);
+	end.
+
+    INPUTS
+
+	Value : A Real type expression
+
+    RESULTS
+	The principal arctangent, in radians.
+
+    BUGS
+
+    SEE ALSO
+	Sin, Cos, Tan
+
+Utils/CRT/AttachConsole			Utils/CRT/AttachConsole
+
+    NAME
+	AttachConsole - initialize the CRT routines for a window
+
+    SYNOPSIS
+	Function AttachConsole(w : WindowPtr) : Address;
+
+    DESCRIPTION
+	AttachConsole is used to set up all the structures needed
+	by the rest of the CRT routines.  It must be called before
+	any of the other routines.
+
+	The address it returns points to a record used to store all
+	the vital information the rest of the routines will need.
+	You will pass this address to all the other CRT routines.
+
+    EXAMPLE
+	see Examples/Map.p and Examples/ConsoleTest.p
+
+    INPUTS
+	w : a pointer to a valid (open) Window.
+
+    RESULTS
+	The address of a bookkeeping record, or Nil if anything
+	goes wrong.
+
+    SEE ALSO
+	ClrEOL, ClrScr, CursOff, CursOn, DetachConsole, GotoXY,
+	InsLine, KeyPressed, MaxX, MaxY, ReadKey, TextColor,
+	TextBackground, WhereX, WhereY, WriteString
+
+
+Utils/BuildMenu/AttachMenu		Utils/BuildMenu/AttachMenu
+
+    NAME
+	AttachMenu - attach a BuildMenu menu to its window
+
+    SYNOPSIS
+	Procedure AttachMenu;
+
+    DESCRIPTION
+	AttachMenu makes a menu defined using the NewMenu,
+	NewItem and other routines available to the user.
+	You must, of course, have already called InitializeMenu
+	and defined the menu using NewMenu and NewItem calls.
+
+	You will need to set the IDCMP flag MENUPICK_f in order
+	to receive messages from Intuition about this menu.  You
+	can set the flag in the NewWindow structure, or through
+	a call to ModifyIDCMP.
+
+    EXAMPLE
+	See Examples/SmallCom.p, Examples/ConsoleTest.p,
+	    Examples/DeadKeysPlus.p
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    SEE ALSO
+	InitializeMenu, DisposeMenu, NewMenu, NewItem,
+	NewSubItem, DetachMenu
+
+
+PCQ/Bit					PCQ/Bit
+
+    NAME
+	Bit - return an Integer with only the specified bit set.
+
+    SYNOPSIS
+	Function Bit(BitNumber : Integer) : Integer;
+
+    DESCRIPTION
+	The Bit function returns an Integer value that has only
+	the specified bit set.  The bit number must therefore
+	be in the range 0 to 31.  This function is identical to
+	the expression (1 shl BitNumber).
+
+    EXAMPLE
+
+	Program ShowBit;
+	var
+	    BitNum : Integer;
+	begin
+	    for BitNum := 0 to 31 do
+		Writeln('Bit ', BitNum, ' set = ', Bit(BitNum));
+	end.
+
+    INPUTS
+
+	BitNum : An Integer in the range 0 to 31.
+
+    RESULTS
+	An Integer with just the specified bit set.
+
+    BUGS
+
+    SEE ALSO
+	shl, shr
+
+Utils/DOSUtils/BPTRtoAPTR		Utils/DOSUtils/BPTRtoAPTR
+
+    NAME
+	BPTRtoAPTR - convert a BCPL pointer to an Address
+
+    SYNOPSIS
+	Function BPTRtoAPTR(b : BPTR) : Address;
+
+    DESCRIPTION
+	This function converts a BCPL pointer value into its
+	equivalent Amiga address by multiplying the BPTR by
+	four.
+
+    EXAMPLE
+
+	Program LocateInput;
+	{$I "Include:Utils/DOSUtils.i"}
+	begin
+	    Writeln('The input file handle is at ',
+		    Integer(BPTRtoAPTR(GetFileHandle(Input))));
+	end.
+
+    INPUTS
+
+	b     : A BCPL pointer value, e.g. from an AmigaDOS record
+
+    RESULTS
+	The equivalent Amiga Address, which is just (b shl 4)
+
+    BUGS
+
+    SEE ALSO
+	APTRtoBPTR
+
+
+PCQ/Ceil				PCQ/Ceil
+
+    NAME
+	Ceil - return the least whole number greater than or equal
+
+    SYNOPSIS
+	Function Ceil(Expr : Real) : Real;
+
+    DESCRIPTION
+	The Ceil function returns the least whole number, expressed
+	as a Real value, greater than or equal to the number passed
+	in.
+
+    EXAMPLE
+
+	Program ShowCeil;
+	var
+	    FloatValue : Real;
+	begin
+	    Write('Please enter a Real value: ');
+	    Readln(FloatValue);
+	    Writeln(FloatValue:0:3, ' becomes ',
+			    Ceil(FloatValue):0:3);
+	end.
+
+	Ceil(5.4)  =  6.0
+	Ceil(-5.4) = -5.0
+
+    INPUTS
+
+	Expr : Any Real type expression
+
+    RESULTS
+	A Real value that is the least whole number greater than
+	or equal to Expr.
+
+    BUGS
+
+    SEE ALSO
+	Floor, Trunc, Round, Float
+
+
+Utils/Break/CheckBreak			Utils/Break/CheckBreak
+
+    NAME
+	CheckBreak - check if user struck CTRL-C
+
+    SYNOPSIS
+	Function CheckBreak;
+
+    DESCRIPTION
+	This routine checks for the SIGBREAK_C signal in the
+	Task structure, and returns TRUE if it is found.
+
+	CheckBreak will only return true for routines that
+	have a console open, since the console.device is what
+	actually sets the SIGBREAK_C flag.
+
+    EXAMPLE
+
+	Program Test;
+	{$I "Include:Utils/BuildMenu/Break.i"}
+	begin
+	    while not CheckBreak do
+		Write('Waiting');
+	end.
+
+    INPUTS
+	None
+
+    RESULTS
+	TRUE if the user has pressed CTRL-C, or
+	FALSE if it hasn't been pressed, or if the console.device
+		wasn't in use.
+
+    SEE ALSO
+
+
+PCQ/Chr					PCQ/Chr
+
+    NAME
+	Chr - convert a number to its corresponding Char value
+
+    SYNOPSIS
+	Function Chr(Expr : Any numeric expression) : Char;
+
+    DESCRIPTION
+	The Chr() function converts a numeric expression into
+	a character based on its ASCII value.
+
+    EXAMPLE
+
+	Program ShowChr;
+	var
+	    n : Real;
+	begin
+	    Write('Enter a number: ');
+	    Readln(n);
+	    Write('That corresponds to the character: ', Chr(n));
+	end.
+
+    INPUTS
+
+	Expr  : Any numeric expression
+
+    RESULTS
+	The corresponding character
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Close				PCQ/Close
+
+    NAME
+	Close - completes access to a PCQ file
+
+    SYNOPSIS
+	Procedure Close(VAR F : Any file type);
+
+    DESCRIPTION
+	Close writes any pending output to the file, closes
+	the associated AmigaDOS file, and frees the file
+	buffer.
+
+	If you do not close a PCQ file, it will be closed
+	automatically at the end of the program.
+
+    EXAMPLE
+
+	Program Closer;
+	var
+	    F : Text;
+	begin
+	    if Open("CON:0/0/640/320/TempOutput",F) then begin
+		Writeln(F,'The window is open.  Hit a key.');
+		Readln(F);
+		Close(F);
+	    end else
+		Writeln('Could not open file');
+	end.
+
+    INPUTS
+
+	F     : An open PCQ file variable, either a type file or
+		a Text file.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Open, Reopen, Reset, Rewrite
+
+
+Utils/ConsoleUtils/CloseConsoleDevice	Utils/ConsoleUtils/CloseConsoleDevice
+
+    NAME
+	CloseConsoleDevice - close the console.device
+
+    SYNOPSIS
+	Procedure CloseConsoleDevice;
+
+    DESCRIPTION
+	This routine closes the console.device opened by a call to
+	OpenConsoleDevice.
+
+    EXAMPLE
+	See Examples/SmallCom.p, Examples/3d.p, Examples/Map.p
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    SEE ALSO
+	OpenConsoleDevice, DeadKeyConvert
+
+
+Utils/DoubleBuffer/CloseDoubleBuffer	Utils/DoubleBuffer/CloseDoubleBuffer
+
+    NAME
+	CloseDoubleBuffer - closes a double-buffered window and screen
+
+    SYNOPSIS
+	Procedure CloseDoubleBuffer(w : WindowPtr);
+
+    DESCRIPTION
+	This routine frees up all the resources allocated by a call
+	to OpenDoubleBuffer.  It closes the Screen and the Window,
+	and frees the memory used for the extra buffer.
+
+	You should not call this routine on normal windows, and you
+	should not use the normal CloseWindow and CloseScreen calls
+	on Windows and Screens created with OpenDoubleBuffer.
+
+    EXAMPLE
+	See Examples/3d.p
+
+    INPUTS
+
+	w     : A pointer to a Window opened with a call to
+		OpenDoubleBuffer.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	OpenDoubleBuffer, SwapBuffers
+
+
+Utils/MathTransUtils/CloseMathTrans	Utils/MathTransUtils/CloseMathTrans
+
+    NAME
+	CloseMathTrans - closes the FFP mathtrans.library
+
+    SYNOPSIS
+	Procedure CloseMathTrans;
+
+    DESCRIPTION
+	This routine closes the Motorola FFP transcendental library
+	opened by OpenMathTrans.  It is important that you call this
+	routine because the mathtrans.library is disk-based, and it
+	will not be unloaded from memory if it thinks someone is
+	still using it.
+
+    EXAMPLE
+
+	Program CheckTrans;
+	{$I "Include:Utils/MathTransUtils.i"}
+	{$I "Include:Libraries/MathTrans.i"}
+	begin
+	    if OpenMathTrans then begin
+		Writeln('Pi is about ', SPAcos(-1.0));
+		CloseMathTrans;
+	    end else
+		Writeln('mathtrans.library was unavailable');
+	end.
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	OpenMathTrans, FlushMathTrans, and the mathtrans.library
+	routines like SPAsin, SPSqrt, etc.
+
+
+Utils/CRT/ClrEOL			Utils/CRT/ClrEOL
+
+    NAME
+	ClrEOL - clear the screen from the cursor to the end of line
+
+    SYNOPSIS
+	Procedure ClrEOL(CRT : Address);
+
+    DESCRIPTION
+	This routine clears the text area from the cursor to the
+	end of the line.
+
+    EXAMPLE
+
+	Procedure CopyOver(CRT : Address);
+	begin
+	    GotoXY(CRT, 1,WhereY);
+	    WriteString(CRT, "This line is far too long");
+	    GotoXY(CRT, 14,WhereY);
+	    ClrEOL(CRT);
+	    WriteString(CRT, "just right");
+	end;
+
+    INPUTS
+
+	CRT : A pointer to a valid CRT information block, as
+		returned by AttachConsole
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, ClrScr, GotoXY, WriteString
+
+
+Utils/CRT/ClrScr			Utils/CRT/ClrScr
+
+    NAME
+	ClrScr - clear the text area and move to 1,1
+
+    SYNOPSIS
+	Procedure ClrScr(CRT : Address);
+
+    DESCRIPTION
+	ClrScr clears the text area of the window, and moves the
+	cursor to the upper left hand corner.
+
+    EXAMPLE
+
+	Procedure ClearWindow(w : WindowPtr);
+	var
+	    CRT : Address
+	begin
+	    CRT := AttachConsole(w);
+	    ClrScr(CRT);
+	    DetachConsole(w);
+	end;
+
+    INPUTS
+
+	CRT : A pointer to a valid CRT information block, as
+	      returned by AttachConsole.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, ClrEOL, GotoXY
+
+
+Utils/ConsoleIO/ConGetChar		Utils/ConsoleIO/ConGetChar
+
+    NAME
+	ConGetChar - read a character from the console.device
+
+    SYNOPSIS
+	Function ConGetChar(ConsolePort : MsgPortPtr;
+			    Request	: IOStdReqPtr;
+			    WhereTo	: String) : Char;
+
+    DESCRIPTION
+	ConGetChar waits until a previous QueueRead is satified,
+	then queues up another and returns the character.
+
+	You need to call OpenDevice to initialize Request and
+	attach the console.device to your window.
+
+    EXAMPLE
+
+	{$I "Include:Utils/IOUtils.i"}
+
+	Function ReadOneCharacter(w : WindowPtr);
+	var
+	    MyPort : MsgPortPtr;
+	    MyReq  : IOStdReqPtr;
+	    Buffer,
+	    Value  : Char;
+	    Error  : Integer;
+	    Dummy  : MessagePtr;
+	begin
+	    MyPort := CreatePort(Nil, 0);
+	    MyReq  := CreateStdIO(MyPort);
+	    MyReq^.io_Data := Address(w);
+	    MyReq^.io_Length := SizeOf(Window);
+	    Error := OpenDevice("console.device",0,
+				IORequestPtr(MyReq), 0);
+	    QueueRead(MyReq, @Buffer);
+	    Value := ConGetChar(MyPort, MyReq, @Buffer);
+	    if CheckIO(IORequestPtr(MyReq)) then begin
+		Error := AbortIO(IORequestPtr(MyReq));
+		Dummy := WaitPort(MyPort);
+		Dummy := GetMsg(MyPort);
+	    end;
+	    CloseDevice(MyReq);
+	    DeleteStdIO(MyReq);
+	    DeletePort(MyPort);
+	    ReadOneCharacter := Value;
+	end;
+
+    INPUTS
+	ConsolePort : A pointer to a valid MsgPort, the one used
+		      by the IOStdReq used for QueueRead.
+	Request     : A pointer to a valid IOStdReq, which will be
+		      used to reset QueueRead.
+	WhereTo     : A pointer to the buffer used by QueueRead,
+		      which also will be used to reset QueueRead.
+
+    RESULTS
+	The character read.
+
+    SEE ALSO
+	ConPutChar, ConWrite, ConPutStr, QueueRead
+
+
+Utils/ConsoleIO/ConPutChar		Utils/ConsoleIO/ConPutChar
+
+    NAME
+	ConPutChar - write one character to the console device
+
+    SYNOPSIS
+	Procedure ConPutChar(Req : IOStdReqPtr; Character : Char);
+
+    DESCRIPTION
+	This routine writes a single character through the console
+	device to a window.  You should already have called
+	OpenDevice to open the console.device and attach it to
+	your window.
+
+	Note that for many applications, the routines in Utils/CRT.i
+	will be easier to use.
+
+    EXAMPLE
+	see Examples/DeadKeysPlus.p
+
+    INPUTS
+	Req : A pointer to a valid IOStdReq, initialized by a
+	      call to OpenDevice.
+	Character : The Char to write.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	ConWrite, ConPutStr, QueueRead, ConGetChar
+
+
+Utils/ConsoleIO/ConPutStr		Utils/ConsoleIO/ConPutStr
+
+    NAME
+	ConPutStr - write a null-terminated string
+
+    SYNOPSIS
+	Procedure ConPutStr(Req : IOStdReqPtr; Str : String);
+
+    DESCRIPTION
+	ConPutStr writes a null-terminated string through the
+	console.device to the screen.  You must use OpenDevice
+	to attach the console.device to the window.
+
+    EXAMPLE
+	see Examples/DeadKeysPlus.p
+
+    INPUTS
+	Req : a pointer to a valid IOStdReq, initialized
+	      by a call to OpenDevice.
+	Str : The string to write, which must be null-terminated.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	ConPutChar, ConWrite, QueueRead, ConGetChar
+
+
+Utils/ConsoleIO/ConWrite		Utils/ConsoleIO/ConWrite
+
+    NAME
+	ConWrite - write any amount of data to the console.device
+
+    SYNOPSIS
+	Procedure ConWrite(Req    : IOStdReqPtr;
+			   Str    : String;
+			   Length : Integer);
+
+    DESCRIPTION
+	ConWrite writes any amount of data to the console device.
+	Although Str is defined as a string, it can in fact point
+	to any arbitrary data and does not have to be null
+	terminated.  If the data is already null-terminated and
+	you don't know its length, you can call ConPutStr instead.
+
+	Before you call this routine, you must use OpenDevice to
+	attach the console.device to your window.
+
+    EXAMPLE
+	See Examples/SmallCom.p, Examples/DeadKeysPlus.p
+
+    INPUTS
+	Req : A pointer to a valid IOStdReq, initialized by a
+	      call to OpenDevice.
+	Str : A pointer to any arbitrary data
+	Length : The number of bytes to write.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	ConPutChar, ConPutStr, QueueRead, ConGetChar
+
+
+PCQ/Cos					PCQ/Cos
+
+    NAME
+	Cos - compute the cosine of an angle in radians
+
+    SYNOPSIS
+	Function Cos(Radians : Real) : Real;
+
+    DESCRIPTION
+	This function returns the cosine of the specified
+	angle.  Normally this is computed by private PCQ
+	routines, but if you can use the $N+ directive to
+	specify that mathtrans.library should be used
+	instead.
+
+    EXAMPLE
+
+	Program ShowCos;
+	var
+	    Value : Real;
+	begin
+	    Write('Enter a number of DEGREES: ');
+	    Readln(Value);
+	    Writen('The cosine of ', Value:0:3, ' degrees is ',
+			Cos(Value * (180 / 3.14159)):0:3);
+	end.
+
+    INPUTS
+
+	Radians : The angle in radians
+
+    RESULTS
+	The cosine of the specified angle
+
+    BUGS
+
+    SEE ALSO
+	Sin, Tan, ArcTan
+
+Utils/CRC16/CRCCheck			Utils/CRC16/CRCCheck
+
+    NAME
+	CRCCheck - calculate the CRC of a buffer
+
+    SYNOPSIS
+	Function CRCCheck(Buffer : Address; Length : Integer) : Word;
+
+    DESCRIPTION
+	CRCCheck uses UpdCRC to calculate the CRC value for an
+	entire buffer at once.  If you are processing data one byte
+	at a time, you can use UpdCRC to calculate the CRC, but if
+	you have the entire buffer at hand you can use this routine.
+
+    EXAMPLE
+
+	Program CRCStr;
+	{$I "Include:Utils/CRC16.i"}
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	begin
+	    Str := AllocString(256);
+	    Write('Enter a string: ');
+	    ReadLn(Str);
+	    Writeln('The CRC of "', Str, '" is ',
+			CRCCheck(Str, strlen(Str)));
+	end.
+
+    INPUTS
+	Buffer : A pointer to the data buffer
+	Length : The number of bytes to calculate
+
+    RESULTS
+	The CRC value of the entire buffer
+
+    SEE ALSO
+	UpdCRC
+
+
+Utils/IOUtils/CreatePort		Utils/IOUtils/CreatePort
+
+    NAME
+	CreatePort - allocate a MsgPort
+
+    SYNOPSIS
+	Function CreatePort(Name : String; Pri : Integer) : MsgPortPtr;
+
+    DESCRIPTION
+	This routine allocates the memory and signal for a message
+	port.  If you have specified a Name, it will also add the
+	port to the system list (that's only necessary if some other
+	task is going to search for your port).  If the Name is
+	Nil, the port is not added.
+
+	Since the memory for the port is not allocated through PCQ
+	memory routines, you must call DeletePort explicitly or the
+	memory will not be returned to the system.
+
+    EXAMPLE
+	See Examples/DeadKeysPlus.p and Examples/Play8.p
+
+    INPUTS
+
+	Name  : The port name, or Nil if you don't want to add the
+		port to the Exec system list.
+	Pri   : The port priority, which will determine where the
+		port is added to the system list.
+
+    RESULTS
+	A MsgPortPtr or Nil if something went wrong
+
+    BUGS
+
+    SEE ALSO
+	DeletePort
+
+
+Utils/IOUtils/CreateStdIO		Utils/IOUtils/CreateStdIO
+
+    NAME
+	CreateStdIO - allocate an IOStdReq record
+
+    SYNOPSIS
+	Function CreateStdIO(Reply : MsgPortPtr) : IOStdReqPtr;
+
+    DESCRIPTION
+	This routine allocates and initializes an IOStdReq used by
+	the Exec IO routines.  Since the memory is not allocated by
+	the PCQ allocation routines, you must call DeleteStdIO or
+	the memory will not be freed.
+
+    EXAMPLE
+	See Examples/SmallCom.p and Examples/DeadKeysPlus.p
+
+    INPUTS
+
+	Reply : A pointer to a valid MsgPort that will serve as the
+		IO record's reply port.  The port can be created
+		with CreatePort.
+
+    RESULTS
+	A pointer to an IOStdReq, or Nil if something went wrong.
+
+    BUGS
+
+    SEE ALSO
+	DeleteStdIO, CreatePort
+
+
+Utils/TaskUtils/CreateTask		Utils/TaskUtils/CreateTask
+
+    NAME
+	CreateTask - initialize a new task
+
+    SYNOPSIS
+	Function CreateTask(Name      : String;
+			    Pri       : Byte;
+			    InitialPC : Address;
+			    StackSize : Integer) : TaskPtr;
+
+    DESCRIPTION
+	CreateTask initializes a new task and adds it to the
+	system list.  Sometime later it will begin executing.
+	Keep in mind that a task, not a process, is created,
+	so it cannot use any AmigaDOS routines, directly or
+	indirectly (e.g. through Pascal Write() or Read()
+	calls).
+
+    EXAMPLE
+	See Examples/Task.p
+
+    INPUTS
+
+	Name      : The name for the new task
+	Pri       : The new task's priority.  For most tasks this
+		    should be very low, say from -5 to 5 at most.
+	InitialPC : The address of the beginning of the task.
+	StackSize : The size in bytes of the stack that should be
+		    allocated for the new task.
+
+    RESULTS
+	If the task was successfully added, CreateTask returns a
+	pointer to its Task record.  If not, it returns Nil.
+
+    BUGS
+
+    SEE ALSO
+	DeleteTask, CreateProc
+
+
+Utils/TimerUtils/CreateTimer		Utils/TimerUtils/CreateTimer
+
+    NAME
+	CreateTimer - open the timer.device and allocate an IO record
+
+    SYNOPSIS
+	Function CreateTimer(Unit : Integer) : TimeRequestPtr;
+
+    DESCRIPTION
+	CreateTimer opens the timer.device, allocates and initializes
+	an IO structure, and passes back the IO structure address to
+	use with the other TimerUtils routines.
+
+	This routine initializes TimerBase, so you can also call
+	SubTime, AddTime, etc.
+
+    EXAMPLE
+	See Examples/Dry.p, Examples/TimerTest.p, Examples/TimeProg.p
+
+    INPUTS
+
+	Unit  : The unit of the timer.device that should be used.  This
+		can be either UNIT_MICROHZ (0), which is highly
+		accurate, or UNIT_VBLANK (1), which has less resolution
+		but much less overhead.  UNIT_VBLANK should not be used
+		if you intend to measure small time differences, less
+		than a half second.
+
+    RESULTS
+	If everything goes correctly, CreateTimer returns a pointer
+	to an initialized TimeRequest, or Nil if something went
+	wrong.
+
+    BUGS
+
+    SEE ALSO
+	DeleteTimer, SetTimer, WaitTimer, GetSysTime
+
+
+Utils/CRT/CursOff			Utils/CRT/CursOff
+
+    NAME
+	CursOff - turn the text cursor off
+
+    SYNOPSIS
+	Procedure CursOff(CRT : Address);
+
+    DESCRIPTION
+	Normally a console window displays a full-block text
+	cursor.  This routine turns it off.
+
+    EXAMPLE
+	See Examples/Map.p
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block,
+		as returned by AttachConsole.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, CursOn
+
+
+Utils/CRT/CursOn			Utils/CRT/CursOn
+
+    NAME
+	CursOn - turn the text cursor on
+
+    SYNOPSIS
+	Procedure CursOn(CRT : Address);
+
+    DESCRIPTION
+	This routine turns the console.device's text cursor
+	on.  It starts out on, so the only reason you'll need
+	to call this routine is if you have previously called
+	CursOff.
+
+    EXAMPLE
+	See Examples/Map.p
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block, as
+		returned by AttachConsole.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, CursOff
+
+
+Utils/DeadKeyConvert/DeadKeyConvert	Utils/DeadKeyConvert/DeadKeyConvert
+
+    NAME
+	DeadKeyConvert - convert raw key event to complete key sequence
+
+    SYNOPSIS
+	Function DeadKeyConvert(Msg     : IntuiMessagePtr;
+				Buffer  : String;
+				BufSize : Integer;
+				KeyMap  : Address) : Integer;
+
+    DESCRIPTION
+	This function takes an Intuition RAWKEY_f IDCMP message,
+	and converts it into a finished command sequence.  The
+	single keypress in the message is converted into zero
+	or more characters in the Buffer, according to an optional
+	KeyMap.
+
+    EXAMPLE
+	See Examples/DeadKeysPlus.p, Examples/Map.p, Examples/3d.p
+	    Examples/SmallCom.p
+
+    INPUTS
+
+	Msg     : A pointer to an Intuition IDCMP message of class
+		  RAWKEY_f
+	Buffer  : The buffer that will hold the converted keystrokes
+	BufSize : The size in bytes of the buffer
+	KeyMap  : Either a pointer to a valid KeyMap, or Nil to use
+		  the standard KeyMap
+
+    RESULTS
+
+	-2 if it was not a RAWKEY_f message
+	-1 if there was a buffer overflow
+	Otherwise, it returns the number of characters 0..BufSize
+	in the converted sequence
+
+    BUGS
+	If you get a buffer overflow (i.e. it returns -1) the
+	characters in the buffer are not valid
+
+    SEE ALSO
+	RawKeyConvert
+
+
+PCQ/Dec					PCQ/Dec
+
+    NAME
+	Dec - subtract from a variable
+
+    SYNOPSIS
+	Procedure Dec(VAR v : Any Integer or pointer type
+			[ ; Amount : Integer ] );
+
+    DESCRIPTION
+	The Dec procedure subtracts from a variable.  If the
+	variable is an Integer type, Dec subtracts Amount from
+	it, or 1 if there is no Amount specified.
+
+	If v is a pointer type, Dec subtracts the size of the
+	element referred to by v multiplied by Amount.  That
+	way you can easily move a pointer along an array.
+
+    EXAMPLE
+
+	Program ShowDec;
+	var
+	    i : Integer;
+	    s : Short;
+	    p : ^Integer;
+	    q : ^Short;
+	begin
+	    Dec(i);      { i := i - 1 }
+	    Dec(s,i);    { i := i - s }
+	    Dec(p);      { p := p - 4 }
+	    Dec(q,s);    { q := q - s*2 }
+	end.
+
+    INPUTS
+
+	v      : A variable Integer or pointer
+	Amount : An optional amount to be subtracted
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Inc
+
+Utils/IOUtils/DeletePort		Utils/IOUtils/DeletePort
+
+    NAME
+	DeletePort - free the resources of a MsgPort
+
+    SYNOPSIS
+	Procedure DeletePort(Port : MsgPortPtr);
+
+    DESCRIPTION
+	This routine frees the memory and signal used by the
+	MsgPort, and removes it from the system list if
+	appropriate.
+
+    EXAMPLE
+	See Examples/DeadKeysPlus.p and Examples/Play8.p
+
+    INPUTS
+
+	Port  : A pointer to the MsgPort to close
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreatePort
+
+
+Utils/IOUtils/DeleteStdIO		Utils/IOUtils/DeleteStdIO
+
+    NAME
+	DeleteStdIO - free the memory of an IOStdReq record
+
+    SYNOPSIS
+	Procedure DeleteStdIO(Request : IOStdReqPtr);
+
+    DESCRIPTION
+	This routine deallocated the memory used by the IOStdReq.
+
+    EXAMPLE
+	See Examples/SmallCom.p and Examples/DeadKeysPlus.p
+
+    INPUTS
+	Request : A pointer to the IOStdReq to free
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreateStdIO, CreatePort, DeletePort
+
+
+Utils/TaskUtils/DeleteTask		Utils/TaskUtils/DeleteTask
+
+    NAME
+	DeleteTask - remove a task from the system list
+
+    SYNOPSIS
+	Procedure DeleteTask(Task : TaskPtr);
+
+    DESCRIPTION
+	DeleteTask terminates a task and frees the memory used
+	for its stack.  It should only be called on tasks
+	created by CreateTask.
+
+	You should be careful to ensure that the new task is
+	ready to be deleted before you call this routine, or
+	you could catch it in the middle of something important.
+
+    EXAMPLE
+	See Examples/Task.p
+
+    INPUTS
+
+	Task  : A pointer to a Task, as returned by CreateTask
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreateTask, CreateProc
+
+
+Utils/TimerUtils/DeleteTimer		Utils/TimerUtils/DeleteTimer
+
+    NAME
+	DeleteTimer - close the timer.device and free the IO record
+
+    SYNOPSIS
+	Procedure DeleteTimer(WhichTimer : TimeRequestptr);
+
+    DESCRIPTION
+	DeleteTimer frees all the system resources allocated by
+	CreateTimer.  It closes the timer.device, then deallocates
+	the memory and port used for the TimeRequestPtr.
+
+    EXAMPLE
+	See Examples/Dry.p, Examples/TimerTest.p, Examples/TimeProg.p
+
+    INPUTS
+
+	WhichTimer : A pointer to a TimeRequest record as returned
+		     by CreateTimer
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreateTimer
+
+
+Utils/CRT/DelLine			Utils/CRT/DelLine
+
+    NAME
+	DelLine - delete the current line
+
+    SYNOPSIS
+	Procedure DelLine(CRT : Address);
+
+    DESCRIPTION
+	DelLine deletes the line on which the cursor rests.  It
+	moves all the lines below it up one, and clears the
+	bottom line.
+
+    EXAMPLE
+
+	Procedure BringTogether(CRT : Address);
+	begin
+	    ClrScr(CRT);
+	    WriteString(CRT, "The First Line");
+	    GotoXY(CRT,1,3);
+	    WriteString(CRT, "The Second Line");
+	    GotoXY(CRT,1,2);
+	    DelLine(CRT);
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block, as
+		returned by AttachConsole
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, InsLine, GotoXY
+
+
+Utils/CRT/DetachConsole			Utils/CRT/DetachConsole
+
+    NAME
+	DetachConsole - close the console.device and free memory
+
+    SYNOPSIS
+	Procedure DetachConsole(CRT : Address);
+
+    DESCRIPTION
+	When you have finished using the CRT routines, you need
+	to call DetachConsole to free up all the resources they
+	are using.  This routine does not close the window,
+	however.
+
+    EXAMPLE
+	See Examples/Map.p and Examples/ConsoleTest.p
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block,
+		as returned by AttachConsole
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole
+
+
+Utils/BuildMenu/DetachMenu		Utils/BuildMenu/DetachMenu
+
+    NAME
+	DetachMenu - remove a menu strip from a window
+
+    SYNOPSIS
+	Procedure DetachMenu;
+
+    DESCRIPTION
+	This routine removes the menu strip from the window.
+	You must call this routine before closing a window or
+	messing around with the menu itself.
+
+    EXAMPLE
+	See Examples/SmallCom.p, Examples/DeadKeysPlus.p,
+	    Examples/ConsoleTest.p
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    SEE ALSO
+	InitializeMenu, AttachMenu
+
+PCQ/Dispose				PCQ/Dispose
+
+    NAME
+	Dispose - free memory allocation through New()
+
+    SYNOPSIS
+	Procedure Dispose(p : Any pointer type);
+
+    DESCRIPTION
+	Dispose frees the memory allocated for the pointer p by
+	the standard procedure New().  If you do not call Dispose,
+	the memory will be freed at the end of the program.
+
+    EXAMPLE
+
+	Program DisposeMem;
+	var
+	    p : ^Integer;
+	begin
+	    New(p);
+	    Writeln('p allocated at ', Integer(p));
+	    Dispose(p);
+	    New(p);
+	    Writeln('p allocated at ', Integer(p));
+	end. { automatically disposed this time }
+
+    INPUTS
+
+	p     : Any pointer type.  The pointer must point to the
+		first byte of the allocated block.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	New, FreePCQMem, FreeString, FreeMem
+
+
+Utils/BuildMenu/DisposeMenu		Utils/BuildMenu/DisposeMenu
+
+    NAME
+	DisposeMenu - Free the memory used by a BuildMenu menu strip.
+
+    SYNOPSIS
+	Procedure DisposeMenu;
+
+    DESCRIPTION
+	DisposeMenu frees the memory allocated by the NewMenu and
+	NewItem routines.
+
+	This routine is not for general use - it only works with
+	the rest of the BuildMenu routines.  Also, you'll have to
+	call DetachMenu before this routine to let Intuition know
+	the menu is no longer available.
+
+	Since NewItem and the related routines use PCQ memory
+	allocation, the memory used by the menus will be freed auto-
+	matically at the end of the program.  Thus you don't have to
+	call this routine unless you want to free it beforehand.
+
+    EXAMPLE
+	see Examples/SmallCom.p
+
+    INPUTS
+	None
+
+    RESULTS
+	The memory used by the current menu is deallocated.
+
+    BUGS
+
+    SEE ALSO
+	InitializeMenu, AttachMenu, DetachMenu
+
+
+PCQ/EOF					PCQ/EOF
+
+    NAME
+	EOF - determine whether a file is at the end-of-file
+
+    SYNOPSIS
+	Function EOF(VAR F : Any file type) : Boolean;
+
+    DESCRIPTION
+	The EOF function returns True if an input file has
+	been entirely read, or False if data remains to be
+	read.  If a file is at the EOF position, it is an
+	error to attempt to Read from it.
+
+	If the file was opened for output using Open or Rewrite,
+	EOF is undefined.
+
+    EXAMPLE
+
+	Program ShowText;
+	{$I "Include:Utils/StringLib.i"}
+	{$I "Include:Utils/Parameters.i"}
+	var
+	    InFile   : Text;
+	    FileName : String;
+	begin
+	    FileName := AllocString(256);
+	    GetParam(1,FileName);
+	    if ReOpen(FileName, InFile) then begin
+		while not EOF(InFile) do begin
+		    Write(InFile^);
+		    Get(InFile);
+		end;
+		Close(InFile);
+	    end else
+		Writeln('Could not open ', FileName);
+	end.
+
+    INPUTS
+
+	F     : Any Pascal file opened for input using ReOpen or
+		Reset.
+
+    RESULTS
+	TRUE if all the data has been read, or
+	FALSE if data remains to be read.
+
+    BUGS
+
+    SEE ALSO
+	ReOpen, Reset, IOResult, Close, Rewrite, Open
+
+
+PCQ/Exit				PCQ/Exit
+
+    NAME
+	Exit - quit the program
+
+    SYNOPSIS
+	Procedure Exit [ (ReturnCode : Integer) ] ;
+
+    DESCRIPTION
+	The standard procedure Exit terminates the program.  If
+	you supply a return code, it is passed back to AmigaDOS.
+	If not, a return code of 0 is passed back.
+
+	Calling exit invokes all the exit procedures, as if the
+	program had ended normally.  It is therefore the
+	recommending way to end a program early.  You should not
+	call the AmigaDOS procedure DOSExit(), since the exit
+	procedures will not be able to take effect.
+
+    EXAMPLE
+
+	Program Reader;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	begin
+	    Str := AllocString(256);
+	    repeat
+		Readln(Str);
+		if strieq(Str,"quit") then
+		    Exit;
+		Writeln(Str);
+	    until false;
+	end.
+
+    INPUTS
+
+	ReturnCode : An optional AmigaDOS return code.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Exp					PCQ/Exp
+
+    NAME
+	Exp - compute e raised to the specified power
+
+    SYNOPSIS
+	Function Exp(Power : Real) : Real;
+
+    DESCRIPTION
+	This value computes the exponential value of the argument,
+	i.e. the value e (about 2.71) raised to the power of the
+	argument.  If you have used the $N+ directive, this is
+	computed by the mathtrans.library.  Otherwise, internal
+	PCQ routines handle it.
+
+    EXAMPLE
+
+	Program ShowExp;
+	var
+	    Power : Real;
+	begin
+	    Write('Enter an exponent: ');
+	    Readln(Power);
+	    Writeln('e raised to the ', Power:0:3, ' power is ',
+				Exp(Power):0:3);
+	end.
+
+    INPUTS
+
+	Power : A Real type expression
+
+    RESULTS
+	e raised to the specified power
+
+    BUGS
+
+    SEE ALSO
+	Ln
+
+Utils/RunProgram/FinishProgram		Utils/RunProgram/FinishProgram
+
+    NAME
+	FinishProgram - wait for the program to finish and clean up
+
+    SYNOPSIS
+	Procedure FinishProgram(RP : RunProgPtr);
+
+    DESCRIPTION
+	FinishProgram waits for a child process launched by
+	RunProgramNW or RunSegmentNW to finish, then frees any
+	resources allocated by the run routines.  It will not
+	free anything it didn't allocate - for example, it will
+	not unload a segment that it didn't load.
+
+    EXAMPLE
+
+	Program RunChild;
+	{$I "Include:Utils/RunProgram.i"}
+	var
+	    Child : RunProgPtr;
+	begin
+	    Child := RunProgramNW("OtherProgram", 4000);
+	    if Child <> Nil then
+		FinishProgram(Child);
+	end.
+
+    INPUTS
+
+	RP    : A pointer to a private information block, as
+		returned by RunSegmentNW or RunProgramNW.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	RunSegment, RunSegmentNW, RunProgram, RunProgramNW,
+	ProgramFinished
+
+
+PCQ/Float				PCQ/Float
+
+    NAME
+	Float - convert an Integer to a Real value.
+
+    SYNOPSIS
+	Function Float(Expr : Integer) : Float;
+
+    DESCRIPTION
+	This function converts the Integer expression into its
+	Real type counterpart.  Float is called automatically
+	by the compiler to "promote" Integer values in expressions
+	when necessary.
+
+    EXAMPLE
+
+	Program ShowFloat;
+	var
+	    IntValue : Integer;
+	begin
+	    Write('Please enter an Integer: ');
+	    Readln(IntValue);
+	    Writeln(IntValue, ' becomes ', Float(IntValue):0:5);
+	end.
+
+    INPUTS
+
+	Expr : Any Integer type expression
+
+    RESULTS
+	The expression converted to a Real value
+
+    BUGS
+
+    SEE ALSO
+	Trunc, Round
+
+
+PCQ/Floor				PCQ/Floor
+
+    NAME
+	Floor - return the greatest whole number less than or equal
+
+    SYNOPSIS
+	Function Floor(Expr : Real) : Real;
+
+    DESCRIPTION
+	The Floor function returns the greatest whole number (still
+	in Real format, however) less than or equal to the value
+	passed in.
+
+    EXAMPLE
+
+	Program ShowFloor;
+	var
+	    FloatValue : Real;
+	begin
+	    Write('Please enter a Real value: ');
+	    Readln(FloatValue);
+	    Writeln(FloatValue:0:3, ' becomes ',
+			  Floor(FloatValue):0:3);
+	end.
+
+	Floor(5.4) = 5.0
+	Floor(-5.4) = -6.0
+
+    INPUTS
+
+	Expr  : Any Real type expression
+
+    RESULTS
+	A Real value less than or equal to the original expression
+
+    BUGS
+
+    SEE ALSO
+	Ceil, Round, Trunc, Float
+
+
+Utils/MathTransUtils/FlushMathTrans	Utils/MathTransUtils/FlushMathTrans
+
+    NAME
+	FlushMathTrans - close and remove the mathtrans.library
+
+    SYNOPSIS
+	Procedure FlushMathTrans;
+
+    DESCRIPTION
+	FlushMathTrans is the same as CloseMathTrans library,
+	but it also signals the mathtrans.library that it should
+	remove itself from the system as soon as possible.
+	If no other tasks have opened the mathtrans.library, it
+	will normally remove itself immediately.
+
+    EXAMPLE
+
+	Program CheckTrans;
+	{$I "Include:Utils/MathTransUtils.i"}
+	{$I "Include:Libraries/MathTrans.i"}
+	begin
+	    if OpenMathTrans then begin
+		Writeln(SPSin(4.7));
+		FlushMathTrans;
+	    end else
+		Writeln('Could not open mathtrans.library');
+	end.
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	OpenMathTrans, CloseMathTrans, and the mathtrans.library
+	routines like SPSin, SPCos, etc.
+
+
+Utils/PCQMemory/FreePCQMem		Utils/PCQMemory/FreePCQMem
+
+    NAME
+	FreePCQMem - return PCQ memory to the system
+
+    SYNOPSIS
+	Procedure FreePCQMem(VAR Ptr : Address; Size : Integer);
+
+    DESCRIPTION
+	FreePCQMem returns memory allocated by GetMem to the system
+	memory pool.  This memory would normally be freed at the
+	end of the program, but using this routine allows you to
+	adjust your memory requirements within the program.
+
+    EXAMPLE
+
+	Procedure Behave;
+	{$I "Include:Utils/PCQMemory.i"}
+	var
+	    p : Address;
+	begin
+	    GetMem(p, 100000);
+	    FreePCQMem(p, 100000);
+	end.
+
+    INPUTS
+
+	Ptr   : Any pointer variable
+	Size  : The amount of memory to be freed.  This number must
+		match the amount that was initially allocated.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	GetMem, AllocString, FreeString
+
+
+Utils/StringLib/FreeString		Utils/StringLib/FreeString
+
+    NAME
+	FreeString - free memory allocated by AllocString
+
+    SYNOPSIS
+	Procedure FreeString(Str : String);
+
+    DESCRIPTION
+	FreeString returns memory allocated through PCQ's
+	memory allocation routines to the system.  You need
+	not supply the length of the string, since it is
+	recorded when the block is allocated.
+
+	Note that PCQ memory is automatically freed at the
+	end of the program, but this routine lets you use
+	the memory earlier.
+
+    EXAMPLE
+
+	Program Deallocator;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	begin
+	    Str := AllocString(256);
+	    Writeln('Allocated space at ', Integer(Str));
+	    FreeString(Str);
+	    Str := AllocString(256);
+	    Writeln('Allocated space at ', Integer(Str));
+	end.
+
+    INPUTS
+
+	Str   : The address of the block to free, as returned by
+		AllocString.  Str must point to the beginning of
+		the block, and the entire block will be freed.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	AllocString, GetMem, FreePCQMem, AllocMem, FreeMem
+
+
+PCQ/Get					PCQ/Get
+
+    NAME
+	Get - advance the input file pointer
+
+    SYNOPSIS
+	Procedure Get(VAR F : Any file type);
+
+    DESCRIPTION
+	Get advances the file pointer to the next record.  In
+	a Text file, it advances it to the next character.
+
+	Get is normally used by programs that access the file
+	buffer directly through the F^ syntax.  It lets you
+	examine the contents of a file without reading values
+	into an extra variable.
+
+    EXAMPLE
+
+	Program TypeFiles;
+	{$I "Include:Utils/Parameters.i"}
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    InFile   : Text;
+	    FileName : String;
+	    ParamNum : Integer;
+	begin
+	    FileName := AllocString(256);
+	    ParamNum := 1;
+	    repeat
+		GetParam(ParamNum,FileName);
+		if strlen(FileName) > 0 then begin
+		    if ReOpen(FileName, InFile) then begin
+			while not EOF(InFile) do begin
+			    Write(InFile^);
+			    Get(InFile);
+			end;
+			Close(InFile);
+		    end else
+			Writeln('Could not open ', FileName);
+		end;
+		Inc(ParamNum);
+	    until strlen(FileName) = 0;
+	end.
+
+    INPUTS
+
+	F     : Any PCQ file variable open for input
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Reopen, Reset, Put, Read, Readln
+
+
+Utils/DateTools/GetDescription		Utils/DateTools/GetDescription
+
+    NAME
+	GetDescription - convert seconds to a date description
+
+    SYNOPSIS
+	Procedure GetDescription(Total  : Integer;
+				 VAR DD : DateDesription);
+
+    DESCRIPTION
+	This routine converts the time format of the timer.device
+	into a more easily used form.  The timer.device returns
+	a time that is the number of seconds and microseconds after
+	midnight on January 1, 1978, the same numbers Intuition
+	returns in the CurrentTime function.  This routine takes
+	that number of seconds and converts it into a year, month,
+	day, etc.
+
+	If you have the time in a DateStamp format (from AmigaDOS),
+	you can use the StampDesc routine to do the same thing.
+
+	The DateDescription record is defined as follows:
+
+	    DaysOfTheWeek = (Sunday, Monday, Tuesday, Wednesday,
+				Thursday, Friday, Saturday);
+
+	    DateDescription = record
+		Day	: Byte;		 { Day of month, 1..31 }
+		Month	: Byte;		 { Month, 1..12 }
+		Year	: Short;	 { Year, 1978... }
+		DOW	: DaysOfTheWeek; { Sunday .. Saturday }
+		Hour	: Byte;		 { 0..23.  0 = 12 AM, 12 = Noon }
+		Minute	: Byte;		 { 0..59 }
+		Second	: Byte;		 { 0..59 }
+	    end;
+
+    EXAMPLE
+
+	Program ShowDate;
+	{$I "Include:Utils/DateTools.i"}
+	{$I "Include:Intuition/Intuition.i"}
+	var
+	    MySecs, MyMicros : Integer;
+	    MyDate  : DateDescription;
+	begin
+	    CurrentTime(MySecs, MyMicros);
+	    GetDescription(MySecs, MyDate);
+	    with MyDate do
+		Writeln(MonthNames[Month], ' ', Day, ', ', Year);
+	end.
+
+    INPUTS
+
+	Total : The total number of seconds after midnight on
+		January 1, 1978, e.g. from a TimeVal.
+	DD    : A DateDescription record
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreateTimer, GetSysTime, TimeDesc, StampDesc, CurrentTime
+
+
+Utils/DOSUtils/GetFileHandle		Utils/DOSUtils/GetFileHandle
+
+    NAME
+	GetFileHandle - return the AmigaDOS handle of a PCQ file
+
+    SYNOPSIS
+	Function GetFileHandle(VAR f : Text) : FileHandle;
+
+    DESCRIPTION
+	GetFileHandle returns the AmigaDOS FileHandle BPTR of the
+	specified PCQ file so you can use it in DOS routines.
+
+    EXAMPLE
+
+	Program WhereFrom;
+	{$I "Include:Utils/DOSUtils.i"}
+	{$I "Include:Libraries/DOS.i"}
+	begin
+	    if IsInteractive(GetFileHandle(Input)) then
+		Writeln('Input is coming from the console')
+	    else
+		Writeln('Input is coming from a file');
+	end.
+
+    INPUTS
+
+	f     : An open PCQ file variable
+
+    RESULTS
+	The associated AmigaDOS FileHandle
+
+    BUGS
+
+    SEE ALSO
+	IsInteractive, Seek, DOSRead, DOSWrite
+
+
+Utils/PCQMemory/GetMem			Utils/PCQMemory/GetMem
+
+    NAME
+	GetMem - allocate PCQ memory
+
+    SYNOPSIS
+	Procedure GetMem(VAR Ptr : Address; Size : Integer);
+
+    DESCRIPTION
+	GetMem allocates PCQ memory from the system pool.  PCQ
+	memory is automatically returned to the system at the
+	end of the program's run.  It also makes use of the
+	HeapError routine to help recover from low memory
+	situations.
+
+	PCQ memory, which is also returned by AllocString and
+	New, is always allocated with the flags MEMF_PUBLIC and
+	MEMF_CLEAR.  If you have different requirements, you'll
+	need to call Exec's AllocMem or Intuition's AllocRemember
+	explicitly.
+
+	Since the PCQ memory allocation scheme uses calls to
+	AllocRemember, each memory allocation will actually try
+	to allocate between 12 and 20 extra bytes.  If the memory
+	not available, the HeapError function takes over.  By
+	default, the program aborts with run-time error 54.
+
+    EXAMPLE
+
+	Program HogMemory;
+	{$I "Include:Utils/PCQMemory.i"}
+	var
+	    p : Address;
+	begin
+	    GetMem(p,100000);
+	end. { The memory is automatically returned }
+
+    INPUTS
+
+	Ptr   : Any pointer type
+	Size  : The amount of memory, in bytes, to allocate
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	FreePCQMem, AllocString, FreeString
+
+
+Utils/Parameters/GetParam		Utils/Parameters/GetParam
+
+    NAME
+	GetParam - return an argument from the command line
+
+    SYNOPSIS
+	Procedure GetParam(Num : Short; Dest : String);
+
+    DESCRIPTION
+	GetParam copies a parameter into the string Dest.  Dest
+	must already be allocated.  The parameter can come from
+	the CLI CommandLine, or it could be the name of an icon
+	from the Workbench startup message.  If the parameter
+	doesn't exist, Dest will have zero length.
+
+	GetParam handles quotes correctly, and does not modify
+	CommandLine.
+
+    EXAMPLE
+
+	Program ShowParams;
+	{$I "Include:Utils/Parameters.i"}
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    n         : Short;
+	    Parameter : String;
+	begin
+	    Parameter := AllocString(256);
+	    n := 1;
+	    repeat
+		GetParam(n, Parameter);
+		if strlen(Parameter) > 0 then
+		    Writeln('Parameter ', n, ' is "', Parameter, '"');
+	    until strlen(Parameter) = 0;
+	end.
+
+    INPUTS
+
+	Num   : The number of the parameter to copy, starting at 1.
+	Dest  : The buffer into which to copy the parameter.  It must
+		already be allocated.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	GetStartupMsg
+
+
+Utils/Parameters/GetStartupMsg		Utils/Parameters/GetStartupMsg
+
+    NAME
+	GetStartupMsg - return the Workbench startup message
+
+    SYNOPSIS
+	Function GetStartupMsg : WBStartupPtr;
+
+    DESCRIPTION
+	This routine returns a pointer to the message sent by the
+	workbench to start up your task.  If your task was started
+	from the CLI, it will return Nil.
+
+    EXAMPLE
+	See Examples/Icons.p
+
+    INPUTS
+	None
+
+    RESULTS
+	A pointer to a WBStartup record, or Nil if the process was
+	executed from the CLI.
+
+    BUGS
+
+    SEE ALSO
+
+
+Utils/TimerUtils/GetSysTime		Utils/TimerUtils/GetSysTime
+
+    NAME
+	GetSysTime - return the current system date and time
+
+    SYNOPSIS
+	Procedure GetSysTime(WhichTimer : TimeRequestPtr;
+			     VAR TV     : TimeVal);
+
+    DESCRIPTION
+	GetSysTime fills in the TimeVal structure with the current
+	date and time, expressed as the number of seconds since
+	midnight, January 1, 1978.
+
+    EXAMPLE
+	See Examples/Dry.p, Examples/TimerTest.p, Examples/TimeProg.p
+
+    INPUTS
+
+	WhichTimer : A pointer to a TimeRequest record, returned by
+		     CreateTimer.
+	TV         : A TimeVal record to store the current time.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreateTimer, CurrentTime, DateStamp, GetDescription
+
+
+Utils/CRT/GotoXY			Utils/CRT/GotoXY
+
+    NAME
+	GotoXY - move the cursor to column X and row Y
+
+    SYNOPSIS
+	Procedure GotoXY(CRT : Address; X, Y : Short);
+
+    DESCRIPTION
+	This routine moves the window's text cursor (which
+	is not the same as the graphics cursor) to the
+	position X,Y.  This position is measured in characters,
+	not pixels.
+
+    EXAMPLE
+	See Examples/Map.p
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block,
+		as returned by AttachConsole
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, MaxX, MaxY
+
+
+Utils/StringLib/Hash			Utils/StringLib/Hash
+
+    NAME
+	Hash - calculate the AmigaDOS hash value of a string
+
+    SYNOPSIS
+	Function Hash(Str : String) : Short;
+
+    DESCRIPTION
+	This function calculates a hash value for a given string
+	the same way they are calculated for DOS0 (the original
+	file system) directories.  This method looks like this:
+
+		Function Hash(Str : String) : Short;
+		var
+		    i, Result : Short;
+		begin
+		    Result := strlen(Str);
+		    for i := 0 to strlen(Str) do
+			Result := ((Result * 13) +
+				   Ord(toupper(Str[i]))) and $07FF;
+		end;
+
+    EXAMPLE
+
+	Program CalculateHash;
+	{$I "Include:Utils/StringLib.i"}
+	begin
+	    Writeln('The hash value of the command line is: ',
+		    Hash(CommandLine));
+	end.
+
+    INPUTS
+
+	Str   : The string to examine
+
+    RESULTS
+	A hash value between 0 and 16383
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Inc					PCQ/Inc
+
+    NAME
+	Inc - increment a variable
+
+    SYNOPSIS
+	Procedure Inc(VAR v : Any Integer or pointer type
+			[ ; Amount : Integer ] );
+
+    DESCRIPTION
+	The Inc procedure is normally used to add to an Integer
+	type.  If v is an integer type and there is no amount
+	specified, Inc will add 1.  Otherwise, it will add Amount.
+	Note that this is somewhat faster than v := v + Amount.
+
+	For pointer types, Inc advances the pointer to the next
+	element.  For example, if v is a pointer to Real, Inc(v)
+	will actually add 4 (the size of a Real) to v.  If you
+	used an Amount, Inc would add Amount*4 to v.  This lets
+	you move a pointer along an array of items.
+
+    EXAMPLE
+
+	Program ShowInc;
+	var
+	    i : Integer;
+	    s : Short;
+	    p : ^Integer;
+	    q : ^Short;
+	begin
+	    Inc(i);    { i := i + 1 }
+	    Inc(s,45); { s := s + 45 }
+	    Inc(p,3);  { p := p + 3*4 }
+	    Inc(q);    { q := q + 2 }
+	end.
+
+    INPUTS
+
+	v      : Any Integer or pointer type.
+	Amount : An amount to add to v.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Dec
+
+
+Utils/BuildMenu/InitializeMenu		Utils/BuildMenu/InitializeMenu
+
+    NAME
+	InitializeMenu - set up the BuildMenu system.
+
+    SYNOPSIS
+	Procedure InitializeMenu(w : WindowPtr);
+
+    DESCRIPTION
+	InitializeMenu creates a blank menu system for a the
+	BuildMenu system.
+
+	InitializeMenu must be called before any of the other
+	BuildMenu routines.
+
+	Note that the BuildMenu routines can only define one
+	menu strip at a time.
+
+    EXAMPLE
+	see Examples/SmallCom.p, Examples/DeadKeysPlus.p,
+	    Examples/ConsoleTest.p
+
+    INPUTS
+	w : a pointer to an open Window.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	DisposeMenu, NewMenu, NewItem, NewSubItem, AttachMenu,
+	DetachMenu
+
+
+
+Utils/CRT/InsLine			Utils/CRT/InsLine
+
+    NAME
+	InsLine - insert a text line
+
+    SYNOPSIS
+	Procedure InsLine(CRT : Address);
+
+    DESCRIPTION
+	InsLine inserts one text line at the current cursor
+	position, moving all lines below it down.
+
+    EXAMPLE
+
+	Procedure SplitApart(CRT : Address);
+	begin
+	    ClrScr(CRT);
+	    WriteString(CRT, "The First Line\n");
+	    WriteString(CRT, "The Third Line");
+	    GotoXY(CRT,1,2);
+	    InsLine(CRT);
+	    WriteString(CRT, "The Second Line");
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block,
+		as returned by AttachConsole
+
+    RESULTS
+	None
+
+    SEE ALSO
+	AttachConsole, DelLine, GotoXY
+
+
+Utils/StringLib/IntToStr		Utils/StringLib/IntToStr
+
+    NAME
+	IntToStr - convert an integer to its character representation
+
+    SYNOPSIS
+	Function IntToStr(Dest : String; Int : Integer) : Integer;
+
+    DESCRIPTION
+	IntToStr converts the integer Int to its string form in the
+	Dest string.  It returns the number of characters in the
+	new string, from 0 to 11.  If Int is negative, the string
+	will start off with a minus sign, but there will be no
+	extra spaces before or after the number.  The string will
+	be null-terminated.
+
+    EXAMPLE
+
+	Program ShowInts;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    MyInt : Integer;
+	    Str   : String;
+	begin
+	    Str := AllocString(12);
+	    Write('Enter an integer: ');
+	    Readln(MyInt);
+	    MyInt := IntToStr(Str, MyInt);
+	    Writeln('That looks like "', Str, '"');
+	end.
+
+    INPUTS
+
+	Str   : The destination string, which must be long enough
+		to hold the result, which will be no more than
+		11 characters.
+	Int   : The number to represent.
+
+    RESULTS
+	The number of characters, from 1 to 11, in the character
+	representation.
+
+    BUGS
+
+    SEE ALSO
+
+
+Utils/StringLib/isalnum			Utils/StringLib/isalnum
+
+    NAME
+	isalnum - check if the character is a letter or digit
+
+    SYNOPSIS
+	Function isalnum(c : Char) : Boolean;
+
+    DESCRIPTION
+	This function checks whether the character is in the
+	range a..z, A..Z or '0'..'9'.  In other words, it returns
+	TRUE if isalpha(c) or isdigit(c) is TRUE.
+
+    EXAMPLE
+
+	Program CheckAll;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    c : Char;
+	begin
+	    for c := Chr(0) to Chr(255) do begin
+		Write('Chr(', Ord(c), ') is ');
+		if not isalnum(c) then
+		    Write('not ');
+		Writeln('alphanumeric');
+	    end;
+	end.
+
+    INPUTS
+
+	c     : The character to check.
+
+    RESULTS
+	TRUE if the character is in the range a..z, A..Z or 0..9, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	isalpha, isdigit
+
+
+Utils/StringLib/isalpha			Utils/StringLib/isalpha
+
+    NAME
+	isalpha - check if character is in a..z or A..Z
+
+    SYNOPSIS
+	Function isalpha(c : Char) : Boolean;
+
+    DESCRIPTION
+	This function checks whether the character is an
+	alphabetic character, i.e. in the range a..z or
+	A..Z.
+
+    EXAMPLE
+
+	Program CheckAll;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    c : Char;
+	begin
+	    for c := Chr(0) to Chr(255) do begin
+		Write('Chr(', Ord(c), ') is ');
+		if not isalpha(c) then
+		    Write('not ');
+		Writeln('a letter');
+	    end;
+	end.
+
+    INPUTS
+
+	c     : The character to check
+
+    RESULTS
+	TRUE if the character is in a..z or A..Z, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	isalnum, isupper, islower
+
+
+Utils/StringLib/isdigit			Utils/StringLib/isdigit
+
+    NAME
+	isdigit - check if character is in the range '0'..'9'
+
+    SYNOPSIS
+	Function isdigit(c : Char) : Boolean;
+
+    DESCRIPTION
+	isdigit returns TRUE if the character is a digit character,
+	i.e. it's in the range Chr(48) to Chr(57), or '0'..'9'.
+
+    EXAMPLE
+
+	Program CheckAll;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    c : Char;
+	begin
+	    for c := Chr(0) to Chr(255) do begin
+		Write('Chr(', Ord(c), ') is ');
+		if not isdigit(c) then
+		    Write('not ');
+		Writeln('a digit');
+	    end;
+	end.
+
+    INPUTS
+
+	c     : The character to check
+
+    RESULTS
+	TRUE if the character is in the range '0'..'9', or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	isalnum, isalpha
+
+
+Utils/StringLib/islower			Utils/StringLib/islower
+
+    NAME
+	islower - check if character is in a..z
+
+    SYNOPSIS
+	Function islower(c : Char) : Boolean;
+
+    DESCRIPTION
+	This function returns TRUE if the character is a lower
+	case letter, i.e. a..z.
+
+    EXAMPLE
+
+	Program CheckAll;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    c : Char;
+	begin
+	    for c := Chr(0) to Chr(255) do begin
+		Write('Chr(', Ord(c), ') is ');
+		if not islower(c) then
+		    Write('not ');
+		Writeln('a lower case letter');
+	    end;
+	end.
+
+    INPUTS
+
+	c     : The character to check
+
+    RESULTS
+	TRUE if the character is in the range a..z, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	isupper
+
+
+Utils/StringLib/isspace			Utils/StringLib/isspace
+
+    NAME
+	isspace - check if character is 'white space'
+
+    SYNOPSIS
+	Function isspace(c : Char) : Boolean;
+
+    DESCRIPTION
+	This function checks whether the character is a white
+	space character, which is either a space, carraige
+	return, line feed, tab, or form feed.
+
+    EXAMPLE
+
+	Program CheckAll;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    c : Char;
+	begin
+	    for c := Chr(0) to Chr(255) do begin
+		Write('Chr(', Ord(c), ') is ');
+		if not isupper(c) then
+		    Write('not ');
+		Writeln('white space');
+	    end;
+	end.
+
+    INPUTS
+
+	c     : The character to check.
+
+    RESULTS
+	TRUE if the character is white space, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	isalpha, isdigit
+
+
+Utils/StringLib/isupper			Utils/StringLib/isupper
+
+    NAME
+	isupper - check if character is in A..Z
+
+    SYNOPSIS
+	Function isupper(c : Char) : Boolean;
+
+    DESCRIPTION
+	This routine checks whether the character is an upper
+	case letter.
+
+    EXAMPLE
+
+	Program CheckAll;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    c : Char;
+	begin
+	    for c := Chr(0) to Chr(255) do begin
+		Write('Chr(', Ord(c), ') is ');
+		if not isupper(c) then
+		    Write('not ');
+		Writeln('an uppercase letter');
+	    end;
+	end.
+
+    INPUTS
+
+	c     : The character to check
+
+    RESULTS
+	TRUE if the character is in the range A .. Z, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	islower
+
+
+Utils/CRT/KeyPressed			Utils/CRT/KeyPressed
+
+    NAME
+	KeyPressed - test whether a key has been pressed
+
+    SYNOPSIS
+	Function KeyPressed(CRT : Address) : Boolean;
+
+    DESCRIPTION
+	This routine tests whether a key is waiting to be
+	read with ReadKey.
+
+    EXAMPLE
+
+	Procedure ReallyBusyWait(CRT : Address);
+	begin
+	    while not KeyPressed(CRT) do
+		WriteString(CRT, "Waiting!");
+	    ClrScr(CRT);
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block, as
+		returned by the AttachConsole function.
+
+    RESULTS
+	TRUE if a key is waiting, FALSE otherwise.
+
+    SEE ALSO
+	AttachConsole, ReadKey
+
+
+PCQ/Ln					PCQ/Ln
+
+    NAME
+	Ln - compute the natural logarithm
+
+    SYNOPSIS
+	Function Ln(Expr : Real) : Real;
+
+    DESCRIPTION
+	The Ln function computes the natural logarithm of the
+	argument.  If you have used the $N+ directive, this
+	value is computed by the mathtrans.library.  Otherwise,
+	it is calculated by internal PCQ routines.
+
+    EXAMPLE
+
+	Program ShowLn;
+	var
+	    Value : Real;
+	begin
+	    Write('Please enter a value: ');
+	    Readln(Value);
+	    Writeln('Natural logarithm is ', Ln(Value):0:3);
+	end.
+
+    INPUTS
+
+	Expr  : A Real type expression
+
+    RESULTS
+	The natural logarithm of Expr
+
+    BUGS
+
+    SEE ALSO
+	Exp
+
+Utils/CRT/MaxX				Utils/CRT/MaxX
+
+    NAME
+	MaxX - returns the maximum column of the window
+
+    SYNOPSIS
+	Function MaxX(CRT : Address) : Short;
+
+    DESCRIPTION
+	MaxX returns the rightmost column of the window, in
+	character coordinates, not pixels.  If the window has
+	a sizing gadget, this value might change.
+
+    EXAMPLE
+
+	Procedure BorderBox(CRT : Address);
+	var
+	    i : Short;
+	begin
+	    for i := 1 to MaxX(CRT) do begin
+		GotoXY(CRT, i, 1);
+		WriteString(CRT, "=");
+		GotoXY(CRT, i, MaxY(CRT));
+		WriteString(CRT, "=");
+	    end;
+	    for i := 2 to Pred(MaxY(CRT)) do begin
+		GotoXY(CRT, 1, i);
+		WriteString(CRT, "|");
+		GotoXY(CRT, MaxX(CRT), i);
+		WriteString(CRT, "|");
+	    end;
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block, as
+		returned by AttachConsole
+
+    RESULTS
+	The rightmost column, in character coordinates, for the
+	window at the moment.
+
+    SEE ALSO
+	AttachConsole, MaxY, GotoXY, WhereX, WhereY
+
+
+Utils/CRT/MaxY				Utils/CRT/MaxY
+
+    NAME
+	MaxY - return the maximum row of the window
+
+    SYNOPSIS
+	Function MaxY(CRT : Address) : Short;
+
+    DESCRIPTION
+	This function returns the bottommost row for the window.
+	If the window has a sizing gadget, this value could change
+	throughout the program.
+
+    EXAMPLE
+
+	Procedure BorderBox(CRT : Address);
+	var
+	    i : Short;
+	begin
+	    for i := 1 to MaxX(CRT) do begin
+		GotoXY(CRT, i, 1);
+		WriteString(CRT, "=");
+		GotoXY(CRT, i, MaxY(CRT));
+		WriteString(CRT, "=");
+	    end;
+	    for i := 2 to Pred(MaxY(CRT)) do begin
+		GotoXY(CRT, 1, i);
+		WriteString(CRT, "|");
+		GotoXY(CRT, MaxX(CRT), i);
+		WriteString(CRT, "|");
+	    end;
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block, as
+		returned by AttachConsole.
+
+    RESULTS
+	The bottommost row, in character coordinates, of the
+	window at the moment.
+
+    SEE ALSO
+	AttachConsole, MaxX, GotoXY, WhereX, WhereY
+
+
+PCQ/New					PCQ/New
+
+    NAME
+	New - allocate space for a record
+
+    SYNOPSIS
+	Procedure New(var p : Any pointer type);
+
+    DESCRIPTION
+	The New procedure allocates memory for an instance of the
+	type referenced by the pointer.  The memory is allocated
+	through the PCQ memory allocation mechanism, which means
+	that each allocation will have between 12 and 19 bytes of
+	overhead (compared to 0 to 7 bytes for direct Exec calls).
+
+	If the memory is not available, the HeapError function is
+	called, and it determines the action taken from that point.
+	By default, the program terminates with runtime error 54,
+	but it could simply assign Nil to the variable p.
+
+	PCQ memory is always allocated with the flags MEMF_PUBLIC
+	and MEMF_CLEAR.  If you need any other flags, you'll need
+	to call AllocMem directly.
+
+    EXAMPLE
+
+	Program ShowNew;
+	type
+	    Rec = record
+		      Field1, Field2 : Integer;
+		  end;
+	var
+	    Ptr : ^Rec;
+	begin
+	    New(Ptr);
+	    Writeln('Ptr allocated at ', Integer(Ptr));
+	end.
+
+    INPUTS
+
+	p     : Any pointer variable.  You should not use the
+		Address type, since Address does not point to a
+		specific type.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Dispose, GetMem, AllocString, AllocMem
+
+
+Utils/BuildMenu/NewItem			Utils/BuildMenu/NewItem
+
+    NAME
+	NewItem - add a menu item to the current menu
+
+    SYNOPSIS
+	Procedure NewItem(Name : String; Comm : Char);
+
+    DESCRIPTION
+	NewItem adds a menu item to the current menu strip, under
+	the menu defined in the most recent NewMenu call.  The
+	item is placed directly below any previous item defined
+	for the same menu.
+
+	You must call NewMenu before calling this routine, and you
+	must call this routine before calling NewSubItem.
+
+	NewItem lets you set up a command key for the item by
+	passing a character in the Comm parameter.  If you don't
+	want a keyboard equivalent for this item (if the item has
+	a SubItem, for example, it shouldn't have one), just pass
+	Chr(0) for Comm.
+
+	When defining items and sub-items, you should add spaces to
+	the text of the shortest items to make all the text the same
+	length.  That will make all of the selection boxes the same
+	size, which looks better and is easier to use than different
+	sized boxes.
+
+    EXAMPLE
+	see Examples/SmallCom.p, Examples/DeadKeysPlus.p,
+	    Examples/ConsoleTest.p
+
+    INPUTS
+	Name : a string defining the text to be displayed for the
+	       item.
+	Comm : the command key to be used for this item, or Chr(0)
+	       if no command key should be used.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	InitializeMenu, NewMenu, NewSubItem, AttachMenu,
+	DetachMenu
+
+
+Utils/BuildMenu/NewMenu			Utils/BuildMenu/NewMenu
+
+    NAME
+	NewMenu - attach a menu to the current menu strip
+
+    SYNOPSIS
+	Procedure NewMenu(MenuText : String);
+
+    DESCRIPTION
+	NewMenu adds another menu to the current menu strip.
+	The menu is placed just to the right of any previous one,
+	with a width based on the window's font.
+
+	NewMenu must be called at least once before any calls
+	to NewItem.
+
+    EXAMPLE
+	See Examples/SmallCom.p, Examples/DeadKeysPlus.p,
+	    Examples/ConsoleTest.p
+
+    INPUTS
+	MenuText : The text you want displayed on the menu bar.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	InitializeMenu, NewItem, NewSubItem, AttachMenu,
+	DetachMenu
+
+
+Utils/BuildMenu/NewSubItem		Utils/BuildMenu/NewSubItem
+
+    NAME
+	NewSubItem - add a sub-item to a menu item
+
+    SYNOPSIS
+	Procedure NewSubItem(Name : String; Comm : Char);
+
+    DESCRIPTION
+	NewSubItem is the same as NewItem, but adds the new item
+	to the most recent item, rather than the most recent menu.
+
+	You must call NewItem before calling this routine.
+
+	If you do not want to use a keyboard equivalent for the
+	item, pass Chr(0) in the Comm parameter.
+
+    EXAMPLE
+	See Examples/SmallCom.p and Examples/DeadKeysPlus.p
+
+    INPUTS
+	Name : The text to be displayed in the sub item.
+	Comm : A command key, or Chr(0) if no keyboard equivalent
+	       should be used.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	InitializeMenu, NewMenu, NewItem, AttachMenu,
+	DetachMenu
+
+
+PCQ/Open				PCQ/Open
+
+    NAME
+	Open - open a Pascal file for writing
+
+    SYNOPSIS
+	Function Open(	FileName   : String;
+			FileVar    : VAR Any file type
+		    [ ; BufferSize : Integer ] ) : Boolean;
+
+    DESCRIPTION
+	The Open function opens a file for output, erasing any
+	existing file of the same name.  If the file opens
+	correctly, Open returns True.  If anything goes wrong,
+	it returns False.  The Open function is provided for
+	convenience only - you can do the same job by calling
+	Rewrite and checking IOResult.
+
+	The BufferSize parameter determines how large the file
+	buffer will be (i.e. how many bytes you can write before
+	the program has to call AmigaDOS).  It is optional - if
+	you don't specify a value, 128 is used.
+
+	Open does not affect IOResult, so you never need to
+	check it after calling Open.  The downside of that is
+	you can't find out exactly why the file could not be
+	opened - to do that, use Rewrite and check IOResult.
+
+    EXAMPLE
+
+	Program ConToCon;
+	var
+	    OutFile : Text;
+	    c       : Char;
+	begin
+	    if Open("CON:100/50/200/100/Copy Output",OutFile) then begin
+		repeat
+		    Read(c);
+		    Write(OutFile, c);
+		until c = '!';
+		Readln;
+		Close(OutFile);
+	    end else
+		Writeln('Could not open console window');
+	end.
+
+    INPUTS
+
+	FileName   : A String containing the AmigaDOS file name and
+		     optional path.
+	FileVar    : Any PCQ file type.
+	BufferSize : The number of bytes to allocate as a buffer.  If
+		     no value is given, 128 will be used.
+
+    RESULTS
+	TRUE if the file opened correctly, or
+	FALSE if anything at all went wrong.
+
+    BUGS
+
+    SEE ALSO
+	Rewrite, ReOpen, Reset, Close, IOResult
+
+
+Utils/ConsoleUtils/OpenConsoleDevice	Utils/ConsoleUtils/OpenConsoleDevice
+
+    NAME
+	OpenConsoleDevice - assign a valid value to ConsoleBase
+
+    SYNOPSIS
+	Procedure OpenConsoleDevice;
+
+    DESCRIPTION
+	This routine just opens the console.device without attaching
+	it to a window, so you can make calls to RawKeyConvert and
+	CDInputHandler.  It also needs to be open for DeadKeyConvert.
+
+    EXAMPLE
+	see Examples/SmallCom.p, Examples/Map.p, Examples/3d.p
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    SEE ALSO
+	CloseConsoleDevice, DeadKeyConvert
+
+
+Utils/DoubleBuffer/OpenDoubleBuffer	Utils/DoubleBuffer/OpenDoubleBuffer
+
+    NAME
+	OpenDoubleBuffer - create a double buffered screen and window
+
+    SYNOPSIS
+	Function OpenDoubleBuffer(ns : NewScreenPtr) : WindowPtr;
+
+    DESCRIPTION
+	OpenDoubleBuffer creates a screen according to the NewScreen
+	passed to it, then opens a borderless backdrop window on it.
+	It then allocates extra BitMap memory, and sets the Window's
+	BitMap to point to this second buffer.  When the function
+	returns, you can pull the RastPortPtr from the Window
+	structure, and draw into that same RastPort for the entire
+	program.  When you want to display the RastPort, just call
+	SwapBuffers.
+
+	Since this routine creates Screens and Windows that the
+	system doesn't expect, you should try to avoid having the
+	system draw into them.  This means that you should not add
+	menus or Window imagery - you should only use RastPort-level
+	graphics.library calls.
+
+	Windows and Screens opened with OpenDoubleBuffer should
+	only be closed with CloseDoubleBuffer.
+
+    EXAMPLE
+	See Examples/3d.p
+
+    INPUTS
+
+	ns    : A pointer to a NewScreen structure.
+
+    RESULTS
+	A valid WindowPtr, or Nil if something went wrong.
+
+    BUGS
+
+    SEE ALSO
+	CloseDoubleBuffer, SwapBuffers
+
+
+Utils/MathTransUtils/OpenMathTrans	Utils/MathTransUtils/OpenMathTrans
+
+    NAME
+	OpenMathTrans - open the mathtrans.library
+
+    SYNOPSIS
+	Function OpenMathTrans : Boolean;
+
+    DESCRIPTION
+	This routine is equivalent to calling OpenLibrary on the
+	Motorola FFP trancendental math library.  If the library
+	can be opened, OpenMathTrans returns TRUE, and otherwise
+	it returns FALSE.
+
+	This routine initializes MathTransBase, which is defined
+	in Libraries/MathTrans.i.
+
+    EXAMPLE
+
+	Program TryTrans;
+	{$I "Include:Utils/MathTransUtils.i"}
+	begin
+	    if OpenMathTrans then begin
+		Writeln('mathtrans.library is available');
+		CloseMathTrans;
+	    end else
+		Writeln('mathtrans.library is not available');
+	end.
+
+    INPUTS
+	None
+
+    RESULTS
+	TRUE if the library could be opened, or
+	FALSE if something went wrong
+
+    BUGS
+
+    SEE ALSO
+	CloseMathTrans, FlushMathTrans, and all the mathtrans.library
+	routines themselves (e.g. SPAcos, APCosh, etc).
+
+
+PCQ/Ord					PCQ/Ord
+
+    NAME
+	Ord - return the ordinal value of an expression
+
+    SYNOPSIS
+	Function Ord(Expr : Any ordinal expression) : Integer;
+
+    DESCRIPTION
+	The Ord function returns the Integer value of any ordinal
+	type.
+
+    EXAMPLE
+
+	Program ShowOrd;
+	var
+	    Ch : Char;
+	begin
+	    Write('Enter a character: ');
+	    Readln(Ch);
+	    Writeln('The ordinal value of ', Ch, ' is ', Ord(Ch));
+	end.
+
+    INPUTS
+
+	Expr  : Any ordinal expression
+
+    RESULTS
+	The Integer corresponding to its ordinal value within
+	the type.
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Pred				PCQ/Pred
+
+    NAME
+	Pred - return the predecessor of an expression
+
+    SYNOPSIS
+	Function Pred(Expr : Any ordinal type) : The same type;
+
+    DESCRIPTION
+	The Pred function returns the previous value within an
+	ordinal type.  If the expression is already at its
+	minimum value, it will wrap around.  In the case of
+	enumerated types, that will almost always produce
+	nonsense results.
+
+    EXAMPLE
+
+	Program ShowPred;
+	var
+	    month : (january,february,march,april,may,
+		     june,july,august,september,october,
+		     november,december);
+	begin
+	    month := december;
+	    while month > january do
+		month := Pred(month);
+	end.
+
+    INPUTS
+
+	Expr  : Any ordinal expression
+
+    RESULTS
+	A value of the same ordinal type
+
+    BUGS
+
+    SEE ALSO
+	Dec, Succ
+
+
+Utils/RunProgram/ProgramFinished	Utils/RunProgram/ProgramFinished
+
+    NAME
+	ProgramFinished - check child status
+
+    SYNOPSIS
+	Funtion ProgramFinished(RP : RunProgPtr) : Boolean;
+
+    DESCRIPTION
+	If a child created by RunSegmentNW or RunProgramNW has
+	finished, this routine deallocates all the resources
+	allocated by the run routines and returns TRUE.  If not,
+	it returns FALSE.
+
+	Note that this routine will only free resources it has
+	allocated - it will not, for example, unload a segment
+	that it did not load.
+
+    EXAMPLE
+
+	Program BusySystem;
+	{$I "Include:Utils/RunProgram.i"}
+	var
+	    Child : RunProgPtr;
+	begin
+	    Child := RunProgramNW("OtherFile",4000);
+	    if Child <> Nil then begin
+		repeat
+		    Writeln('Otherfile is still running');
+		until ProgramFinished(Child);
+	    end else
+		Writeln('Could not load OtherFile');
+	end.
+
+    INPUTS
+
+	RP    : A pointer to a private information block as
+		returned by RunSegmentNW or RunProgramNW.
+
+    RESULTS
+	TRUE if the child process has finished execution, in
+	     which case the resources allocated for the process
+	     will have been freed.
+	FALSE if the child is still running.
+
+    BUGS
+
+    SEE ALSO
+	RunProgramNW, RunProgram, RunSegmentNW, RunSegment,
+	FinishProgram
+
+
+PCQ/Put					PCQ/Put
+
+    NAME
+	Put - advance an output file pointer
+
+    SYNOPSIS
+	Procedure Put(VAR F : Any type of file);
+
+    DESCRIPTION
+	The Put procedure advances the file pointer on an
+	output file past the current record.  If the file
+	pointer is advanced to the end of the file buffer,
+	the buffer is flushed.
+
+	This routine is normally used in conjunction with
+	the file pointer to write information to a file
+	directly.
+
+    EXAMPLE
+
+	Program ShowPut;
+	begin
+	    Output^ := 'z';
+	    Put(Output);  { Same as Write(Output, 'z'); }
+	end.
+
+    INPUTS
+
+	F     : A PCQ file open for output
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Get, Write, Writeln, Open, Rewrite
+
+
+Utils/ConsoleIO/QueueRead		Utils/ConsoleIO/QueueRead
+
+    NAME
+	QueueRead - tell the console.device where to put character
+
+    SYNOPSIS
+	Procedure QueueRead(Req : IOStdReqPtr; Where : String);
+
+    DESCRIPTION
+	The QueueRead routine lets the console.device know that
+	you want to read a character.  If a character arrives,
+	the console.device will put it in Where and return the
+	Req.  Note that you must have already called OpenDevice
+	to initialize the Req and attach it to a window.
+
+	Remember that the QueueRead returns immediately - it does
+	not wait until a character is available.  You must use
+	CheckIO to see if a character has arrived.
+
+	You might want to check the routines in Utils/CRT.i to see
+	if they better suit your needs.
+
+    EXAMPLE
+
+	Function ReadConCharacter(IO : IOStdReqPtr) : Char;
+	var
+	    CharBuffer  : Char;
+	    Dummy	: Integer;
+	begin
+	    QueueRead(IO, @CharBuffer);
+	    Dummy := WaitIO(IO);
+	    ReadConCharacter := CharBuffer;
+	end;
+
+    INPUTS
+	Req : a pointer to a valid IOStdReq, intialized by
+	      OpenDevice.
+	Where : A pointer to at least one byte of memory to
+		receive the character.
+
+    RESULTS
+	None
+
+    SEE ALSO
+	ConGetChar, ConPutChar, ConPutStr, ConWrite
+
+Utils/Random/RangeRandom		Utils/Random/RangeRandom
+
+    NAME
+	RangeRandom - return a psuedo random integer
+
+    SYNOPSIS
+	Function RangeRandom(MaxValue : Integer) : Integer;
+
+    DESCRIPTION
+	RangeRandom returns a psuedo random number in the range
+	0..MaxValue.  It uses a faster generator than RealRandom,
+	and has a maximum cycle length of 1,000,002.
+
+    EXAMPLE
+
+	Program CheckCycle;
+	{$I "Include:Utils/Random.i"}
+	var
+	    StartPoint : Integer;
+	    Count      : Integer;
+	begin
+	    SelfSeed;
+	    Count := 0;
+	    StartPoint := RangeRandom(Pred(MaxInt));
+	    repeat
+		Inc(Count);
+	    until RangeRandom(Pred(MaxInt)) = StartPoint;
+	    Writeln('The cycle length is ', Count);
+	end.
+
+    INPUTS
+
+	MaxValue : The greatest value the result should take on
+
+    RESULTS
+	An unpredictable Integer in the range 0 to MaxValue
+
+    BUGS
+	Since RangeRandom scales the result using something like
+	(Value mod Succ(MaxValue)), you should not use MaxInt as
+	the maximum value, or you'll cause a divide by zero error.
+
+    SEE ALSO
+	RealRandom, UseSeed, SelfSeed
+
+
+PCQ/Read				PCQ/Read
+
+    NAME
+	Read - input data from a PCQ file
+
+    SYNOPSIS
+	Procedure Read([VAR InputFile; ] References );
+
+    DESCRIPTION
+	The Read procedure gets input from the specified file,
+	or from the standard input file Input if no file is
+	specified.  It assigns to each of the variable
+	references the next value from the file.  If the
+	file is a typed file, each reference must have the
+	same type as the file.  If it is a Text file, the
+	references can have one of several different types,
+	and the sequence of characters read is converted to
+	that type.
+
+	If the reference is an Integer, Short, Word, or Byte
+	type, Read first skips over any 'white space', e.g.
+	spaces, tabs, etc.  It then reads a decimal number,
+	possibly beginning with a minus sign.  The procedure
+	reads all the decimal digits, and leaves the file
+	pointer on the first character following the last
+	digit.  If there were no digits before the first
+	letter, Read sets IOResult to 59.  If there are no
+	digits before the end of file, it sets IOResult to
+	58.
+
+	If the reference is a Char type, Read assigns to it
+	the next character in the file.  Standard Pascal
+	converts control characters into spaces, but PCQ
+	passes them through unchanged.
+
+	If the reference is a Real type, Read inputs the
+	integer portion as described above.  If the next
+	character is a decimal point, Read continues reading
+	digits until the next character is a non-digit.  The
+	file pointer is left on that digit.  The decimal point
+	is optional, and there does not have to be any digits
+	following the decimal point.  There does, however,
+	have to be at least one digit before a decimal point.
+
+	If the reference is a String type, Read inputs
+	all the characters up to, but not including, the
+	next end-of-line marker into the string.  The string
+	must be long enough to hold all these characters.
+	The file pointer is left on the end-of-line marker.
+
+	If the reference is an Array of Char, Read inputs
+	characters until it fills the entire array, or until
+	the end-of-line is reached, whichever comes first.
+	If it hits the end-of-line before filling the array,
+	it pads the remaining part of the array with spaces.
+	The file pointer is left either on the next character
+	or the end-of-line marker.
+
+	Read will set IOResult if it has any errors.  If
+	IOResult is not zero when Read is called, no input
+	will take place.
+
+    EXAMPLE
+
+	Program ShowRead;
+	var
+	    i : Integer;
+	    r : Real;
+	    a : Array [0..9] of Char;
+	begin
+	    Read(i, a, r);
+	    Writeln(i, a:11, r:0:2);
+	end.
+
+	Given the input ' 456abcdefgh' (new line)
+			'      45.'
+	this program will write: '456 abcdefgh  45.00'
+
+    INPUTS
+
+	InputFile  : A PCQ file variable, which must be opened
+		     for input using Reopen or Reset
+	References : Any number of variable references
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Readln, Write, Writeln, Reopen, Reset, Get
+
+Utils/CRT/ReadKey			Utils/CRT/ReadKey
+
+    NAME
+	ReadKey - wait for a keypress, then return the key
+
+    SYNOPSIS
+	Function ReadKey(CRT : Address) : Char;
+
+    DESCRIPTION
+	ReadKey waits until the user presses a key, then returns
+	that key.
+
+    EXAMPLE
+
+	Procedure Typer(CRT : Address);
+	var
+	    Buf : Array [0..1] of Char;
+	begin
+	    Buf[1] := Chr(0);
+	    repeat
+		Buf[0] := ReadKey(CRT);
+		WriteString(CRT, String(@Buf));
+	    until Buf[0] = 'q';
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block as
+		returned by AttachConsole
+
+    RESULTS
+	The character read
+
+    SEE ALSO
+	AttachConsole, KeyPressed
+
+
+PCQ/Readln				PCQ/Readln
+
+    NAME
+	Readln - Read input, then read the rest of the line
+
+    SYNOPSIS
+	Procedure Readln([VAR InputFile : Text;] References );
+
+    DESCRIPTION
+	Readln calls Read to fill in each of the variables
+	references, then continues reading from the file until
+	either the end of file is reached, or the end-of-line
+	marker has been read.  In the latter case the file
+	pointer is placed on the first character of the next
+	line.
+
+	Readln can only be called on Text files, since Typed
+	files do not use lines.
+
+    EXAMPLE
+
+	Program ShowReadln;
+	var
+	    i,j : Integer;
+	begin
+	    Readln(i);
+	    Readln(j);
+	    Writeln(i, ',', j);
+	end.
+
+	Given the input: '456 The rest of the line is ignored' (new line)
+			 '' (new line)
+			 '678' (new line)
+
+	the program will write: '456,678'
+
+    INPUTS
+
+	InputFile  : An open PCQ Text file
+	References : Any number of variable references.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Read, Write, Writeln, Reopen, Reset, Get
+
+
+Utils/Random/RealRandom			Utils/Random/RealRandom
+
+    NAME
+	RealRandom - return a floating point psuedo-random number
+
+    SYNOPSIS
+	Function RealRandom : Real;
+
+    DESCRIPTION
+	RealRandom calculates a psuedo random number using a slow
+	but extremely random method - it actually combines the
+	results of three seperate random number generators to
+	create very long cycle sequences.  The technique was
+	described in the March 1987 issue of Byte.
+
+    EXAMPLE
+
+	Program TemptFate;
+	{$I "Include:Utils/Random.i"}
+	var
+	    R : Float;
+	begin
+	    SelfSeed;
+	    repeat
+		R := RealRandom;
+		Writeln(R:0:4);
+	    until R < 0.1;
+	end.
+
+    INPUTS
+	None
+
+    RESULTS
+	An unexpected FFP floating point value
+
+    BUGS
+
+    SEE ALSO
+	RangeRandom, UseSeed, SelfSeed
+
+
+PCQ/ReOpen				PCQ/ReOpen
+
+    NAME
+	ReOpen - open a file for reading
+
+    SYNOPSIS
+	Function ReOpen(FileName	: String;
+			VAR FileVar	: Any file type
+		    [ ; BufferSize	: Integer ] ) : Boolean;
+
+    DESCRIPTION
+	ReOpen attempts to open an existing file for reading.
+	ReOpen will return True if the file opens correctly, and
+	False otherwise.  The opened file behaves exactly as if
+	it was opened with Reset - this routine is provided just
+	for convenience.
+
+	ReOpen does not set IOResult, so you don't have to check
+	it after a failed call.  If you want specific information
+	about why the file could not be opened, use Reset and
+	check IOResult directly.
+
+	The BufferSize parameter is optional - if it is omitted,
+	the compiler will use the value 128.
+
+    EXAMPLE
+
+	Program ShowText;
+	{$I "Include:Utils/StringLib.i"}
+	{$I "Include:Utils/Parameters.i"}
+	var
+	    c        : Char;
+	    InFile   : Text;
+	    FileName : String;
+	begin
+	    FileName := AllocString(256);
+	    GetParam(1,FileName);
+	    if ReOpen(FileName, InFile, 10000) then begin
+		while not EOF(InFile) do begin
+		    Read(InFile, c);
+		    Write(c);
+		end;
+		Close(InFile);
+	    end else
+		Writeln('Could not open ', FileName);
+	end.
+
+    INPUTS
+
+	FileName   : The AmigaDOS file name, with path if necessary.
+	FileVar    : Any Pascal file type
+	BufferSize : The number of bytes to allocate as a file buffer.
+		     If this parameter is omitted, 128 is used.
+
+    RESULTS
+	TRUE if the file opened correctly, or
+	FALSE if anything went wrong.
+
+    BUGS
+
+    SEE ALSO
+	Reset, Rewrite, Open, IOResult
+
+
+PCQ/Reset				PCQ/Reset
+
+    NAME
+	Reset - open a file for reading
+
+    SYNOPSIS
+	Procedure Reset(VAR F    : Any file type;
+			FileName : String
+			[ ; BufferSize : Integer ] );
+
+    DESCRIPTION
+	The Reset procedure opens a PCQ file for input.  If the
+	file cannot be opened, IOResult is set to a non-zero
+	value.  If you are using automatic IO checking, the
+	default, your program will terminate.  If you have used
+	the {$I-} option to set IO checking to manual, you will
+	need to check the IOResult function before continuing.
+
+	If you specify a BufferSize, Reset will attempt to
+	allocate a buffer of that size (actually the closest
+	multiple of the record size).  If the BufferSize parameter
+	is not used, the default is 128.
+
+    EXAMPLE
+
+	Program OpenUp;
+	{$I "Include:Utils/StringLib.i"}
+	{$I "Include:Utils/Parameters.i"}
+	{$I-  set IO checking to manual }
+	var
+	    FileName : String;
+	    TestFile : Text;
+	begin
+	    FileName := AllocString(256);
+	    GetParam(1,FileName);
+	    Reset(TestFile,FileName,1024);
+	    if IOResult = 0 then begin
+		Writeln('The file is open');
+		Close(TestFile);
+	    end else
+		Writeln('Could not open ', FileName);
+	end.
+
+    INPUTS
+
+	F          : Any PCQ File type
+	FileName   : A String specifying the file name and path, if
+		     necessary.
+	BufferSize : The size of the input buffer to allocate.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Reopen, Rewrite, Open
+
+
+PCQ/Rewrite				PCQ/Rewrite
+
+    NAME
+	Rewrite - open a file for output
+
+    SYNOPSIS
+	Procedure Rewrite(VAR F      : Any file type;
+			  FileName   : String
+		      [ ; BufferSize : Integer ] );
+
+    DESCRIPTION
+	Rewrite opens a PCQ file for output, erasing any existing
+	file of the same name.  If the file does not open
+	correctly, IOResult is set to a non-zero value, which
+	will cause programs using automatic IO checking to
+	abort.
+
+	If a buffer size is not specified, a value of 128 is used.
+
+    EXAMPLE
+
+	Program ShowRewrite;
+	{$I "Include:Utils/Parameters.i"}
+	{$I "Include:Utils/StringLib.i"}
+	{$I- turn off automatic IO checking }
+	var
+	    FileName : String;
+	    TempFile : Text;
+	begin
+	    FileName := AllocString(256);
+	    GetParam(1,FileName);
+	    Rewrite(TempFile, FileName, 10);
+	    if IOResult = 0 then begin
+		Writeln('File opened correctly');
+		Close(TempFile);
+	    end else
+		Writeln('Could not open ', FileName);
+	end.
+
+    INPUTS
+
+	F          : Any file variable.  It should not already
+		     be open.
+	FileName   : The file name and path if necessary
+	BufferSize : The size of the buffer to allocate for
+		     this file.  This value is optional, and
+		     if it's not supplied 128 is used.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Open, Reset, Reopen
+
+
+PCQ/Round				PCQ/Round
+
+    NAME
+	Round - convert a Real value to an Integer by rounding
+
+    SYNOPSIS
+	Function Round(Expr : Real) : Integer;
+
+    DESCRIPTION
+	This routine converts a floating point value to an Integer
+	by rounding it to the nearest whole value.  This routine
+	is implemented as Trunc(Expr + 0.5) for positive Expr or
+	Trunc(Expr - 0.5) for negative values.  Thus it is somewhat
+	slower than the Trunc function, and it always rounds 0.5
+	up for positive values or down for negative.
+
+    EXAMPLE
+
+	Program ShowRound;
+	var
+	    FloatValue : Real;
+	begin
+	    Write('Please enter a Real value: ');
+	    Readln(FloatValue);
+	    Writeln(FloatValue:0:3, ' rounds to ',
+				Round(FloatValue));
+	end.
+
+    INPUTS
+
+	Expr : Any Real type expression
+
+    RESULTS
+	An integer formed by rounding Expr to the nearest whole
+	number.
+
+    BUGS
+
+    SEE ALSO
+	Trunc, Float
+
+
+Utils/RunProgram/RunProgram		Utils/RunProgram/RunProgram
+
+    NAME
+	RunProgram - load and run a program
+
+    SYNOPSIS
+	Function RunProgram(FileName  : String;
+			    StackSize : Integer) : Boolean;
+
+    DESCRIPTION
+	RunProgram loads a program, then runs it as a seperate
+	process.  The child process acts as if it were run from
+	the Workbench, so any programs that can't handle that
+	should not be used with this routine.
+
+	RunProgram returns TRUE if it was able to load the
+	program and successfully create a new process, and
+	FALSE otherwise.  This result doesn't tell you anything
+	about the program's returncode, or any other measure of
+	its success - you'll have to check that some other way.
+
+	This routine provides no way of passing command line
+	parameters to the new process.  Again, you'll have to
+	handle that through configuration files or some other
+	means.
+
+    EXAMPLE
+
+	Program RunOther;
+	{$I "Include:Utils/RunProgram.i"}
+	{$I "Include:Utils/StringLib.i"}
+	{$I "Include:Utils/Parameters.i"}
+	var
+	    ChildName : String;
+	begin
+	    ChildName := AllocString(256);
+	    GetParam(1,ChildName);
+	    if RunProgram(ChildName,4000) then
+		Writeln('Successfully ran ', ChildName)
+	    else
+		Writeln('Could not run ', ChildName);
+	end.
+
+    INPUTS
+
+	FileName  : The filename of the program to load.  It can
+		    include a full path if necessary, and it will
+		    also serve as the process name.
+	StackSize : The number of bytes to allocate for the stack
+
+    RESULTS
+	TRUE if the program was loaded and launched successfully
+	FALSE if RunProgram was not able to load the program, or
+	      was not able to create the new process.
+
+    BUGS
+
+    SEE ALSO
+	RunProgramNW, RunSegment, RunSegmentNW, FinishProgram,
+	ProgramFinished
+
+
+Utils/RunProgram/RunProgramNW		Utils/RunProgram/RunProgramNW
+
+    NAME
+	RunProgramNW - load and run a file, returning immediately
+
+    SYNOPSIS
+	Function RunProgramNW(FileName  : String;
+			      StackSize : Integer) : RunProgPtr;
+
+    DESCRIPTION
+	RunProgramNW loads a program file from the disk, then
+	launches it as a new process.  Unlike RunProgram, this
+	routine returns immediately, while the child process is
+	still running.
+
+	Programs run with this routine behave as if they were
+	run from the Workbench, so AmigaDOS commands like Dir
+	and Copy are out of the question.  PCQ Pascal programs
+	should not have any problems.  The calling program must
+	wait until the child ends before ending itself.
+
+	This routine does not provide a method for passing
+	parameters to the new program.
+
+	If the program is loaded and run successfully, this
+	routine returns a pointer to a private block of memory
+	that tracks system resources allocated for the new
+	process.  RunProgramNW returns Nil if the program could
+	not be loaded, or if the new process could not be created.
+
+    EXAMPLE
+
+	Program MakeChild;
+	{$I "Include:Utils/RunProgram.i"}
+	{$I "Include:Utils/Parameters.i"}
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    ChildName : String;
+	    Child     : RunProgPtr;
+	begin
+	    ChildName := AllocString(256);
+	    GetParam(1,ChildName);
+	    Child := RunProgramNW(ChildName, 4000);
+	    if Child <> Nil then begin
+		repeat
+		    Writeln('It is still running');
+		until ProgramFinished(Child);
+	    end else
+		Writeln('Could not run ', ChildName);
+	end.
+
+    INPUTS
+
+	FileName  : The file name of the program to run, which can
+		    include path information as necessary.  It will
+		    also be used as the process name.
+	StackSize : The size in bytes of the stack to allocate.
+
+    RESULTS
+	If everything goes OK, this routine returns a pointer to
+	a private information block.  If anything went wrong, it
+	returns Nil.
+
+    BUGS
+
+    SEE ALSO
+	RunProgram, RunSegmentNW, RunSegment, FinishProgram,
+	ProgramFinished
+
+Utils/RunProgram/RunSegment		Utils/RunProgram/RunSegment
+
+    NAME
+	RunSegment - create a process from the segment and run it
+
+    SYNOPSIS
+	Function RunSegment(ProcName  : String;
+			    Segment   : Address;
+			    StackSize : Integer) : Boolean;
+
+    DESCRIPTION
+	RunSegment creates a new process from the supplied Segment,
+	and waits for it to finish.  The segment is run as if it
+	were launched from the Workbench, so programs that can't
+	handle that (e.g. AmigaDOS commands like Dir) should not
+	be used with this routine.  Programs compiled by PCQ Pascal
+	should not have a problem.
+
+	If you want the parent and child processes to run at the
+	same time, try RunSegmentNW instead.
+
+    EXAMPLE
+
+	See Exampes/TimeProg.p
+
+    INPUTS
+
+	ProcName  : The new process name, which can be anything.
+	Segment   : A BPTR to the first segment of the program, as
+		    returned by LoadSeg.
+	StackSize : The number of bytes to allocate for the program's
+		    stack.
+
+    RESULTS
+	TRUE indicates that the program run, but does not tell you
+	     anything about returncodes or other problems.
+	FALSE indicates that the process could not be launched.
+
+    BUGS
+
+    SEE ALSO
+	RunSegmentNW, RunProgram, RunProgramNW, FinishProgram,
+	ProgramFinished
+
+
+Utils/RunProgram/RunSegmentNW		Utils/RunProgram/RunSegmentNW
+
+    NAME
+	RunSegmentNW - create a process from a supplied segment
+
+    SYNOPSIS
+	Function RunSegmentNW(  ProcName  : String;
+				Segment   : Address;
+				StackSize : Integer) : RunProgPtr;
+
+    DESCRIPTION
+	RunSegmentNW is one of several related routines for easily
+	creating seperate processes.  In this case, it creates a
+	new process if you loaded it as a segment, or otherwise
+	have the segment available to you.  "NW" stands for No Wait,
+	which means that after launching the new process, this
+	function returns immediately.
+
+	If it could not launch the program, it returns Nil.  That
+	indicates that the program was unable to create the new
+	process or allocate associated memory - it does not tell
+	you anything about the new processes return code, or
+	anything else about its run.  If everything went OK, this
+	function will return a pointer to a private area of memory
+	used to track resources allocated to run this new process.
+
+	As with the other RunProgram routines, the program thinks
+	it was run from the Workbench, so it must be able to handle
+	that.  PCQ Pascal programs should not have a problem, but
+	normal AmigaDOS programs like Dir or List will not work.
+	Also, these routines provide no method for setting up a
+	CommandLine, or passing parameters in any way.
+
+	The parent process cannot end before the child process is
+	finished running.
+
+    EXAMPLE
+
+	Program Twofer;
+	{$I "Include:Utils/RunProgram.i"}
+	{$I "Include:Libraries/DOS.i"}
+	{$I "Include:Libraries/DOSExtens.i"}
+	var
+	    Child : RunProgPtr;
+	    MySeg : BPTR;
+	begin
+	    MySeg := LoadSegment("Proc2");
+	    Child := RunSegmentNW("The Second Proc", MySeg, 4000);
+	    if Child <> Nil then begin
+		Writeln('Running two processes');
+		FinishProgram(Child);
+	    end else
+		Writeln('Could not run the child');
+	end.
+
+    INPUTS
+
+	ProcName  : The name to use for the new process
+	Segment   : A BPTR to the start of the program's segments,
+		    returned by LoadSeg, for example.
+	StackSize : The size of the stack to allocate for the new
+		    process
+
+    RESULTS
+	A pointer to a RunProgram information block, or Nil if the
+	new process could not be created.
+
+    BUGS
+
+    SEE ALSO
+	RunProgramNW, FinishProgram, RunProgram, RunSegment,
+	ProgramFinished
+
+
+Utils/SameName/SameName			Utils/SameName/SameName
+
+    NAME
+	SameName - match Amiga wildcards against a string
+
+    SYNOPSIS
+	Function SameName(Mask, Target : String) : Boolean;
+
+    DESCRIPTION
+	SameName determines whether a given string matches an
+	Amiga wildcard expression.  This routine does not handle
+	all of the Amiga wildcard options, but does take care of
+	the most frequently used ones: ?, # and #?, along with
+	the single quote to match literally.
+
+    EXAMPLE
+	See Examples/Find.p
+
+    INPUTS
+
+	Mask   : The Amiga wildcard expression to match against
+	Target : The string to test - this one does not contain
+		 wildcards.
+
+    RESULTS
+	TRUE if the Target matches the Mask, or
+	FALSE otherwise
+
+    BUGS
+	SameName does not handle the (), % or | options of Amiga
+	expressions.
+
+    SEE ALSO
+
+
+Utils/Random/SelfSeed			Utils/Random/SelfSeed
+
+    NAME
+	SelfSeed - seed the random number generator from the clock
+
+    SYNOPSIS
+	Procedure SelfSeed;
+
+    DESCRIPTION
+	SelfSeed establishes the seed values used by RangeRandom
+	RealRandom, using numbers derived from the current time.
+	For most purposes this should be completely unpredictable.
+
+    EXAMPLE
+	See Examples/MapMaker.p
+
+    INPUTS
+	None
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	UseSeed, RangeRandom, RealRandom
+
+
+Utils/TimerUtils/SetTimer		Utils/TimerUtils/SetTimer
+
+    NAME
+	SetTimer - request to be notified at a given time
+
+    SYNOPSIS
+	Function SetTimer(WhichTimer   : TimeRequestPtr;
+			  Seconds,
+			  MicroSeconds : Integer) : MsgPortPtr;
+
+    DESCRIPTION
+	SetTimer asks the timer.device to notify the task sometime
+	after the given number of seconds and microseconds.  When
+	the timer.device returns SetTimer's request at the message
+	port returned by this function, at least that many seconds
+	and microseconds will have elapsed.
+
+    EXAMPLE
+
+	Program Wait10;
+	{$I "Include:Utils/TimerUtils.i"}
+	{$I "Include:Exec/Ports.i"}
+	var
+	    MyTimer : TimeRequestPtr;
+	    MyPort  : MsgPortPtr;
+	    MyMsg   : MessagePtr;
+	begin
+	    MyTimer := CreateTimer(UNIT_VBLANK);
+	    MyPort  := SetTimer(MyTimer,10,0);
+	    MyMsg   := WaitPort(MyPort);
+	    MyMsg   := GetMsg(MyPort);
+	    Writeln('Ten seconds has elapsed');
+	    DeleteTimer(MyTimer);
+	end.
+
+    INPUTS
+
+	WhichTimer   : A pointer to the TimeRequest record returned
+		       by CreateTimer
+	Seconds      : The number of seconds to wait
+	MicroSeconds : The number of microseconds to wait
+
+    RESULTS
+	A pointer to the MsgPort from WhichTimer, which will receive
+	the reply of the timer.device.
+
+    BUGS
+
+    SEE ALSO
+	CreateTimer, Delay, WaitTimer, GetSysTime
+
+
+PCQ/Sin					PCQ/Sin
+
+    NAME
+	Sin - return the sine of an expression
+
+    SYNOPSIS
+	Function Sin(Radians : Real) : Real;
+
+    DESCRIPTION
+	The Sin function returns the sine of the specified value
+	in radians.  This routine will normally use a private
+	sine approximation algorithm, but if you use the $N+
+	directive, it will call the more accurate mathtrans
+	library routine.
+
+	If your program uses degrees, you can convert to radians
+	using Degrees * (180 / PI), where PI is 3.14159....
+
+    EXAMPLE
+
+	Program ShowSin;
+	var
+	    Value : Real;
+	begin
+	    Write('Enter a value in radians: ');
+	    Readln(Value);
+	    Writeln('The sine of ', Value:0:3, ' is ', Sin(Value):0:3);
+	end.
+
+    INPUTS
+
+	Radians : A Real type expression of an angle in radians.
+
+    RESULTS
+	The sine of the specified angle
+
+    BUGS
+
+    SEE ALSO
+	Cos, Tan, ArcTan
+
+PCQ/SizeOf				PCQ/SizeOf
+
+    NAME
+	SizeOf - return the size of a type
+
+    SYNOPSIS
+	Function SizeOf(TP : Any type identifier) : Integer;
+
+    DESCRIPTION
+	This function returns the size of the specified type
+	in bytes.  Using this function never generates any
+	code - it is simply replaced by the actual number of
+	bytes, as if it were a constant.  Therefore it is a
+	good idea to use this function wherever it's
+	appropriate.
+
+	Note that although the size of a type might be odd,
+	if the size is greater than 1 any variable of that
+	type will always begin on an even word boundary.
+	This applies within records, arrays, or anywhere the
+	variable can occur.
+
+    EXAMPLE
+
+	Program ShowSizes;
+	begin
+	    Writeln('SizeOf(Real)    = ', SizeOf(Real));
+	    Writeln('SizeOf(Integer) = ', SizeOf(Integer));
+	    Writeln('SizeOf(Word)    = ', SizeOf(Word));
+	    Writeln('SizeOf(Short)   = ', SizeOf(Short));
+	    Writeln('SizeOf(Byte)    = ', SizeOf(Byte));
+	    Writeln('SizeOf(Address) = ', SizeOf(Address));
+	    Writeln('SizeOf(Boolean) = ', SizeOf(Boolean));
+	    Writeln('SizeOf(Char)    = ', SizeOf(Char));
+	    Writeln('SizeOf(Text)    = ', SizeOf(Text));
+	    Writeln('SizeOf(String)  = ', SizeOf(String));
+	end.
+
+    INPUTS
+
+	TP    : Any type identifier.  This must be a simple
+		identifier, not a complete type specification.
+
+    RESULTS
+	The size of the specified type in bytes
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Sqr					PCQ/Sqr
+
+    NAME
+	Sqr - return the expression squared
+
+    SYNOPSIS
+	Function Sqr(Expr : Any numeric type) : The same type
+
+    DESCRIPTION
+	This function returns the square of the value, i.e.
+	Expr * Expr.
+
+    EXAMPLE
+
+	Program ShowSqr;
+	var
+	    Value : Real;
+	begin
+	    Write('Please enter a value: ');
+	    Readln(Value);
+	    Writeln(Value:0:3, ' squared is ', Sqr(Value):0:3);
+	end.
+
+    INPUTS
+
+	Expr : Any numeric expression
+
+    RESULTS
+	The square of the expression, (Expr * Expr), in the
+	same type.
+
+    BUGS
+
+    SEE ALSO
+	Sqrt
+
+PCQ/Sqrt				PCQ/Sqrt
+
+    NAME
+	Sqrt - return the square root of an expression
+
+    SYNOPSIS
+	Function Sqrt(Expr : Real) : Real;
+
+    DESCRIPTION
+	The Sqrt function returns the approximate square root
+	of the specified expression, i.e. Sqrt(Expr) * Sqrt(Expr)
+	is close to Expr.
+
+    EXAMPLE
+
+	Program ShowSqrt;
+	var
+	    Value : Real;
+	begin
+	    Write('Please enter a value: ');
+	    Readln(Value);
+	    Writeln('The square root of ', Value:0:3,
+			' is ', Sqrt(Value):0:3);
+	end.
+
+    INPUTS
+
+	Expr : Any Real type expression
+
+    RESULTS
+	An approximation of the square root of the expression
+
+    BUGS
+
+    SEE ALSO
+	Sqr
+
+Utils/DateTools/StampDesc		Utils/DateTools/StampDesc
+
+    NAME
+	StampDesc - convert a DateStampRec into a DateDescription
+
+    SYNOPSIS
+	Procedure StampDesc(DS : DateStampRec;
+			    VAR DD : DateDescription);
+
+    DESCRIPTION
+	This routine converts a date and time from the DateStampRec
+	format into a DateDescription, which is easier to use but
+	much larger.  The DateDescription is layed out as follows:
+
+	    DaysOfTheWeek = (Sunday, Monday, Tuesday, Wednesday,
+				Thursday, Friday, Saturday);
+
+	    DateDescription = record
+		Day	: Byte;		 { Day of month, 1..31 }
+		Month	: Byte;		 { Month, 1..12 }
+		Year	: Short;	 { Year, 1978... }
+		DOW	: DaysOfTheWeek; { Sunday .. Saturday }
+		Hour	: Byte;		 { 0..23.  0 = 12 AM, 12 = Noon }
+		Minute	: Byte;		 { 0..59 }
+		Second	: Byte;		 { 0..59 }
+	    end;
+
+	If you have the time in a TimeVal rather than a DateStampRec,
+	you can use the GetDescription routine to convert it.
+
+    EXAMPLE
+
+	Program ShowTime;
+	{$I "Include:Utils/DateTools.i"}
+	{$I "Include:Libraries/DOS.i"}
+	var
+	    MyStamp : DateStampRec;
+	    MyDate  : DateDescription;
+	begin
+	    DateStamp(MyStamp);
+	    StampDesc(MyStamp,MyDate);
+	    with MyDate do
+		Writeln('It is ', Minutes, ' after ', Hour);
+	end.
+
+    INPUTS
+
+	DS    : An AmigaDOS DateStampRec, initialized with a date
+		and time
+	DD    : A DateDescription record
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	DateStamp, GetDescription, TimeDesc
+
+
+Utils/StringLib/strcat			Utils/StringLib/strcat
+
+    NAME
+	strcat - concatenate two strings
+
+    SYNOPSIS
+	Procedure strcat(Str1, Str2 : String);
+
+    DESCRIPTION
+	This routine attaches Str2 on the end of Str1.  Str1 must
+	have enough room for the entire resulting string, which
+	will be null-terminated.
+
+    EXAMPLE
+
+	Program Attach;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    Readln(Str2);
+	    strcat(Str1, Str2);
+	    Writeln('Str1 is now ', Str1);
+	    Writeln('Str1 is still ', Str2);
+	end.
+
+    INPUTS
+
+	Str1  : The base string.  The second string will be
+		attached to the end of this one, so Str1 must
+		have enough space allocated for both.
+	Str2  : The second string, which will be attached to the
+		end of the first.  Str2 itself will not be
+		affected.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	strncat, strcpy
+
+
+Utils/StringLib/strcmp			Utils/StringLib/strcmp
+
+    NAME
+	strcmp - compare two strings, returning relationship
+
+    SYNOPSIS
+	Function strcmp(Str1, Str2 : String) : Integer;
+
+    DESCRIPTION
+	This function returns an Integer whose relationship with
+	zero is the same as the relationship of Str1 to Str2.  In
+	other words, if the return value is less than zero, Str1
+	is less than Str2.  If the return value is equal to zero,
+	Str1 is equal to Str2.  If the return value is greater
+	than zero, Str1 is greater than Str2.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    Writeln('strcmp returns ', strcmp(Str1,Str2));
+	end.
+
+    INPUTS
+
+	Str1,Str2 : The strings to compare
+
+    RESULTS
+	-MaxInt to -1 if Str1 < Str2, or
+	0 if Str1 = Str2, or
+	1 to MaxInt if Str1 > Str2
+
+    BUGS
+
+    SEE ALSO
+	streq, strieq, strneq, strnieq, stricmp, strncmp,
+	strnicmp, SameName
+
+
+Utils/StringLib/strcpy			Utils/StringLib/strcpy
+
+    NAME
+	strcpy - copy one string into another
+
+    SYNOPSIS
+	Procedure strcpy(Dest, Source : String);
+
+    DESCRIPTION
+	This routine copies the string Source into the string
+	Dest.  Both strings must already be allocated.  Note
+	that this is different from "Dest := Source", which
+	just copies a pointer to the same area of memory - this
+	procedure actually copies all the characters over to
+	a second memory area.
+
+    EXAMPLE
+
+	Program MakeTwo;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter a string: ');
+	    Readln(Str1);
+	    strcpy(Str2,Str1);
+	    Writeln('You entered "', Str2, '"');
+	end.
+
+    INPUTS
+
+	Dest   : The string buffer that will recieve characters
+	Source : The string to be copied
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	strncpy, strcat, strncat, strdup
+
+Utils/StringLib/strdup			Utils/StringLib/strdup
+
+    NAME
+	strdup - duplicate a string
+
+    SYNOPSIS
+	Function strdup(Str : String) : String;
+
+    DESCRIPTION
+	This function allocates an area of memory large enough
+	to hold Str, copies Str into it, and returns a pointer
+	to the new string.
+
+	Understanding this function goes a long way toward
+	understanding PCQ strings in general.  Consider the
+	three following statements:
+
+		Str1 := Str2;
+		strcpy(Str1,Str2);
+		Str1 := strdup(Str2);
+
+	They each do very different things.  The first one points
+	Str1 at the same area of memory as Str2 points to - any
+	changes you make to Str1 show up in Str2 as well.  The
+	second statement copies the contents of Str2 into Str1 -
+	Str1 must already point to an allocated area of memory
+	at least as long as Str2.  The third one makes a completely
+	new copy of Str2.  It works just like the following
+	statements:
+
+		Str1 := AllocString(strlen(Str2) + 1);
+		strcpy(Str1,Str2);
+
+    EXAMPLE
+
+	Program CopyTwo;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    i          : Integer;
+	begin
+	    Str1 := AllocString(256);
+	    Write('Enter a string: ');
+	    Readln(Str1);
+	    Str2 := strdup(Str1);
+	    for i := 0 to strlen(Str1) do
+		Str1[i] := toupper(Str1[i]);
+	    Writeln('Str1 is now ', Str1);
+	    Writeln('Str2 is now ', Str2);
+	end.
+
+    INPUTS
+
+	Str   : The string that will be duplicated.
+
+    RESULTS
+	A pointer to a string matching Str, or possibly Nil if
+	the program could not allocate the memory and you have
+	set up the appropriate HeapError.
+
+    BUGS
+
+    SEE ALSO
+	AllocString, strcpy
+
+
+Utils/StringLib/streq			Utils/StringLib/streq
+
+    NAME
+	streq - compare two strings for equality
+
+    SYNOPSIS
+	Function streq(Str1, Str2 : String) : Boolean;
+
+    DESCRIPTION
+	The streq function compares two strings, and returns
+	TRUE if they are equal and FALSE otherwise.  Of all the
+	string comparison functions, it is the fastest.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    if streq(Str1,Str2) then
+		Writeln('The strings are equal')
+	    else
+		Writeln('The strings are not equal');
+	end.
+
+    INPUTS
+
+	Str1 and Str2 : The two strings to compare
+
+    RESULTS
+	TRUE if the strings are equal, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	strieq, strneq, strnieq, strcmp, stricmp, strncmp,
+	strnicmp, SameName
+
+
+Utils/StringLib/stricmp			Utils/StringLib/stricmp
+
+    NAME
+	stricmp - return the relationship ignoring case
+
+    SYNOPSIS
+	Function stricmp(Str1, Str2 : String) : Integer;
+
+    DESCRIPTION
+	This function compares two strings, ignoring any
+	differences in case, and returns an Integer whose
+	relationship to zero is the same as the relationship
+	of Str1 to Str2.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    Writeln('strieq returns ', strieq(Str1,Str2));
+	end.
+
+    INPUTS
+
+	Str1,Str2 : The two strings to compare
+
+    RESULTS
+	-MaxInt to -1 if Str1 < Str2, or
+	0 if Str1 = Str2, or
+	1 to MaxInt if Str1 > Str2
+
+    BUGS
+
+    SEE ALSO
+	streq, strieq, strneq, strnieq, strcmp, strncmp,
+	strnicmp, SameName
+
+
+Utils/StringLib/strieq			Utils/StringLib/strieq
+
+    NAME
+	strieq - compare the strings ignoring case
+
+    SYNOPSIS
+	Function strieq(Str1, Str2 : String) : Boolean;
+
+    DESCRIPTION
+	This function compares the two strings, and returns TRUE
+	if they are equal.  It is case insensitive, which means
+	that it considers, for example, "String" and "STRING"
+	equal.
+
+	This function is much slower than streq, so it should
+	only be used where you really need to ignore case.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    if strieq(Str1,Str2) then
+		Writeln('The strings are equal')
+	    else
+		Writeln('The strings are not equal');
+	end.
+
+    INPUTS
+
+	Str1,Str2 : The strings to compare
+
+    RESULTS
+	TRUE if the strings are equal, ignoring case, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	streq, strneq, strnieq, strcmp, stricmp, strncmp,
+	strnicmp, SameName
+
+
+Utils/StringLib/strlen			Utils/StringLib/strlen
+
+    NAME
+	strlen - return the length of a string
+
+    SYNOPSIS
+	Function strlen(Str : String) : Integer;
+
+    DESCRIPTION
+	This function returns the number of characters in the
+	string.  Note that a string requires strlen(Str) + 1
+	bytes of memory for storage, because it also has to
+	store the trailing zero byte.
+
+    EXAMPLE
+
+	Program Countem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	begin
+	    Str := AllocString(256);
+	    Write('Enter a string: ');
+	    Readln(Str);
+	    Writeln('That string is ', strlen(Str),
+		    ' characters long.');
+	end.
+
+    INPUTS
+
+	Str   : The string to measure
+
+    RESULTS
+	The number of characters in the string
+
+    BUGS
+
+    SEE ALSO
+
+
+Utils/StringLib/strncat			Utils/StringLib/strncat
+
+    NAME
+	strncat - concatenate at most n characters
+
+    SYNOPSIS
+	Procedure strncat(Str1, Str2 : String; n : Short);
+
+    DESCRIPTION
+	This routine attaches Str2 on the end of Str1, but will
+	attach at most n characters.  This helps you ensure that
+	the resulting string does not overrun Str1's memory
+	area.  The result, whether it is truncated or not, will
+	be null-terminated.
+
+    EXAMPLE
+
+	Program Attach;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    n          : Short;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter a string: ');
+	    Readln(Str1);
+	    Write('Enter a second string: ');
+	    Readln(Str2);
+	    Write('Enter a number: ');
+	    Readln(n);
+	    strncat(Str1, Str2, n);
+	    Writeln('Str1 is now: "', Str1, '"');
+	end.
+
+    INPUTS
+
+	Str1  : The destination string, which will have Str2
+		attached to the end of it.  It must have at
+		least n characters left in its allocated space.
+	Str2  : The string that will be copied on the end of
+		Str1.  It is unaffected by the operation.
+	n     : The maximum number of characters that can be
+		copied.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	strcat, strcpy, strncpy
+
+
+Utils/StringLib/strncmp			Utils/StringLib/strncmp
+
+    NAME
+	strncmp - return relationship of first n characters
+
+    SYNOPSIS
+	Function strncmp(Str1,Str2 : String; n : Short) : Integer;
+
+    DESCRIPTION
+	This function compares the first n characters in Str1 and
+	Str2, and returns an Integer that is greater than zero if
+	the first n characters of Str1 are greater alphabetically
+	than those of Str2, zero if they are equal, or less than
+	zero if the first n characters of Str1 are less than those
+	of Str2.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    n          : Integer;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    Write('Enter a the number to compare: ');
+	    Readln(n);
+	    Writeln('strncmp returns ', strncmp(Str1,Str2));
+	end.
+
+    INPUTS
+
+	Str1, Str2 : The strings to compare
+	n          : The number of characters to compare at most
+
+    RESULTS
+	-MaxInt to -1 if the first n characters of Str1 are less
+	than those of Str2, or
+	0 if they are equal, or
+	1 to MaxInt if they are greater.
+
+    BUGS
+
+    SEE ALSO
+	streq, strieq, strneq, strnieq, strcmp, stricmp, strnicmp,
+	SameName
+
+
+Utils/StringLib/strncpy			Utils/StringLib/strncpy
+
+    NAME
+	strncpy - copy at most n characters from Source to Dest
+
+    SYNOPSIS
+	Procedure strncpy(Dest, Source : String; n : Short);
+
+    DESCRIPTION
+	This routine copies Source into Dest, but if there are
+	more than n characters in Source, Dest is truncated to
+	n characters.  Dest will always be null-terminated.
+
+    EXAMPLE
+
+	Program CopyIt;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    n          : Integer;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter a string: ');
+	    ReadLn(Str1);
+	    Write('Enter the number of characters to copy: ');
+	    Readln(n);
+	    strncpy(Str2,Str1,n);
+	    Writeln('Result is ', Str2);
+	end.
+
+    INPUTS
+
+	Dest   : The string buffer to copy into.  It must already
+		 be allocated.
+	Source : The string to be copied.
+	n      : The maximum number of characters to copy.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	strcpy, strcat, strncat
+
+
+Utils/StringLib/strneq			Utils/StringLib/strneq
+
+    NAME
+	strneq - check whether string prefixes are equal
+
+    SYNOPSIS
+	Function strneq(Str1, Str2 : String; n : Short) : Boolean;
+
+    DESCRIPTION
+	This function determines whether the two strings are
+	equal for the first n characters at most.  If either
+	string is less than n characters long, the function
+	will return TRUE if both strings are equal and the
+	same length.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    n	       : Integer;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    Write('Enter a length: ');
+	    Readln(n);
+	    if strneq(Str1,Str2,n) then
+		Writeln('The strings are equal up to ',n)
+	    else
+		Writeln('The strings are not equal up to ',n);
+	end.
+
+    INPUTS
+
+	Str1,Str2 : The strings to compare
+	n         : The number of characters to compare at most
+
+    RESULTS
+	TRUE if the first n characters of the strings are equal,
+	     or if the strings are equal and less than n characters
+	     length, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	streq, strieq, strnieq, strcmp, stricmp, strncmp,
+	strnicmp, SameName
+
+
+Utils/StringLib/strnicmp		Utils/StringLib/strnicmp
+
+    NAME
+	strnicmp - return alphabetical relationship ignoring case
+
+    SYNOPSIS
+	Function strnicmp(Str1, Str2 : String; n : Short) : Integer;
+
+    DESCRIPTION
+	This function compares the first n characters of two
+	strings, ignoring case, and returns an Integer indicating
+	their relative alphabetical position.  If the returned
+	value is less than zero, then the prefix of Str1 is less
+	than that of Str2.  If it is zero, the prefixes are equal.
+	If it is greater than zero, the prefix of Str1 is greater
+	than that of Str2.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    n          : Integer;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    Write('Enter the number of characters to compare: ');
+	    Readln(n);
+	    Writeln('strnicmp returns ', strnicmp(Str1,Str2,n));
+	end.
+
+    INPUTS
+
+	Str1,Str2 : The string to be compared.
+	n         : The maximum number of characters to compare.
+
+    RESULTS
+	-MaxInt to -1 if the first n characters of Str1 are less
+	than those of Str2, ignoring case, or
+	0 if the prefixes are equal, or
+	1 to MaxInt if the prefix of Str1 is greater than that
+	of Str2.
+
+    BUGS
+
+    SEE ALSO
+	streq, strieq, strneq, strnieq, strcmp, stricmp, strncmp,
+	SameName
+
+
+Utils/StringLib/strnieq			Utils/StringLib/strnieq
+
+    NAME
+	strnieq - Compares up to n characters ignoring case
+
+    SYNOPSIS
+	Function strnieq(Str1,Str2 : String; n : Short) : Boolean;
+
+    DESCRIPTION
+	This function compares at most n characters of the two
+	strings ignoring case.
+
+    EXAMPLE
+
+	Program Comparem;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str1, Str2 : String;
+	    n          : Integer;
+	begin
+	    Str1 := AllocString(256);
+	    Str2 := AllocString(256);
+	    Write('Enter the first string: ');
+	    ReadLn(Str1);
+	    Write('Enter the second string: ');
+	    ReadLn(Str2);
+	    Write('Enter the number of characters to compare: ');
+	    ReadLn(n);
+	    if strnieq(Str1,Str2,n) then
+		Writeln('The strings are equal')
+	    else
+		Writeln('The strings are not equal');
+	end.
+
+    INPUTS
+
+	Str1,Str2 : The two strings to compare
+	n         : The maximum number of characters to compare
+
+    RESULTS
+	TRUE if the first n characters are equal, ignoring case,
+	     or if the strings are equal and both less than n
+	     characters long, or
+	FALSE otherwise
+
+    BUGS
+
+    SEE ALSO
+	streq, strieq, strneq, strcmp, stricmp, strncmp,
+	strnicmp, SameName
+
+
+Utils/StringLib/strpos			Utils/StringLib/strpos
+
+    NAME
+	strpos - find the first occurence of a character
+
+    SYNOPSIS
+	Function strpos(Str : String; Ch : Char) : Integer;
+
+    DESCRIPTION
+	This routine search for the first (leftmost) occurence
+	of the character Ch in the string Str.  If it finds it,
+	it returns the index, from 0 to strlen(Str).  If the
+	character does not occur in the string, it returns -1.
+
+    EXAMPLE
+
+	Program FindChar;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	    i   : Integer;
+	begin
+	    Str := AllocString(256);
+	    Write('Enter a string: ');
+	    Readln(Str);
+	    i := strpos(Str, 'e');
+	    if i = -1 then
+		Writeln('The letter "e" does not occur')
+	    else
+		Writeln('The letter "e" occurs in position ', i);
+	end.
+
+    INPUTS
+
+	Str   : The string to search through - it will not be
+		modified.
+	Ch    : The character to search for.
+
+    RESULTS
+	-1 if the character could not be found, or
+	the index of the leftmost occurence otherwise.
+
+    BUGS
+
+    SEE ALSO
+	strrpos
+
+Utils/StringLib/strrpos			Utils/StringLib/strrpos
+
+    NAME
+	strrpos - find the rightmost occurence of a character
+
+    SYNOPSIS
+	Function strrpos(Str : String; Ch : Char) : Integer;
+
+    DESCRIPTION
+	This function returns the index of the rightmost
+	occurrence of the character Ch in the string Str.  If
+	the character does not occur in the string, the
+	function returns -1.
+
+    EXAMPLE
+
+	Program Rightmost;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Str : String;
+	    Ch  : Char;
+	    Pos : Integer;
+	begin
+	    Str := AllocString(256);
+	    Write('Enter a string: ');
+	    Readln(Str);
+	    Write('Enter a character: ');
+	    Readln(Ch);
+	    Pos := strrpos(Str,Ch);
+	    if Pos = -1 then
+		Writeln('"', Ch, '" does not occur in "', Str, '"')
+	    else
+		Writeln(Ch, ' last occurs at position ', Pos);
+	end.
+
+    INPUTS
+
+	Str   : The string to be examined.  It will not be modified.
+	Ch    : The character for which to search.
+
+    RESULTS
+	-1 if the character does not occur in the string, or
+	the index of the rightmost occurence.
+
+    BUGS
+
+    SEE ALSO
+	strpos
+
+
+PCQ/Succ				PCQ/Succ
+
+    NAME
+	Succ - return the next ordinal value
+
+    SYNOPSIS
+	Function Succ(Expr : Any ordinal type) : The same type;
+
+    DESCRIPTION
+	Succ returns the successor to an ordinal value, i.e.
+	the value plus 1.  If the value is already at its maximum
+	value, in an enumerated type for example, the returned
+	value has no meaning.
+
+    EXAMPLE
+
+	Program ShowSucc;
+	var
+	    i : (sunday,monday,tuesday,wednesday,
+		 thursday,friday,saturday);
+	begin
+	    i := sunday;
+	    while i < saturday do
+		i := Succ(i);
+	end.
+
+    INPUTS
+
+	Expr  : Any ordinal expression
+
+    RESULTS
+	A value of the same type
+
+    BUGS
+
+    SEE ALSO
+	Pred, Inc
+
+
+Utils/DoubleBuffer/SwapBuffers		Utils/DoubleBuffer/SwapBuffers
+
+    NAME
+	SwapBuffers - swap the drawing and displaying BitMaps
+
+    SYNOPSIS
+	Procedure SwapBuffers(w : WindowPtr);
+
+    DESCRIPTION
+	When you have drawn something into a Window opened using
+	OpenDoubleBuffer, you need to call SwapBuffers in order
+	to display it.  SwapBuffers points the Screen's BitMap
+	at the BitMap into which you have been drawing, and points
+	the RastPort's at the BitMap that was being displayed.  It
+	then calls ScrollVPort to update the graphics system.
+
+    EXAMPLE
+	See Examples/3d.p
+
+    INPUTS
+
+	w     : A pointer to a Window opened with OpenDoubleBuffer
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	OpenDoubleBuffer, CloseDoubleBuffer
+
+
+PCQ/Tan					PCQ/Tan
+
+    NAME
+	Tan - computes the tangent of the specified angle in radians
+
+    SYNOPSIS
+	Function Tan(Radians : Real) : Real;
+
+    DESCRIPTION
+	This function computes the tangent of the angle, which must
+	be specified in radians.  The tangent function is not defined
+	at odd multiples of PI/2, so neither is this function.
+
+	If you are using the $N+ option, this function is computed by
+	the mathtrans.library.  Otherwise, it is computed by internal
+	PCQ routines.
+
+    EXAMPLE
+
+	Program ShowTan;
+	var
+	    Angle : Real;
+	begin
+	    Write('Enter an angle in radians: ');
+	    Readln(Angle);
+	    Writeln('The tangent of ', Angle:0:3, ' is ',
+				Tan(Angle):0:3);
+	end.
+
+    INPUTS
+
+	Radians : The radian measure of the angle
+
+    RESULTS
+	The tangent of the specified angle
+
+    BUGS
+
+    SEE ALSO
+	Sin, Cos, ArcTan
+
+Utils/CRT/TextBackground		Utils/CRT/TextBackground
+
+    NAME
+	TextBackground - set the current background color
+
+    SYNOPSIS
+	Procedure TextBackground(CRT : Address; Pen : Byte);
+
+    DESCRIPTION
+	This routine sets the background pen number for
+	subsequent text writes.  The actual color depends
+	on the screen's colormap, so you might want to use
+	SetRGB4 to make sure you get the colors you're
+	looking for.
+
+    EXAMPLE
+
+	Procedure HighLight(CRT : Address; msg : String);
+	begin
+	    TextBackground(CRT, 3);
+	    WriteString(CRT, msg);
+	    TextBackground(CRT, 0);
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block as
+		returned by AttachConsole.
+	Pen   : The new background pen number
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	AttachConsole, TextColor, WriteString
+
+
+Utils/CRT/TextColor			Utils/CRT/TextColor
+
+    NAME
+	TextColor - set the foreground color for text drawing
+
+    SYNOPSIS
+	Procedure TextColor(CRT : Address; Pen : Byte);
+
+    DESCRIPTION
+	This routine sets the foreground pen color for the
+	text.  The resulting color depends on the colormap
+	in use, so to get specific results you should use
+	the SetRGB4 function to define the pen colors
+	exactly.
+
+    EXAMPLE
+
+	Procedure ColorWrite(CRT : Address; Msg : String);
+	var
+	    Buffer : Array [0..1] of Char;
+	    Pen    : Byte;
+	    Pos    : Short;
+	begin
+	    Buffer[1] := Chr(0);
+	    Pos := 0;
+	    while Msg[Pos] <> 0 do begin
+		Buffer[0] := Msg[Pos];
+		WriteString(CRT, String(@Buffer));
+		TextColor(CRT, Pos);
+		Inc(Pos);
+	    end;
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block, as
+		returned by the AttachConsole function.
+	Pen   : The new pen number
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	AttachConsole, TextBackground, WriteString
+
+
+Utils/DateTools/TimeDesc		Utils/DateTools/TimeDesc
+
+    NAME
+	TimeDesc - fill a DateDescription with the current date/time
+
+    SYNOPSIS
+	Procedure TimeDesc(VAR DD : DateDescription);
+
+    DESCRIPTION
+	TimeDesc fills in a DateDescription record with the current
+	system date and time.  A DateDescription record is defined
+	as follows:
+
+	    DaysOfTheWeek = (Sunday, Monday, Tuesday, Wednesday,
+				Thursday, Friday, Saturday);
+
+	    DateDescription = record
+		Day	: Byte;		 { Day of month, 1..31 }
+		Month	: Byte;		 { Month, 1..12 }
+		Year	: Short;	 { Year, 1978... }
+		DOW	: DaysOfTheWeek; { Sunday .. Saturday }
+		Hour	: Byte;		 { 0..23.  0 = 12 AM, 12 = Noon }
+		Minute	: Byte;		 { 0..59 }
+		Second	: Byte;		 { 0..59 }
+	    end;
+
+    EXAMPLE
+
+	Program DayOfWeek;
+	{$I "Include:Utils/DateTools.i"}
+	var
+	    MyDate : DateDescription;
+	begin
+	    TimeDesc(MyDate);
+	    Writeln('It is ', DayNames[MyDate.DOW]);
+	end.
+
+    INPUTS
+
+	DD    : A DateDescription record
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	GetDescription, StampDesc
+
+
+Utils/StringLib/tolower			Utils/StringLib/tolower
+
+    NAME
+	tolower - convert an upper case character to lower case
+
+    SYNOPSIS
+	Function tolower(c : Char) : Char;
+
+    DESCRIPTION
+	This function converts characters in the range A..Z to
+	their corresponding lower case characters in the range
+	a..z.  If the character is not an upper case letter,
+	no action is taken.
+
+    EXAMPLE
+
+	Program LowerLine;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Line : String;
+	    i    : Integer;
+	begin
+	    Line := AllocString(256);
+	    Write('Enter a line: ');
+	    Readln(Line);
+	    for i := 0 to strlen(Line) do
+		Line[i] := tolower(Line[i]);
+	    Writeln('In lower case, that is: ', Line);
+	end.
+
+    INPUTS
+
+	c     : The character to convert
+
+    RESULTS
+	If the input character is in the range A..Z, this
+	function returns its corresponding lower case character.
+	Otherwise, it returns the character unchanged.
+
+    BUGS
+
+    SEE ALSO
+	toupper, islower
+
+
+Utils/StringLib/toupper			Utils/StringLib/toupper
+
+    NAME
+	toupper - convert a character to uppercase
+
+    SYNOPSIS
+	Function toupper(c : Char) : Char;
+
+    DESCRIPTION
+	This function converts a character in the range a..z to
+	its upper case equivalent.  If the character is outside
+	of that range, it returns the character unchanged.
+
+    EXAMPLE
+
+	Program UpperLine;
+	{$I "Include:Utils/StringLib.i"}
+	var
+	    Line : String;
+	    i    : Integer;
+	begin
+	    Line := AllocString(256);
+	    Write('Enter a line: ');
+	    Readln(Line);
+	    for i := 0 to strlen(Line) do
+		Line[i] := toupper(Line[i]);
+	    Writeln('In upper case, that is: ', Line);
+	end.
+
+    INPUTS
+
+	c     : The character to convert
+
+    RESULTS
+	If c is in the range a..z, toupper() returns the
+	corresponding character in the range A..Z.  Otherwise,
+	it returns the character unchanged.
+
+    BUGS
+
+    SEE ALSO
+	tolower, isupper
+
+
+PCQ/Trap				PCQ/Trap
+
+    NAME
+	Trap - issue a 68000 TRAP instruction
+
+    SYNOPSIS
+	Procedure Trap(TrapNum : Integer);
+
+    DESCRIPTION
+	This routine inserts a 68000 TRAP instruction into your
+	code.  In some cases (you'll have to experiment) the
+	trap will act as a breakpoint for a debugger.
+
+    EXAMPLE
+
+	Program TryTrap;
+	begin
+	    Trap(4); { Will GURU if not in a debugger }
+	end.
+
+    INPUTS
+
+	TrapNum : The trap number to generate
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+
+
+PCQ/Trunc				PCQ/Trunc
+
+    NAME
+	Trunc - convert a Real value into an Integer
+
+    SYNOPSIS
+	Function Trunc(Expr : Real) : Integer;
+
+    DESCRIPTION
+	The Trunc function returns the whole number portion
+	of a Real expression.  In other words, it rounds the
+	Real value down and returns the Integer part.
+
+	This routine is somewhat faster than the Round
+	function.
+
+	Note that this function is automatically invoked by
+	the compiler to	convert Real values to Integers,
+	whenever that is appropriate.
+
+    EXAMPLE
+
+	Program ShowTrunc;
+	var
+	    FloatValue : Real;
+	begin
+	    Write('Please enter a Real value: ');
+	    Readln(FloatValue);
+	    Writeln(FloatValue:0:3, ' becomes ', Trunc(FloatValue));
+	end.
+
+    INPUTS
+
+	Expr  : Any Real type expression
+
+    RESULTS
+	The whole number portion of Expr, i.e. Expr with the
+	fractional digits truncated.
+
+    BUGS
+
+    SEE ALSO
+	Round, Float
+
+
+Utils/CRC16/UpdCRC			Utils/CRC16/UpdCRC
+
+    NAME
+	UpdCRC - Update a CRC code for the next byte of data
+
+    SYNOPSIS
+	Function UpdCRC(cp : Byte; crc : Word) : Word;
+
+    DESCRIPTION
+	UpdCRC takes a previous 16-bit CRC value and updates
+	it according to the next character.  The CRC is
+	calculated by the fast table-driven method
+	compatible with ZMODEM, but incompatible with Kermit
+	and XMODEM.
+
+	This routine was written by Stephen Satchell and Chuck
+	Forsberg.
+
+    EXAMPLE
+
+	Program CRC;
+	{$I "Include:Utils/CRC16.p"}
+	var
+	    InFile : Text;
+	    Code   : Word;
+	begin
+	    if reopen(CommandLine, InFile) then begin
+		Code := 0;
+		while not eof(InFile) do begin
+		    Code := UpdCRC(InFile^, Code);
+		    Get(InFile);
+		end;
+		Close(InFile);
+		Writeln('The CRC is ', Code);
+	    end else
+		Writeln('Could not open ', CommandLine);
+	end.
+
+    INPUTS
+	cp	: The character to add to the CRC value
+	crc	: The previous crc value
+
+    RESULTS
+	The updated CRC value
+
+    SEE ALSO
+	CRCCheck
+
+Utils/Random/UseSeed			Utils/Random/UseSeed
+
+    NAME
+	UseSeed - set the seed value for the random number routines
+
+    SYNOPSIS
+	Procedure UseSeed(Seed : Integer);
+
+    DESCRIPTION
+	This routine allows you to directly set the random number
+	seeds.  Normally you would call SelfSeed instead, but this
+	routine lets you get predictable results from the supposedly
+	random routines, since for a given seed value they will always
+	produce the same sequence of numbers.
+
+    EXAMPLE
+
+	Program Swami;
+	{$I "Include:Utils/Random.i"}
+	begin
+	    UseSeed(1991);
+	    Writeln('I would guess ... 481204');
+	    Writeln(RangeRandom(Pred(MaxInt)));
+	end.
+
+    INPUTS
+
+	Seed  : The seed value to use for RealRandom and RangeRandom
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	SelfSeed, RangeRandom, RealRandom
+
+
+PCQ/VA_Arg				PCQ/VA_Arg
+
+    NAME
+	VA_Arg - return the next unnamed parameter
+
+    SYNOPSIS
+	Function VA_Arg(VAR ArgPtr : Address;
+			Simple Type Spec) : Simple Type;
+
+    DESCRIPTION
+	The VA_Arg routine retrieves the next unnamed parameter
+	from the stack.  You should first call VA_Start to
+	initialize ArgPtr, an Address variable, then call this
+	routine to get each of the parameters.  The type returned
+	by this function is the simple type specified as the
+	second argument.
+
+    EXAMPLE
+
+	Program Unnamed;
+	{$C+ use C calling conventions }
+	    Procedure WriteAll(Num : Short; ... );
+	    var
+		ArgPtr : Address;
+		i      : Short;
+	    begin
+		VA_Start(ArgPtr);
+		for i := 1 to Num do
+		    Writeln(VA_Arg(ArgPtr,Integer));
+	    end;
+	begin
+	    WriteAll(1,45);
+	    WriteAll(3,56,12,12345);
+	end.
+
+    INPUTS
+
+	ArgPtr		 : A variable of type Address that will be
+			   used to point to the next argument.
+	Simple Type Spec : The type specification of a simple
+			   type.
+
+    RESULTS
+	The value from the stack, of the type specified as the
+	second parameter.
+
+    BUGS
+
+    SEE ALSO
+	VA_Start
+
+
+PCQ/VA_Start				PCQ/VA_Start
+
+    NAME
+	VA_Start - initialize an argument pointer
+
+    SYNOPSIS
+	Procedure VA_Start(VAR ArgPtr : Address);
+
+    DESCRIPTION
+	The VA_Start procedure initializes ArgPtr to point to the
+	first of the routine's unnamed parameters.  It must be
+	called before any calls to VA_Arg.
+
+    EXAMPLE
+
+	Program Unnamed;
+	{$C+ use C calling conventions }
+	    Procedure WriteAll(Num : Short; ... );
+	    var
+		ArgPtr : Address;
+		i      : Short;
+	    begin
+		VA_Start(ArgPtr);
+		for i := 1 to Num do
+		    Writeln(VA_Arg(ArgPtr,Integer));
+	    end;
+	begin
+	    WriteAll(1,45);
+	    WriteAll(3,56,12,12345);
+	end.
+
+    INPUTS
+
+	ArgPtr		 : A variable of type Address that will be
+			   used to point to the next argument.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	VA_Arg
+
+Utils/TimerUtils/WaitTimer		Utils/TimerUtils/WaitTimer
+
+    NAME
+	WaitTimer - wait for a given amount of time
+
+    SYNOPSIS
+	Procedure WaitTimer(WhichTimer   : TimeRequestPtr;
+			    Seconds,
+			    MicroSeconds : Integer);
+
+    DESCRIPTION
+	This routine waits for at least the given number of
+	seconds and microseconds, then returns.  If you want
+	to continue processing while you wait, use SetTimer
+	instead.
+
+    EXAMPLE
+	See Examples/TimerTest.p
+
+    INPUTS
+
+	WhichTimer   : A pointer to the TimeRequest record returned
+		       by CreateTimer
+	Seconds	     : The number of seconds to wait
+	MicroSeconds : The number of microseconds to wait
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	CreateTimer, SetTimer, Delay
+
+
+Utils/CRT/WhereX			Utils/CRT/WhereX
+
+    NAME
+	WhereX - returns the current cursor column
+
+    SYNOPSIS
+	Function WhereX(CRT : Address) : Short;
+
+    DESCRIPTION
+	This routine returns the cursor's current column position,
+	expressed in character coordinates (not pixels).
+
+    EXAMPLE
+
+	Procedure VerticalLine(CRT : Address);
+	var
+	    y : Short;
+	begin
+	    for y := 1 to MaxY(CRT) do begin
+		GotoXY(WhereX(CRT),y);
+		WriteString(CRT, "|");
+	    end;
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block as
+		returned by AttachConsole
+
+    RESULTS
+	The current cursor column in character coordinates
+
+    BUGS
+
+    SEE ALSO
+	AttachConsole, GotoXY, MaxX, MaxY, WhereY
+
+
+Utils/CRT/WhereY			Utils/CRT/WhereY
+
+    NAME
+	WhereY - returns the current text row
+
+    SYNOPSIS
+	Function WhereY(CRT : Address) : Short;
+
+    DESCRIPTION
+	WhereY returns the cursor row in character coordinates,
+	not pixels.
+
+    EXAMPLE
+
+	Procedure Filling(CRT : Address);
+	var
+	    Offset : Short;
+	begin
+	    Offset := 1;
+	    while Offset <= (MaxX(CRT) div 2) do begin
+		GotoXY(CRT, Offset, WhereY(CRT));
+		WriteString(CRT, "-");
+		GotoXY(CRT, MaxX(CRT) - Offset, WhereY(CRT));
+		WriteString(CRT, "-");
+		Inc(Offset);
+	    end;
+	end;
+
+    INPUTS
+
+	CRT   : A pointer to a valid CRT information block as
+		returned by the AttachConsole function.
+
+    RESULTS
+	The current cursor row in character coordinates
+
+    BUGS
+
+    SEE ALSO
+	AttachConsole, WhereX, MaxX, MaxY, GotoXY
+
+
+PCQ/Write				PCQ/Write
+
+    NAME
+	Write - send data to a PCQ file
+
+    SYNOPSIS
+	Procedure Write([VAR OutputFile,] Arguments );
+
+	Each argument can take the form: e:m:n, where e is an
+	expression and m and n are integer expressions.
+
+    DESCRIPTION
+	The standard procedure Write outputs data to the
+	specified PCQ file, or to the standard output file
+	Output if no file is specified.
+
+	If OutputFile is a typed file, the data is written as
+	a direct binary representation, just as it exists in
+	memory.  In that case, the extra values m and n in
+	the argument definition above are not allowed.
+
+	If the output file is a Text file, the data is first
+	converted to a character representation before it is
+	written.  The results of the conversion depend on the
+	type of the expression e.
+
+	If e is an Integer, Word, Short or Byte type, the
+	number is converted into its decimal representation,
+	preceded by a minus sign if appropriate.  If the
+	character representation is less than m characters
+	long, the field is filled with spaces.  The parameter
+	n is not allowed.
+
+	If e is a Real value, the integer part of the value
+	is converted to a character representation and printed
+	according to the rules for an Integer.  If the parameter
+	n is greater than zero, a decimal point is written and
+	n fractional digits follow.
+
+	If e is a String, the characters in the string up to,
+	but not including, the final null byte are written.  If
+	there are less than m characters in the string, spaces
+	are written before the string to fill out the field.  The
+	parameter n is not allowed.
+
+	If e is an Array of Char, the entire array is written
+	to the file, possibly preceded by enough space characters
+	to fill out the field.  Again the parameter n is not
+	allowed.
+
+	If e is a Char type, the single character is written,
+	possibly preceded by m-1 space characters.  The parameter
+	n is not allowed.
+
+	If e is a Boolean type, the string TRUE or the string
+	FALSE is written, preceded by spaces as necessary to fill
+	out the field.  The parameter n is not allowed.
+
+	No other types can be written to a text file.
+
+	If an error occurs during the write, IOResult will be set
+	to a non-zero value.  If IOResult is not zero when you
+	call Write, no output will occur.
+
+    EXAMPLE
+
+	Program ShowWrite;
+	begin
+	    Write(56);          (* Writes '56'         *)
+	    Write(Output,56:4); (* Writes '  56'       *)
+	    Write(98.6:5:4);    (* Writes '   98.6000' *)
+	    Write(45 > 32);     (* Writes 'TRUE'       *)
+	    Write(32 > 45:8);   (* Writes '   FALSE'   *)
+	end.
+
+    INPUTS
+
+	OutputFile : The destination file, which must have been
+		     opened for output using Rewrite or Open.
+	Arguments  : Any number of expressions.  If the output
+		     file is a typed file, these expressions
+		     must each match the file type, and cannot
+		     use field width specifiers.  If the file
+		     is a Text file, they can be any of the
+		     types mentioned above, and can have at
+		     least one field width specifier.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Writeln, Read, Readln, Rewrite, Open, Put
+
+
+PCQ/Writeln				PCQ/Writeln
+
+    NAME
+	Writeln - write arguments, then append a newline character
+
+    SYNOPSIS
+	Procedure Writeln([VAR OutputFile : Text;] Arguments );
+
+    DESCRIPTION
+	Writeln outputs values to a PCQ file like Write, but with
+	two differences: it only works with Text files, and it
+	appends a newline character after writing all of the
+	arguments.
+
+	Writeln only works on Text files because typed files,
+	which are unlimited sequences of a single type, don't
+	have lines.
+
+	The newline character on the Amiga is a line feed, or
+	Chr(10), but since on other machines it can be quite
+	different (on MS-DOS machines, for example, it is a
+	carraige return/line feed pair), you should use this
+	routine rather than writing line feeds directly.
+
+    EXAMPLE
+
+	Program ShowWriteln;
+	begin
+	    Writeln(50:3, 100.0:5:2); { Writes ' 50  100.00' }
+	end.
+
+    INPUTS
+
+	OutputFile : A PCQ Text file, already open for output.  If
+		     OutputFile is not supplied, PCQ used the
+		     standard output file Output.
+	Arguments  : A series of arguments exactly like those of
+		     Write, which will be written the same way.
+
+    RESULTS
+	None
+
+    BUGS
+
+    SEE ALSO
+	Write, Read, Readln, Rewrite, Open, Put
+
+

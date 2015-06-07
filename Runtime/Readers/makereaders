@@ -1,0 +1,4 @@
+join readarb.o readchar.o readcharray.o readint.o get.o to t:readers1.lib
+join readln.o readonechar.o readstring.o readreal.o fileptr.o to t:readers2.lib
+join t:readers1.lib t:readers2.lib to readers.lib
+delete t:readers(1|2).lib

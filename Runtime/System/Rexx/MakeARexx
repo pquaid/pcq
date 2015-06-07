@@ -1,0 +1,2 @@
+join RxsLib.o Storage.o RexxIO.o ARexxStrings.o to Rexx.lib
+

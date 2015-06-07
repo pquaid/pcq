@@ -1,0 +1,3942 @@
+===========================================================================
+
+                          PCQ Pascal version 1.2
+                     Ein Pascal-Compiler für den Amiga
+                             von Patrick Quaid
+
+===========================================================================
+
+PCQ  Pascal  ist  ein  einfacher  Pascal-Compiler  für  den  Amiga-Personal
+Computer.  Er ist frei vertreibbar, was bedeutet, daß ich das Copyright für
+den  Compiler,  die Runtime-Library, den Quellcode für den Compiler und die
+Runtime-Library,  sowie  diese  Dokumentation behalte.  Diese Dokumentation
+bezieht  sich  auf  die  registrierte  Version  von  PCQ Pascal.  Hier eine
+Übersicht über die Eigenschaften des Compilers:
+
+Das Schlechte:
+
+    o  Der Compiler unterstützt keine Mengen.
+    o  Er ist nicht kompatibel zu Turbo Pascal, obwohl er schon
+       nahe 'rankommt.
+    o  Einige Sachen sind etwas verschieden vom Standard Pascal.
+    o  Der Compiler bei den meisten Fehlern in einer Schleife stecken.
+
+Das Gute:
+
+    o  Er funktioniert.
+    o  Er unterstützt Include-Dateien.
+    o  Er erlaubt die Compilierung von einzelnen Programmteilen,
+       obwohl man selbst die Überprüfungen machen muß (dieses ist
+       halt nicht Modula-2).
+    o  Er unterstützt Records, Aufzählungstypen, Zeiger, Felder,
+       und C-Strings.
+    o  Typenumwandlung wie in Modula-2 wird unterstützt. In anderen
+       Worten, etwas wie "Byte('d')" ist erlaubt.
+    o  Viele Eigenschaften von Turbo- und Quick Pascal, wie Exit-
+       Prozeduren, Operatoren wie Shl und Shr und typisierte Konstanten
+       werden unterstützt.
+    o  Man kann so viele Const, Var, Type, Procedure und Function-
+       Blöcke haben, wie man will, in beliebiger Reihenfolge.
+
+
+
+===========================================================================
+
+                            Inhaltsverzeichnis
+
+===========================================================================
+
+
+Dieses  Handbuch  ist  aufgebaut,  um es mit einem Textanzeigeprogramm oder
+Texteditor   zu   lesen,   so   basiert   dieses   Inhaltsverzeichnis   auf
+Zeilennummern,  nicht auf Seitennummern.  Siehe das letzte Kapitel, wie man
+an eine Seiten-orientierte Version bekommt.
+
+
+        Kapitel                                     Zeilennummer
+      ------------------------------------------------------------
+
+        Wie man PCQ installiert.............................160
+            Was habe ich hier?..............................166
+            Wie mache ich mir eine Arbeitsdiskette?.........195
+        Ein Programm kompilieren............................364
+        Inkompatibilitäten..................................508
+
+        PCQ-Programme.......................................549
+        Reservierte Wörter..................................563
+        Pascal-Programm-Struktur............................593
+
+        Typendeklaration....................................662
+             Numerische Typen...............................731
+             Andere ordinale Typen..........................767
+             Zeigertypen....................................791
+             Dateitypen.....................................817
+             Typenkompatibilität............................838
+
+         Konstantendeklaration..............................864
+             Typisierte Konstanten..........................906
+             Standardkonstanten.............................996
+
+         Variablendeklaration..............................1036
+             Standardvariablen.............................1084
+
+         Prozedur- und Funktionsdeklaration................1130
+             Parameterübergabe.............................1162
+             Ungenannte Parameter..........................1206
+             Forward-Prozeduren und -Funktionen............1264
+             Externe Referenzen............................1289
+             Standardprozeduren............................1312
+             Standardfunktionen............................1465
+
+          Sprungmarkendeklarationen........................1635
+
+          Ausdrücke........................................1658
+             Auswertungsreihenfolge und Operationsabbrüche.1832
+             Konstante Ausdrücke...........................1886
+             Variablenreferenzen...........................1895
+
+          Anweisungen......................................1930
+             If-Anweisungen................................1952
+             While-Anweisungen.............................1993
+             Repeat-Anweisungen............................2009
+             For-Anweisungen...............................2029
+             Case-Anweisungen..............................2073
+             With-Anweisungen..............................2106
+             Verbundanweisungen............................2142
+             Zuweisungen...................................2158
+             Prozeduraufrufe...............................2171
+             Return-Anweisungen............................2202
+             Goto-Anweisungen..............................2221
+
+          Eingabe/Ausgabe..................................2248
+             Pascal Eingabe/Ausgabe........................2255
+             Text- und typisierte Dateien..................2292
+             Dateien öffnen................................2341
+             Nach Dateien schreiben........................2432
+             Lesen von Dateien.............................2496
+             Dateipuffer...................................2577
+             Eingabe/Ausgabekontrolle......................2637
+             Standard-Eingabe/Ausgabe......................2666
+
+          Zeichenketten....................................2740
+             Zeichenkettenspeicher belegen.................2778
+             Wie man Escape-Sequenzen benutzt..............2828
+             StringLib.....................................2867
+
+          Speichermanagement...............................2879
+             HeapError.....................................2918
+
+          Exit-Prozeduren..................................2948
+             Laufzeitfehler................................2998
+
+          Compiler-Direktiven..............................3070
+
+          Typenumwandlung..................................3224
+
+          Kleiner Initialisierungs-Code....................3270
+
+          Ausführungs-Überwachung..........................3333
+
+          Externe Dateien..................................3393
+
+          Aufrufkonventionen...............................3465
+
+          Bemerkungen für Assembler-Programmierer..........3495
+
+          Fehler...........................................3523
+
+          Quelltexte.......................................3551
+
+          Zukünftige Entwicklungen.........................3638
+
+          Update-Geschichte................................3666
+
+          Weitere Bemerkungen, Copyright und
+          Adresse..........................................3900
+
+
+
+
+===========================================================================
+
+                          Wie man PCQ installiert
+
+===========================================================================
+
+ Was habe ich hier bekommen?
+-----------------------------
+
+Die registrierte Version von PCQ Pascal beinhaltet die folgenden Dateien:
+
+         Pascal          Der Compiler ansich
+         Peep            Der Peephole-Optimierer
+         PCQ             Das Make-Hilfsprogramm
+         Pascal.DOC      Diese Dokumentation
+         Readme.PCQ      Eine kurze Beschreibung von PCQ
+         PCQ.DOC         Dokumentation für das Make-Hilfsprogramm
+         PCQ.lib.DOC     Eine Beschreibung für die PCQ.lib-Routinen
+         PCQ.lib         Die Runtime-Library
+         Include.LZH     Die Include-Dateien-Bibliothek, zusammengepresst
+                         mit dem LHArc-Programm.
+         Examples.LZH    Einige Beispielprogramm, auch mit LHArc zusammen-
+                         gepresst.
+         IDList.LZH      Ein Verzeichnis für die Include-Dateien
+         Runtime.LZH     Die Pascal- und Assemblerquelltexte für PCQ.lib
+
+         A68k            Charlie Gibbs' Assembler
+         A68k.doc        Die Dokumentation zu A68k
+         A68k2do.txt     Geplante Verbesserungen zu A68k
+         History.log     Version-zu-Version-Änderungen von A68k
+
+         Blink           Der Linker der Software Destillery
+         Blink.doc       Die Dokumentation zu Blink
+
+
+ Wie mache ich mir eine Arbeisdiskette?
+----------------------------------------
+
+Ich  bin froh, daß Sie fragen.  Die Antwort ist, daß ich es nicht weiß.  Es
+gibt  Millionen  von  verschiedenen  System-Zusammenstellungen, so kann ich
+Ihnen nicht genau sagen, wie Sie Ihr System aufbauen sollen.  Aber ich kann
+Ihnen einige Anhaltspunkte geben:
+
+Zuallererst,  irgendwo  in  Ihrem Kommandopfad werden Sie den Compiler, den
+Assembler,  den  Linker  und einen Text-Editor brauchen.  Normalerweise tut
+man  diese  Dinge  in  das C-Verzeichnis, aber wenn Sie den AmigaDOS-Befehl
+PATH  benutzen,  können  sie  auch  in  ein  anderes Verzeichnis des Pfades
+kommen.
+
+Wenn  Sie  keinen Text-Editor haben, empfehle ich Ihnen wärmstens Cygnus-Ed
+Professional  von  ASDG.  TxEd soll ähnlich gut sein, aber ich habe es noch
+nie  benutzt.   Sparsame Programmierer können MEMACS von der Extrasdiskette
+benutzen,  ED  von  der  Workbench-Diskette,  oder  eine  Vielzahl von frei
+vertreibbaren  Editoren  wie  DME.  ED ist keine gute Wahl, MEMACS geht so,
+und  nach  dem,  was  ich gehört habe, ist DME recht gut.  Treffen Sie Ihre
+Wahl.
+
+Eine  weitere  Datei,  die  Sie  auf  jeden Fall gebrauchen werden, ist die
+Runtime-Library,  welche  Sie  an beliebige Stelle setzen können.  Ich habe
+meine  in  meinem  Arbeitsverzeichnis, aber andere finden es besser, sie in
+Ihrem  LIBS:-Verzeichnis  zu  haben.  Es liegt an Ihnen, aber vergessen Sie
+nicht, wo Sie sie haben.
+
+Diese  Dateien sind selbst für die einfachsten Programme absolut notwendig.
+Wenn  Sie  irgendwelche  Amiga-Routinen  benutzen  wollen,  oder  spezielle
+Routinen   der  PCQ.lib,  werden  Sie  auch  die  Includedateien-Bibliothek
+installieren  müssen.   Hier  wird  es  etwas  haarig,  weil  die Menge der
+Includedateien  gerade  unter 800 Disketten-Blöcke (etwas weniger als 400k)
+lang  ist.  Das ist eine halbe Diskette.  Die Größe dieser Dateien macht es
+ziemlich      schwierig,      das      volle      System      auf     einem
+Ein-Diskettenlaufwerks-System  zu  benutzen.   Wenn  Sie die Includedateien
+installieren  möchten,  müssen  Sie  auch noch eine Version von LHArc (oder
+einem  kompatiblen  Archivierungsprogramm)  finden.  LHArc ist scheinbar in
+allen  Mailboards  erhältlich,  so sollten Sie keine Schwierigkeiten haben,
+eine  Version  zu  erhalten (wenn Sie das noch nicht gemacht haben, tun Sie
+sich  einen  Gefallen  und  kaufen  sich  ein  Modem.   Es  ist  die besten
+Investition, die Sie je gemacht haben).
+
+Wie  also  organisieren  wir all dieses Zeug?  Es hängt natürlich von Ihrem
+System  ab,  aber  hier  sind  einige Beispiele.  Wenn Sie das Programm auf
+einer  Festplatte  installieren  wollen,  könnten  Sie folgendes probieren:
+Erstens,  kopieren  Sie  Pascal,  A68k  und Blink in Ihr C-Verzeichnis (und
+einen  Texteditor,  falls  Sie noch keinen dort haben).  Dann erstellen Sie
+ein  Arbeitsverzeichnis.   Kopieren Sie PCQ.lib in dieses neue Verzeichnis.
+Jetzt  machen  Sie  ein  Unterverzeichnis von ihrem Arbeitsverzeichnis aus,
+welches Sie "Include" oder so nennen sollten.  Es ist zwar nicht notwendig,
+daß  es  ein  Unterverzeichnis  ist,  aber  das  wird  Ihnen  helfen,  Ihre
+Diskettenstruktur   aufgeräumt   zu   behalten.   Dann  benutzen  Sie  den
+AmigaDOS-Befehl  ASSIGN,  um  eine  Zuweisung  "Include:"  zu  Ihrem  neuen
+Include-Verzeichnis     zu     machen.      Jetzt     wollen     Sie    die
+Includedateien-Bibliothek  in  Ihr neues Include-Verzeichnis entpacken, mit
+einem Befehl wie dem folgenden:
+
+LHArc -x -r x DistributionDisk:Include Include:
+
+Benutzen Sie natürlich den aktuellen Pfad des Include-Archivs.  Immer, wenn
+Sie den Compiler benutzen, sollten Sie sicher sein, das Include-Verzeichnis
+richtig  ASSIGNt  zu  haben  - vielleicht wollen Sie diese Anweisung in die
+startup-sequence oder ein Initialisierungs-Script einbauen.
+
+Wenn  Sie  ein Diskettenlaufwerk haben, empfehle ich die folgende Struktur.
+Das  Problem  ist hier, daß ich kein Ein-Disketten-System habe, auf dem ich
+diese testen kann, so könnten Sie es etwas ändern müssen.
+
+     Hauptverzeichnis:
+        PCQ.lib
+        C (dir)
+            A68k                             Assign
+            Avail                            Blink
+            CD                               Copy
+            Date                             Delete
+            Echo                             Ed
+            Else                             EndCLI
+            EndIf                            EndSkip
+            Execute                          Failat
+            If                               Info
+            Join                             Lab
+            List                             LoadWB
+            Makedir                          NewShell
+            Pascal                           Path
+            Prompt                           Protect
+            Quit                             Relabel
+            Rename                           Resident
+            Run                              SetPatch
+            Stack                            Type
+        Libs (dir)
+            diskfont.library                 icon.library
+            mathtrans.library                version.library
+        Devs (dir)
+            ramdrive.device                  system-configuration
+        S (dir)
+            Startup-Sequence                 Make
+        L (dir)
+            Disk-Validator                   Newcon-Handler
+            Port-Handler                     Ram-Handler
+            Shell-Seg                        
+        Include (dir)
+            All die Include-Dateien...
+        Trashcan (dir)
+
+
+Um  diese  Art  Diskette  zu  erstellen, machen Sie zuerst eine Kopie einer
+Standard-Workbench-Diskette.   Dann  löschen Sie alles, wirklich alles, was
+Sie  nicht unbedingt brauchen.  Sie werden vielleicht bemerkt haben, daß in
+obigem  Beispiel  nicht  einmal  das  serial.device und das parallel.device
+auftaucht,  also  können  Sie  Ihren Drucker oder Ihr Modem nicht benutzen.
+Diese  Art  Opfer muß man machen.  Dann kopieren Sie Pascal, A68k und Blink
+in  das  :c-Verzeichnis, danach kopieren Sie Make in das :s-Verzeichnis und
+PCQ.lib  in  das  Hauptverzeichnis  der  neuen Diskette.  Erstellen Sie ein
+Verzeichnis,  was  Sie  "Include"  nennen,  machen  es  dann  zum Aktuellen
+Verzeichnis  (CD).  Entpacken Sie die Include-Dateien-Bibliothek, indem Sie
+folgenden Befehl verwenden:
+
+     LHArc -x -r x Distribution:Include WorkDisk:Include/
+
+Benutzen  Sie  den  aktuellen  Pfad  für  LHArc und das Archiv ansich.  Sie
+müssen  vielleicht  "Install"  auf  die  neue  Diskette  benutzen,  um  sie
+bootfähig  zu  machen,  aber  Sie  werden eine kaum benutzbare Diskette für
+Pascal  haben.   Sie werden kaum freien Platz haben, so wenn Sie Dateien im
+RAM:   editieren und kompilieren, kopieren Sie diese so oft wie möglich auf
+eine  andere  Diskette.   Es wird ein hartes Leben sein.  Wenn Sie nur sehr
+einfache,  Standard-Pascal-Programme  schreiben,  die  keine der besonderen
+Amiga-Eigenschaften  nutzen,  können  Sie das Include-Verzeichnis weglassen
+(und   so   etwa   400k   freimachen),  aber  Sie  werden  keine  besonders
+interessanten  Programme schreiben können.  Ein-Diskettenlaufwerks-Benutzer
+kennen  vielleicht ein paar Tricks, um mit Diskettenspeicherplatz-Problemen
+fertig  zu  werden, wenn Sie also einen besseren Plan haben, nutzen Sie ihn
+um Himmels willen.
+
+Wenn  Sie  zwei  Diskettenlaufwerke  haben,  würde  ich  Ihnen einen Aufbau
+ähnlich   dem   für  ein  Diskettenlaufwerk  empfehlen.   Bewegen  Sie  das
+Include-Verzeichnis   auf   die   zweite   Diskette   und   gestalten   die
+System-Dateien  auf  der  Boot-Diskette besser (besonders so, daß Sie Ihren
+Drucker   benutzen    können).   Benutzen  Sie  die  ca.   400k  an  freiem
+Speicherplatz  als  Ihren  Arbeitsspeicher.  Dieses ist die Art Aufbau, den
+ich benutzt habe, als ich PCQ ursprünglich entwickelt habe.
+
+Wenn  Sie  mengen  an  RAM  haben (sagen wir, ein MB oder mehr), wollen Sie
+vielleicht  einiges  von  diesem Zeug ins RAM:  oder RAD:  kopieren, um den
+Arbeitsplatz  freier  zu  bekommen.   Wenn  Sie  zum Beispiel ein MB an RAM
+haben,  könnten  Sie das ganze Include-Verzeichnis in die RAM-Disk schieben
+und  immer  noch  genug  Platz  haben,  um  mittelmäßig  große Programme zu
+compilieren.
+
+Der  einzige  optionale Teil des Systems ist der Peephole-Optimierer, Peep.
+Dieses  Programm  nimmt  die  Assembler-Ausgabe des Compilers und macht sie
+etwas   effizienter   und    kürzer.    Wenn  Sie  mit  Diskettenlaufwerken
+kompilieren, möchten Sie diesen Schritt vielleicht weglassen, aber wenn Sie
+im  RAM  arbeiten  oder  auf einer Festplatte, wird die Kompilierzeit nicht
+viel länger.  Peep sollte an die gleiche Stelle wie Pascal kopiert werden.
+
+Wieauchimmer    Sie    ihr    System    konfigurieren,   Sie   werden   die
+Include:-Zuweisung  definieren  müssen,  die  auf  Ihr  Include-Verzeichnis
+zeigt.   Diese Zuweisung ist die Konvention, die ich in den Include-Dateien
+und  Beispiel-Programmen benutze - sie ist nicht Teil des Compilers ansich,
+in  anderen  Worten  -  so  wenn Sie all die Include-Dateien ändern wollen,
+können   Sie   eine   andere  Zuweisung  verwenden.   Die  einzige   andere
+interessante   Zuweisung   ist   die   des  T:-Verzeichnisses.   Dies  wird
+automatisch vom AmigaDOS erstellt, und da sie vom Make-Script benutzt wird,
+um   Zwischendateien   zu   speichern,  erhöht  eine  Zuweisung  zu  einem
+RAM-Verzeichnis die Kompiliergeschwindigkeit drastisch.
+
+
+
+===========================================================================
+
+                         Ein Programm kompilieren
+
+===========================================================================
+
+Um  eine Pascal-Quellcodedatei in ein ablauffähiges Programm zu verwandeln,
+braucht  man  (nach  letzter  Zählung) vier Schritte.  Man fängt mit seinem
+Quelltext  an (eins der Beispielprogramme zum Beispiel), welcher vielleicht
+mit  ".p"  endet.   Der erste Schritt ist, den Compiler zu benutzen, um aus
+diesem  Quelltext ein äquivalentes Assembler-Programm zu machen.  Um dieses
+zu tun, rufen Sie den Compiler mit dem folgendem Befehlsformat auf:
+
+            Pascal EingabePascal AusgabeAssembler [Direktiven]
+
+"EingabePascal"  sollte  durch  den  kompletten Dateinamen (mit Pfad, falls
+erforderlich)  des  Quelltextes  ersetzt werden, und "AusgabeAssembler" ist
+der Dateiname (optional mit einem Pfad) der Assembler-Ausgabe.  Ich benutze
+normalerweise  ".asm"  für die Ausgabedatei.  Die Direktiven können überall
+in  der  Kommandozeile  plaziert werden, in Groß- oder Kleinbuchstaben, und
+haben folgende Bedeutungen:
+
+        -q Laufe in "Stillem" Modus, was heißt, daß der Compiler nichts auf
+           den Bildschirm schreibt, außer Fehlermeldungen.  Dies  macht  es
+           einfacher,     Fehlermeldungen    beispielsweise    durch    ein
+           AREXX-Programm zu bearbeiten.
+
+        -s  Kleine  Initialisierung.  Kleine Programme benutzen eine andere
+            Initialisierungs-Routine, die nicht den ganzen Programmcode der
+            Standardroutine  hat,  aber  das heißt, daß Sie überhaupt keine
+            Pascal-Ein-  und  Ausgaben  machen  können   (z.B.   Writeln(),
+            Readln(), etc.).
+
+        -p  Fügt  Code  für  die  Ablaufüberwachung  hinzu.  Wenn Sie diese
+            Option  verwenden, werden zusätzliche Informationen im Programm
+            gespeichert, um die Ablaufüberwachung möglich zu machen.  Siehe
+            im Kapitel "Ablaufüberwachung" für weitere Details.
+
+       -$B,
+       +$B,
+       -$I,
+       +$I,
+       -$N, Diese Direktiven entsprechen alle den Quelltext-Direktiven  mit
+       +$N, demselben Buchstaben. Sie erlauben  Ihnen,  das  standardmäßige
+       -$R, Verhalten des Compilers  zu  beeinflussen.  Siehe  das  Kapitel
+       +$R, "Compiler-Direktiven" für nähere Informationen.
+       -$X,
+       +$X
+
+
+Der zweite Schritt nimmt die Assembler-Datei und generiert eine neue Datei,
+welche  etwas effizienter ist.  Dieses wird gemacht, indem man das Programm
+Peep benutzt, welches durch das folgende Befehlsformat aufgerufen wird:
+
+                  Peep EingabeAssembler AusgabeAssembler
+
+Ich  benutze  normalerweise  das  Anhängsel  ".s" für Assember-Dateien, die
+durch den Peephole-Optimierer gelaufen sind, aber das liegt ganz bei Ihnen.
+
+Der  dritte  Schritt  nimmt  die  .asm  oder  .s  Datei  und generiert eine
+Objektdatei.   In  einer  Objektdatei  nahezu die gleiche Maschinenlesbaren
+Instruktionen  und  Daten  wie  in  einer  Ausführbaren Datei, aber sie be-
+inhaltet  nicht die ganzen Routinen, die das fertige Programm braucht.  Der
+Assembler,    in    diesem   Falle   Charlie   Gibbs'   A68k,   konvertiert
+Assemblerprogramme  in  Objektdateien,  und  wird  durch folgende Kommando-
+zeile aufgerufen:
+
+                    A68k EingabeAssembler AusgabeObjekt
+
+A68k ist ein sehr starkes, flexibles Programm mit einer Menge an Optionen -
+sein Sie sicher, seine Dokumentation für eine volle Beschreibung gelesen zu
+haben.
+
+Wenn   all  diese  Schritte  ohne  Fehler  beendet  sind,  können  Sie  die
+Objektdatei  mit  all  den  Routinen  in der Runtime-Library linken, die es
+braucht,  um  ein  ablauffähiges Programm zu sein.  Der Linker der Software
+Destillery,  Blink,  macht  diesen  Teil  des  Ablaufs.   Er  wird  mit der
+folgenden Kommandozeile aufgerufen:
+
+            Blink EingabeObjekt to AusgabeExec library PCQ.lib
+
+Blink  hat  auch viele Optionen und kommt mit einer Dokumentation, die alle
+beschreibt.    Es  muß  bemerkt  werden,  daß  Sie  vielleicht  eine  volle
+Pfadangabe  brauchen, um zu beschreiben, wo die PCQ.lib ist - wenn sie z.B.
+im LIBS:-Verzeichnis ist, würde ich LIBS:PCQ.lib benutzen.
+
+Nun  haben Sie - endlich - ein ablauffähiges Programm erzeugt.  Das scheint
+eine Menge Schritte zu gebrauchen, und eine Menge, was man sich merken muß,
+um  gerade ein Programm zu compilieren.  Es ist.  Es gibt zwei Wege, um den
+Compilierprozess zu automatisieren.  Der erste und beste Weg ist es, PCQ zu
+benutzen,  das Make-Hilfsprogramm, welches in PCQ.doc beschrieben ist.  Der
+zweite   Weg   ist   es,   ein  AmigaDOS-Script  zu  benutzen.   In  dieser
+Veröffentlichung ist ein Script namens Make enthalten, welches ein Programm
+im  T:-Verzeichnis  kompiliert  und  nur  das ablauffähige Programm auf der
+Diskette übrig läßt.  Es sieht etwa so aus:
+
+                .key source
+                Pascal <source>.p T:<source>.asm
+                A68k T:<source>.asm T:<source>.o
+                Delete T:<source>.asm
+                Blink T:<source>.o to <source> library PCQ.lib
+                Delete T:<source>.o
+
+Sie werden bemerken, daß meine Vorlieben für die Anhängsel in diesem Script
+vorhanden sind - die Pascaldatei endet auf .p, die Assemblerdatei endet auf
+.asm,  und die Objektdatei endet auf .o.  Wenn Sie andere Namen bevorzugen,
+ändern  Sie  halt  dieses  Script.  Weiterhin müssen Sie das Script ändern,
+wenn Ihr Compiler, Assembler und Linker nicht im normalen Pfad liegen, oder
+wenn  PCQ.lib  nicht  im  aktuellen  Verzeichnis  liegt.  (In beiden Fällen
+benutzen Sie den kompletten Pfad anstatt des Dateinamens.) Um dieses Script
+zu benutzen, rufen Sie es etwa so auf:
+
+                             Make ProgrammName
+
+Sie  lassen  also  alle Anhängsel weg.  Wenn alles einwandfrei funktioniert
+hat,  werden Sie ein ausführbares Programm namens ProgrammName im aktuellen
+Verzeichnis  finden.   Ein  Problem  bei  diesem  Script ist, daß Sie keine
+Kommandozeilenparameter  für  den  Compiler  benutzen  können.  So habe Ich
+verschiedene  Versionen des Make-Scripts, um alle Kombinationen benutzen zu
+können, die ich brauche.
+
+Ein  anderes  Script,  OMake, ist scheinbar das gleiche, außer, das es auch
+noch  den  Peephole-Optimierer  aufruft, um etwas effizientere Programme zu
+machen.  Es sieht etwa so aus:
+
+                .key source
+                Pascal <source>.p T:<source>.asm
+                Peep T:<source>.asm T:<source>.s
+                Delete T:<source>.asm
+                A68k T:<source>.s T:<source>.o
+                Delete T:<source>.s
+                Blink T:<source>.o to <source> library PCQ.lib
+                Delete T:<source>.o
+
+Wieder  müssen  Sie  vielleicht  kleinere  Änderungen  vornehmen, damit das
+Script  auf  Ihrer  System-Konfiguration  läuft.   Wenn  Sie an einem recht
+komplexen  Projekt  arbeiten,  werden Sie es vielleicht gut finden, mehrere
+Scripts   zu  schreiben,  um  den  Kompiliere-Assembliere-Linke-Prozess  zu
+automatisieren.
+
+
+
+
+
+===========================================================================
+
+                            Inkompatibilitäten
+
+===========================================================================
+
+PCQ-Pascal ist inkompatibel zu Standard-Pascal, und weiterhin Turbo-Pascal,
+in vielen Dingen.  In Kurzform sind das:
+
+       (1) Sets werden nicht unterstützt.
+       (2)  Die  gebräuchliche  Syntax,  um  ein  einzelnes  Hochkomma  zu
+           definieren, die im Standard Pascal '''' lautet, wird nicht un-
+           terstützt. Stattdessen benutzt PCQ-Pascal C-Escape-Konventionen,
+           die im Kapitel "Strings" behandelt werden.
+       (3) Der  Weg,  eine Datei zu öffnen, ist anders als im Standard-Pas-
+           cal,  obwohl,  wenn die Datei erst mal offen ist, die Befehle im
+           Grunde die gleichen sind.
+
+Obwohl  PCQ-Pascal  nicht geschrieben wurde, um mit Turbo-Pascal kompatibel
+zu  sein,  stelle ich einige der wichtigeren Unterschiede (als Ergänzung zu
+den  oben  genannten)  heraus, um die Anpassung von Programmen einfacher zu
+machen.
+
+       (1) PCQ-Pascal verwaltet Strings komplett anders  als  Turbo-Pascal.
+           PCQ-Strings sind ähnlich zu C-Strings, die nicht so  einfach  zu
+           manipulieren sind wie Turbo-Strings. In der Tat sind PCQ-Strings
+           die am kompliziertesten zu manipulierenden von allen dreien. Sie
+           werden voll beschrieben im Kapitel "Strings".
+       (2) In einer PCQ-Funktion führt das Zuweisen eines Wertes zum  Funk-
+           tionsnamen zu einem Verlassen der Funktion. In Turbo-Pascal wird
+           der  Funktionsname  als Nur-Schreibe-Variable behandelt, und man
+           muß extra den Exit-Befehl aufrufen. Alle Beispiele im Pascal-Re-
+           port umgehen das Herauskommen, indem Sie den Wert dem Funktions-
+           namen als letzten Befehl übergeben.
+       (3) Wo wir über Exit sprechen, Exit in PCQ-Pascal beendet  das  Pro-
+           gramm,  wohingegen  es  in  Turbo  die  aktuelle  Funktion  oder
+           Prozedur  beendet.   Turbo's  "Exit" ist wie PCQ's "return", und
+           Turbo's "Halt" ist wie PCQ's "Exit". Verstanden?
+
+
+
+===========================================================================
+
+                               PCQ-Programme
+
+===========================================================================
+
+In  den  meisten  Teilen  sehen  PCQ-Programme  ziemlich  ähnlich  aus  wie
+Standard-Pascal-Programme.     Abgesehen   von   den   oben   beschriebenen
+Inkompatibilitäten    sollte   PCQ   in  der  Tat  Pascal-Programme  direkt
+compilieren  können.   PCQ  macht einige Erweiterungen zu Pascal, so werden
+ich  beschreiben, was in PCQ-Programmen erlaubt ist und was nicht, um diese
+zu erläutern.
+
+
+===========================================================================
+
+                            Reservierte Wörter
+
+===========================================================================
+
+Reservierte  Wörte sind Symbole, die nicht als Bezeichner in Ihrem Programm
+benutzt werden können.  Sie haben eine besondere Bedeutung für den Compiler
+und  können  nicht  überschrieben  werden.  Die reservierten Wörter in PCQ-
+Pascal sind die folgenden:
+
+            and         array       begin
+            case        chip        const
+            div         do          downto
+            else        end         external
+            fast        file        for
+            forward     function    goto
+            if          in          label
+            mod         not         of
+            or          packed      private
+            procedure   program     record
+            repeat      return      set
+            then        to          type
+            until       var         while
+            with
+
+Wie Sie sehen können, ist sogar das nicht-implementierte Zeug reserviert.
+
+
+
+===========================================================================
+
+                         Pascal-Programm-Struktur
+
+===========================================================================
+
+Die normale Struktur eines Pascal-Programms ist die folgende:
+
+<Programm> ::= Program <Bezeichner> ; <Block>. |
+               Program <Bezeichner> (<Bezeichnerliste>); <Block>.
+
+<Block>    ::= <Deklarationen> begin <Anweisungen> end |
+               begin <Anweisungen> end
+
+<Bezeichnerliste> ::= <Bezeichner> , <Bezeichnerliste> |
+                      <Bezeichner>
+
+Kann  jeder  Backus-Naur lesen?  Die Idee ist es, daß die Objekte links vom
+Definitionszeichen  ::=  durch  die  Regel  vereinbart  werden, die auf der
+rechten  Seite steht.  Objekte in Spitzklammern werden an anderer Stelle in
+der  Liste vereinbart, und die senkrechte Linie trennt Alternativen.  Alles
+andere  ist wörtlich zu nehmen.  So beginnt ein Pascalprogramm mit dem Wort
+"Program",  worauf ein Bezeichner folgt, ein Semikolon, ein Block (was auch
+immer  das  ist), und endet mit einem Punkt.  Anders kann es auch "Program"
+beinhalten, danach einen Bezeichner, eine Klammer auf, eine Bezeicherliste,
+eine  Klammer  zu,  ein Semikolon, einen Block und schließlich einen Punkt.
+Sobald  Sie  sich  an  sie gewöhnt haben, werden Ihnen BNF- Diagramme genau
+sagen,   was   Sie   über   die  Syntax  eines  Programms  wissen   müssen.
+BNF-Grammatiken können auch als Eisenbahn-Diagramme dargestellt werden, und
+wenn dieses nicht ein Nur-Text-Dokument wäre, hätte ich das auch gemacht.
+
+Wir  haben  einige Dinge undefiniert gelassen, so tun wir dieses nun besser
+erst einmal:
+
+<Deklarationen> ::= <Deklaration>, <Deklarationen> | <Deklaration>
+
+<Deklaration> ::= <Typendeklaration>        |
+                  <Konstantendeklaration>   |
+                  <Variablendeklaration>    |
+                  <Labeldeklaration>        |
+                  <Prozedurdeklaration>     |
+                  <Funktionsdeklaration>
+
+Beachten  Sie,  daß  Standard-Pascal  die Deklarationen in einer bestimmten
+Reihenfolge  will:   Zuerst  sollte da ein Konstantenblock sein, danach ein
+Typenblock,  etc.   PCQ-  Pascal  nimmt diese Einschränkung weg, Sie können
+also  so  viele  Deklarationen  in  beliebiger  Reihenfolge  haben, wie Sie
+wollen.
+
+Was  die Definition des Restes dieser Objekte betrifft, ist dies das Format
+von jedem normalen PCQ-Pascal-Programm.  Es gibt (natürlich) eine Ausnahme:
+die einzeln kompilierbare Datei.  Turbo Pascal unterstützt eine Unit-Struk-
+tur,  so  daß man Units schreiben, kompilieren und verbessern kann, die man
+dann  in  vielen  Programmen benutzen kann.  PCQ unterstützt eine ähnliche,
+zwar  nicht  so  leistungsstarke,  Sache, in der Form von externen Dateien.
+Schauen Sie sich die folgende Erweiterung unserer grundlegenden Regel an:
+
+<Programm> ::= Program <Bezeichner>; <Block>.    |
+               Program <Bezeichner> (<Bezeichnerliste>); <Block>. |
+               External ; <Deklarationen>
+
+Demnach  ist  eine  externe Datei nur das reservierte Wort "External", dann
+ein  Semikolon,  danach  eine Reihe Prozeduren, Funktionen, was auch immer.
+Siehe das Kapitel "Externe Dateien" für weitere Informationen.
+
+
+
+
+
+===========================================================================
+
+                            Typendeklarationen
+
+===========================================================================
+
+Typendeklarationen haben die folgende Form:
+
+<Typendeklaration>  ::= Type <Typendefinitionen>;
+
+<Typendefinitionen> ::= <Typendefinition>; <Typendefinitionen> |
+                        <Typendefinition>
+
+<Typendefinition>   ::= <Bezeichner> = <Typenbeschreibung> |
+                        <Bezeichner> = packed <Typenbeschreibung>
+
+<Typenbeschreibung> ::= <Bezeichner>                       |
+                        <Bereich>                          |
+                        ^<Typenbeschreibung>               |
+                        (<Bezeichnerliste>)                |
+                        <Felddefinition>                   |
+                        <Recorddefinition>                 |
+                        file of <Typenbeschreibung>
+
+<Bereich>           ::= <Konstante> .. <Konstante>
+
+<Felddefinition>    ::= array [<Bereich>] of <Typenbeschreibung> |
+                        array <Bezeichner> of <Typenbeschreibung>
+
+<Recorddefinition>  ::= record <Felddefinitionen> end
+
+<Felddefinitionen>  ::= <Felddefinition> |
+                        <Felddefinitionen>; <Felddefinition>
+
+<Felddefinition>    ::= <Variablendefinitionen> |
+                        <Variantendefinition>
+
+<Variantendefinition> ::= case <Variantenselektor> of
+                            <Varianten>
+                          end
+
+<Variantenselektor> ::= <Bezeichner> : <Typenbeschreibung> |
+                        <Typenbeschreibung>
+
+<Varianten>         ::= <Variant> | <Variant>; <Varianten>
+
+<Variant>           ::= <Konstante> : (<Variablendefinitionen>)
+
+Sobald  Sie  die  BNF  verstanden  haben,  werden  Sie das gut verständlich
+finden.   Es  gibt  trotzdem  einen  Unterschied  in  der Art, wie variante
+Records definiert werden.  Im Standard-Pascal muß der variante Teil am Ende
+der  Definition  kommen,  so daß das reservierte Wort "end" sowohl das Ende
+der  Case-Struktur  als  auch der Recorddefinition markiert.  In PCQ-Pascal
+dagegen  muß  jede "case"-Struktur ihr eigenes "end" haben, variante Felder
+können in der Mitte der Definition stehen, und es kann eine ganze Reihe von
+varianten  Teilen  geben.   Felder, die nach einem varianten Teil definiert
+werden, werden am Ende des längsten varianten Teils gespeichert.
+
+Im Standard-Pascal sagt das Schlüsselwort "packed" dem Compiler, daß er die
+Variable  in  speichereffizientesten  Art  und Weise speichern soll, sogar,
+wenn  dadurch die Ausführungsgeschwindigkeit sinkt.  "Packed" wird schlicht
+und einfach von PCQ-Pascal ignoriert, da alle Variablen automatisch gepackt
+werden.
+
+Konstanten  werden  im Kapitel "Ausdrücke" besprochen, welches weiter unten
+steht - lassen Sie uns nun einen Blick auf die vordefinierten Typen in PCQ-
+Pascal werden.
+
+
+ Numerische Typen
+------------------
+
+PCQ-Pascal  unterstützt  eine  Reihe  von  numerischen Typen, die Ihnen die
+Flexibilität  geben  soll,  jede  Art  Rechnen  möglich  zu machen, die sie
+gebrauchen  könnten.   Es  gibt  die folgenden Typen, vom kleinsten bis zum
+größten Bereich:
+
+Byte     Dieses ist eine 1-Byte-große, vorzeichenlose Ganzzahl,  die  Werte
+         von 0 bis 255 speichern kann.
+
+Short    Ein Short ist eine 2-Byte-große (16 Bit) vorzeichenbehaftete Ganz-
+         zahl in einem Bereich von -32768 bis 32767.
+
+Word     Ein Word ist eine 2-Byte-große (16 Bit) vorzeichenlose Ganzzahl in
+         einem Bereich von 0 bis 65535.
+
+Integer  Integer  ist  der  größte  ordinale Typ. Er kann eine 32-Bit-große
+         vorzeichenbehaftete Ganzzahl speichern in einem  Bereich  von  ca.
+         -2 Millionen bis 2 Millionen.
+
+Real     Eine Gleitkommazahl, im Motorola Fast Floating  Point-Format.  Ein
+         Real-Wert ist 4 Bytes (32 Bits) groß,  und  kann  Gleitkommazahlen
+         von ca. 10^19 bis ca. 10^-20 ausdrücken, positiv oder negativ. Ich
+         bin  mir über die Genauigkeit von FFP nicht sicher, aber ich würde
+         nicht auf mehr als 5 oder 6 Stellen zählen.
+
+Die  numerischen Typen sind in Ausdrücken untereinander austauschbar.  Wenn
+Sie  beispielsweise  zwei  verschiedene  Typen in einer Addition verwenden,
+wird  der Compiler automatisch beide Werte in den kleinsten Typ verwandeln,
+der  beide  beinhaltet.   Das ist ein numerischer Typ, dessen Bereich beide
+Argumente  abdeckt.   Z.B.  ist das Ergebnis einer Addition eines Short und
+eines  Integer ein Integer.  Das Ergebnis der meisten Operationen, in denen
+ein Real-Wert vorkommt, wird ein Real-Wert sein.
+
+
+ Andere ordinale Typen
+-----------------------
+
+Integer,  Short  und  Byte  sind  alles ordinale Typen.  Das heißt, daß sie
+getrennte  Werte sind, die exakt durch eine binäre Schreibweise ausgedrückt
+werden  können  (nicht wie Real, wo der Wert angenähert wird).  Die anderen
+ordinalen Typen sind:
+
+Char       Ein Ein-Byte-Wert, der als ASCII-Wert gespeichert wird.
+
+Boolean    Auch ein Byte groß, ein Boolean-Wert ist entweder -1 (alle Bits
+           gesetzt)  für  wahr,  oder  0  für falsch.  Alles andere kann zu
+           unvorhersagbaren  Ergebnissen führen.  Nebenbei, der Boolean-Typ
+           kann  als Aufzählungstyp mit den Werten True und False angesehen
+           werden.  In den meisten Implementationen ist False  <  True  und
+           Succ(False)=True, aber nicht in PCQ.
+
+Aufzählung Die Werte eines Aufzählungstypen werden innerhalb des  Programms
+           spezifiziert. Wenn es 256 oder weniger Werte gibt, wird der Auf-
+           zählungstyp  in  einem  Byte gespeichert.  Gibt es mehr, in zwei
+           Bytes.   In  jedem  Fall wird jede Aufzählung mit einer Ganzzahl
+           verknüpft, beginnend mit 0.
+
+
+ Zeigertypen
+-------------
+
+Zeigertypen  beinhalten die Adresse einer anderen Variable.  Sie werden wie
+folgt deklariert:
+
+                     Zeigertyp = ^<Typenbeschreibung>
+
+Es  gibt  eine  Ausnahme  in Pascal, die es erlaubt, einen Zeiger auf einen
+bisher  undefinierten  Typ  zu  definieren.   In  anderen Worten können Sie
+"RecPtr = ^Rec" definieren, bevor Sie "Rec" ansich definiert haben.  Dieses
+ist  die  einzige Ausnahme, wo Sie einen Bezeichner verwenden können, bevor
+Sie  ihn definiert haben.  Wenn Sie diese Art der Deklaration verwenden, mu
+der Bezeichner im gleichen Block definiert werden wie der Zeigertyp.
+
+Zeiger sind immer 32-Bit-Werte. Die vordefinierten Zeigerkonstanten sind:
+
+Adress   Adress ist ein spezieller Zeigertyp, der mit allen anderen Zeiger-
+         typen kompatibel ist. Er sollte nicht mißbraucht werden, kann aber
+         helfen, unübersichtliche Typenumwandlungen zu vermeiden.
+
+String   Der Stringtyp in PCQ ist in Wirklichkeit als Zeiger auf Char defi-
+         niert, obwohl er weitere spezielle Eigenschaften hat wie den Feld-
+         ähnlichen Zugriff auf einzelne Zeichen.
+
+
+ Dateitypen
+------------
+
+Dateien  in  PCQ  basieren auf normalen AmigaDOS-Dateien, aber unterstützen
+automatische  Bufferung  und Zugriff auf die handlichen Pascal-Ein/Ausgabe-
+routinen wie Writeln. Dateivariablen gibt es in zwei Arten:
+
+Text      Eine Text-Datei ist eine normale ASCII-Datei (diese Dokumentation
+          zum Beispiel).
+
+Typisierte
+Dateien   Eine typisierte Datei, deklariert als "File  of  Typ",  speichert
+          nur Werte des gegebenen Typs.  Wenn Sie einen Write()-Befehl  auf
+          eine  typisierte  Datei  anwenden,  gibt  PCQ die aktuelle binäre
+          Darstellung  des  Wertes  an  die Datei aus.  Wenn Sie z.B.  eine
+          Datei aus Ganzzahlen haben, wird die typisierte Datei jede  Ganz-
+          zahl  als  eine  4-Byte-Repräsentation speichern.  Eine Textdatei
+          dagegen  wird  jede Ganzzahl als eine Reihe von ASCII-Zeichen von
+          '0' bis '9' speichern.  Sie können auf typisierte Dateien Writeln
+          und Readln nicht verwenden.
+
+ Typenkompatibilität
+---------------------
+
+Es  gibt  zwei  Arten  von  Typenüberprüfung.  Die eine ist für die normale
+Typenkompatibilität.   Das  wird  gebraucht,  um  die  Argumente  in  einem
+Ausdruck zu vergleichen oder für die formalen und aktuellen Parameter.  Die
+zweite  Art  überprüft  auf  identische  Typen  und wird für die strengeren
+Umstände  gebraucht:   In  Zuweisungen  und zwischen formalen und aktuellen
+Parametern,   wenn   es   sich  um  Referenzparameter  handelt  (mit  VAR).
+PCQ-Pascal  ist  im  Verhältnis  zu  Standard-Pascal  großzügig  in  der
+Verstärkung dieser Regeln.  Für die einfache Typenkompatibilität müssen die
+beiden Typen eine der folgenden Tests durchlaufen:
+
+      o Sie sind der gleiche Typ oder
+      o Sie sind beides numerische Typen (real, integer, etc), oder
+      o Sie sind beides Feldtypen mit dem gleichen Bereich und die
+        Feldinhalte sind kompatibel, oder
+      o Sie sind beides Zeiger auf kompatible Typen, oder
+      o Sie sind beides Dateien aus kompatiblen Typen.
+
+Synonyme  Typen  (z.B.   "TYPE  ByteSynonym  = BYTE") werden wie identische
+Typen  behandelt.   Bei  der strengeren zweiten Identitätsprüfung entfernen
+Sie die zweite Regel.
+
+
+
+===========================================================================
+
+                          Konstantendeklarationen
+
+===========================================================================
+
+
+Konstanten  werden  normalerweise  nach Art des Standard-Pascal deklariert,
+was im BNF wie folgt aussieht:
+
+<Konstantenblock> ::= Const <Konstantendeklarationen>
+
+<Konstantendeklarationen> ::= <Konstantendeklaration> |
+                              <Konstantendeklaratoin> ;
+                              <Konstantendeklaration>
+
+<Konstantendeklaration> ::= <Bezeichner> = <Konstante> |
+                            <Bezeichner> : <Typenbeschreibung> =
+                                            <Typisierte Konstante> |
+                            <Bezeichner> : <Speicherbeschreibung>
+                                            <Typenbeschreibung> =
+                                            <Typisierte Konstante>
+
+<Typisierte Konstante> ::= <Konstante>      |
+                           ( <Konstanten> ) |
+                           @ <Bezeichner>
+
+Konstanten  werden  weiter  unten definiert werden, aber Sie können sie als
+als  normale  Ausdrücke behandeln, die während der Kompilierung schon voll-
+ständig ausgewertet werden können (d.h., daß sie keine Benutzer-definierten
+Funktionen und keine Variablen enthalten).
+
+Normale Konstanten sind einfach zu verstehen - sie sind einfach das gleiche
+wie  nur-lese-Variablen,  brauchen  jedoch  keinen Speicher.  Der Werte der
+Konstante  wird  im Programm einfach an die Stelle des Bezeichners gesetzt.
+Da sie aus konstanten Ausdrücken gebildet werden, können normale Konstanten
+nur  aus  wenigen Typen bestehen:  Integer, Real, Char, Boolean, String und
+Array  Of  Char.   Sie  können  keinen  Benutzer-definierten Typ und keinen
+Record- oder Feldtyp haben.
+
+
+
+ Typisierte Konstanten
+-----------------------
+
+Hier  kommen  nun  typisierte  Konstanten ins Spiel.  Typisierte Konstanten
+stellt  man  sich  am  besten als vor-initialisierte Variablen vor, und sie
+können  jeden  Typ  besitzen,  den Sie definieren können, außer Dateitypen.
+Ich kann mir nicht vorstellen, warum Turbo-Pascal diese Objekte Konstanten,
+und  nicht  Variablen  nennt, aber ich passe mich da an.  Wenn Ihr Programm
+geladen  wird,  sind diese Werte schon an ihrem Platz, und Sie werden nicht
+wieder  aufgefrischt,  bis  Ihr Programm erneut geladen wird.  Daher werden
+sie  in  residenten  Programmen  zu  Fehlern führen, wenn Sie nicht korrekt
+benutzt werden.
+
+Ein praktischer Nebeneffekt ist, daß Variablen, die lokal in einer Prozedur
+definiert werden, ihren Wert während der Programmausführung behalten können
+(wie  statische Variablen in C, nicht wahr?).  Mit anderen Worten, wenn Sie
+eine  typisierte  Konstante  in  einer  Prozedur  definieren,  kann auf sie
+außerhalb  der  Prozedur  nicht zugegriffen werden, sie verliert aber ihren
+Wert  zwischen  zwei  Prozeduraufrufen  nicht.   Sieht aus wie eine lokale,
+verhält sich wie eine globale Variable.
+
+Das Deklarieren von typisierten Konstanten führt leicht zu Fehlern, und Sie
+verbringen  wahrscheinlich  viel  Zeit  damit,  die Elemente einer Liste zu
+zählen  oder Klammern richtig zu setzen, oder etwas ähnliches irremachendes
+zu   tun.   Trotzdem  sind  sie  außerordentlich  praktisch.   Die  Syntax
+entspricht  dem  zweiten  Fall  der <Konstantendeklaration>, was einem aber
+noch nicht alles sagt.  Vielleicht ist es das Beste, sich ein paar Beispiel
+anzusehen:
+
+     Type
+          BeispielRec = record
+                           Feld1 : Integer;
+                           Feld2 : Char;
+                           Feld3 : Boolean;
+                           Feld4 : ^Integer;
+                           Feld5 : Array [-1..1] of Byte;
+                        end;
+          MultiDim = Array [0..1,0..1] of Integer;
+
+     Const
+         Meldung1 : String = "Ein Beispielstring";
+         Meldung2 : Array [0..9] of Char = 'String2   ';
+         Meldung3 : Array [0..9] of Char = ('a','b','c','d','e',
+                                            'f','g','h','i','j');
+         Wert1    : Integer = 456;
+         Record1  : BeispielRec =
+                        (34, 'r', True, @Wert1, (34,56,12));
+         Multi1   : MultiDim =((34,12), (45,15));
+
+Beachten  Sie,  daß  alle  "Meldung"-Konstanten  und Wert1 auch als normale
+Konstanten  deklariert  werden könnten.  Meldung1 und Wert1 würden in jedem
+Fall  keinen  Speicher  benötigen,  aber  die  Meldungen 2 und 3 würden das
+gleiche  sein.   Das Format von Meldung3 ist typisch für Felder, das Format
+von  Meldung2  ist  eine  besondere  Abkürzungsmöglichkeit für ein Feld aus
+Char.
+
+Der Teil <Speicherbeschreibung> der Deklaration erlaubt es Ihnen, die Kate-
+gorie des Speichers zu bestimmen, den die typisierte Konstante belegt.  Die
+möglichen Werte sind CHIP, was die Konstante in den Speicher setzt, der für
+die  Customchips  des  Amiga zugänglich ist, und FAST, was die Konstante in
+den  Speicherbereich  setzt, in dem die CPU nicht um Zugriffsberechtigungen
+kämpfen muß.  Wenn Sie konstante Bild- oder Tondaten definieren, können Sie
+das  CHIP-Schlüsselwort  benutzen, um sicher zu gehen, daß die Konstante im
+richtigen  Speicherbereich  liegt.   Beachten  Sie, daß Konstanten, für die
+keine  Speicherbeschreibung  angegeben  wird,  im  FAST-Ram  liegen,  falls
+welches vorhanden ist.
+
+Es gibt einige Unterschiede zwischen dieser und der Syntax von Turbo-Pascal
+(alle,  wenn  ich  das  so  sagen  darf, zum Vorteil von PCQ).  Zuallererst
+erfordert  die  Definition  von konstanten Records in Turbo-Pascal, daß Sie
+die  Feldbezeichner  benutzen, gefolgt von einem Doppelpunkt, dem Wert, und
+möglicherweise  einem  Semikolon.   Das  ist mir viel zu umständlich, daher
+benutze  ich  den  gleichen  Weg  wie bei Feldern.  Sie spezifizieren jedes
+Feld, gefolgt von einem Komma.  Turbo benutzt die kompliziertere Syntax, um
+variante  Records  zu  behandeln,  PCQ  erlaubt  es  Ihnen nicht, konstante
+Records mit varianten Feldern zu definieren.
+
+Der  zweite  Unterschied zu Turbo-Pascal ist, daß Turbo bis zur Version 6.0
+das  Initialisieren von Zeigern nur mit Nil gestattete.  PCQ-Pascal erlaubt
+es,  einen  Zeiger  mit  Nil  zu initialisieren, oder mit der Adresse einer
+vorher  definierten Variable oder typisierten Konstante.  Um dieses zu tun,
+benutzen  Sie  normalerweise  den  '@'-Operator,  welcher die Adresse einer
+spezifizierten Variable zurückgibt.
+
+Der letzte Unterschied ist, daß Sie die Werte von typisierten Konstanten in
+späteren  konstanten  Ausdrücken  benutzen können.  Sie können keine struk-
+turierten  Typen  (d.h.  Records und Felder) benutzen, aber Integer, Reals,
+und andere sogenannte "einfache" Typen.
+
+
+ Standardkonstanten
+--------------------
+
+Es  gibt eine ganze Reihe von Standardkonstanten (d.h., daß sie im Compiler
+selbst  eingebaut  sind  -  Sie brauchen sie nicht zu deklarieren oder eine
+Includedatei benutzen).  Das sind:
+
+False     False ist eine Aufzählung des Typs Boolean, und hat den Wert 0.
+
+MaxInt    MaxInt ist die größte Ganzzahl, die im 32-bit-Integer-Typ gespei-
+          chert werden kann. Sie ist: 2.147.483.647, was $7FFFFFFF in hexa-
+          dezimaler Schreibweise ist. So können Sie also sagen, daß der Be-
+          reich einer Integer-Variable von +MaxInt bis -MaxInt geht.
+
+MaxShort  MaxShort ist die größte Zahl, die im 16-bit-Short-Typ gespeichert
+          werden kann. Sie liegt bei 32.767, oder  $7FFF  in  hexadezimaler
+          Schreibweise.  Genauso  wie  bei MaxInt können Sie sagen, daß der
+          Bereich einer Short-Variablen von +MaxShort  bis  -MaxShort  geht
+          (um   genau   zu  sein,  der  Bereich  liegt  von  +MaxShort  bis
+          -(maxShort+1), bei MaxInt analog).
+
+MaxWord   MaxWord ist die größte Zahl, die im  16-bit-Word-Typ  gespeichert
+          werden kann. Sie ist 65.535, oder $FFFF in hexadezimaler Schreib-
+          weise. Der Bereich des Word-Typs geht also von 0 bis 65.535.
+
+Nil       Nil ist eine Konstante vom Typ Address. Sie ist etwa so definiert:
+
+                             Nil = Address(0);
+
+          Im Standard-Pascal ist "Nil" ein reserviertes Wort. In PCQ-Pascal
+          ist es kein reserviertes Wort, da es das nicht zu sein braucht.
+
+True      True ist eine Aufzählung des Typs Boolean und hat den Wert -1. In
+          einigen Fällen reicht irgendein Wert  ungleich  0  aus,  aber  der
+          "not"-Operator wird sich falsch verhalten, wenn  Sie  irgendwelche
+          verrückten Werte benutzen.
+
+
+
+
+===========================================================================
+
+                          Variablendeklarationen
+
+===========================================================================
+
+Variablendeklarationen werden genauso wie im Standard-Pascal behandelt:
+
+<Variablendeklaration> ::= Var <Variablendefinitionen> ;
+
+<Variablendefinitionen> ::= <Variablendefinition> |
+                            <Variablendefinition> ; <Variablendefinitionen>
+
+<Variablendefinition> ::= <Bezeichnerliste> : <Typenbeschreibung> |
+                          <Bezeichnerliste> : <Speicherbeschreibung>
+                                                 <Typenbeschreibung>
+
+Globale  Variablen,  d.h.  Variablen, die in der äußersten Ebene deklariert
+werden,  werden  als  statischer  Speicher  behandelt.  Alle Variablen, die
+innerhalb  einer  Prozedur  oder Funktion deklariert werden, werden auf dem
+Stack  gelagert.  Wenn Sie also öfters aufgerufene Routinen schreiben, sein
+Sie sicher, nicht auf globale Variablen zu schreiben.
+
+Variablen,  die  größer  als  ein Byte sind, werden an durch Zwei teilbaren
+Adressen  gespeichert  (nicht  an durch Vier teilbaren Adressen, Sie müssen
+AllocMem  benutzen,  um das zu garantieren).  Das ist eine Option in Turbo-
+Pascal,  doch  der  68000 macht das zu einer Bedingung für Amiga-Programme.
+Beachten  Sie,  daß  das  auch  für  Records und Felder gilt, sein Sie also
+vorsichtig, wenn Sie die Größe und den Ort der Variablen abschätzen.
+
+Der  Teil  <Speicherbeschreibung> der Variablendefinition erlaubt es Ihnen,
+den  Speichertyp  für  die Variable zu bestimmen.  Die möglichen Werte sind
+CHIP  und  FAST, welche die Variable in den Speicherbereichen Chip und Fast
+des  Amiga plazieren.  Einige Variablen, wie Bild- oder Tondaten, müssen in
+dem  Speicherbereich  liegen,  der  für die Customchips zugänglich ist, für
+diese    Fälle    benutzen   Sie   also   das  Schlüsselwort  "CHIP".   Das
+"FAST"-Schlüsselwort  ist  nur  von  wegen  der  Symmetrie  vorhanden,  da
+Variablen  immer  im  Fast-Ram untergebracht werden, soweit möglich.  Diese
+Speichertypspezifikationen  können nur für globale Variablen und typisierte
+Konstanten  benutzt  werden,  da  lokale  Variablen  immer  auf  dem  Stack
+untergebracht werden.
+
+Denken  Sie immer daran, daß lokale Variablen (nicht typisierte Konstanten)
+verschwinden,  wenn Sie die Funktion verlassen, Sie sollten also nicht ver-
+suchen,  auf  sie  hinterher  zuzugreifen (beispielsweise mit einer Zeiger-
+variable).  Das wird einfach nicht funktionieren.
+
+
+ Standardvariablen
+-------------------
+
+Es gibt eine Reihe von in PCQ-Pascal eingebauten Variablen.  Sie sind immer
+zugänglich,  und  werden  wie globale Variablen behandelt.  Sie sind die
+folgenden:
+
+CommandLine  Dieses  ist  eine  Stringvariable,  die  auf die Kommandozeile
+             zeigt, die der Benutzer eingegeben hat (ohne den Programmnamen
+             und  irgendwelche Umleitungsparameter).  Wenn das Programm von
+             der  Workbench  gestartet wurde, ist der Wert nicht definiert.
+             Denken  Sie daran, daß Sie sie als nur-lese-Variable behandeln
+             sollten,  wenn  Sie auf Nummer Sicher gehen wollen.  Falls Sie
+             sie  modifizieren  wollen,  machen  Sie  am  besten eine Kopie
+             davon.
+
+ExitAddr     ExitAddr ist die Stelle in Ihrem Programm, die einen Laufzeit-
+             fehler verursachte.  Wenn kein Fehler aufgetaucht ist, ist ihr
+             Wert undefiniert.  Siehe auch das Kapitel "Exitprozeduren" für
+             weitere Informationen.
+
+ExitCode     Dieses ist der Integerwert, der zum AmigaDOS ausgegeben  wird,
+             wenn  Ihr  Programm  beendet  wird.   Er ist nur innerhalb von
+             Exitprozeduren definiert.
+
+ExitProc     Dieses ist die Adresse der  ersten  Prozedur,  die  aufgerufen
+             wird,  wenn Ihr Programm beendet wird.  Siehe auch das Kapitel
+             "Exitprozeduren" für weitere Informationen.
+
+HeapError    HeapError ist die Adresse einer Funktion, die aufgerufen wird,
+             wenn  New()  oder  AllocString()  keinen Speicherblock belegen
+             können.   Siehe  das  Kapitel "Speichermanagement" für weitere
+             Informationen.
+
+Input        Input ist ein Texttyp. Er korrespondiert mit dem  Standardein-
+             gabekanal  des  Programms,  etwa  der  CLI,  von  dem  aus  es
+             gestartet  wurde.  PCQ-Pascal legt immer eine Art Eingabekanal
+             an,  außer wenn Sie gesondert angeben, keinen haben zu wollen.
+             Siehe das Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+Output       Output ist ein Texttyp. Er korrespondiert mit dem Standardaus-
+             gabekanal des Programms, welcher in den meisten Fällen der CLI
+             ist,  von  dem  aus es gestartet wurde.  PCQ-Pascal legt immer
+             einen Ausgabekanal an, außer wenn es das nicht soll.
+
+
+===========================================================================
+
+                   Prozedur- und Funktionsdeklarationen
+
+===========================================================================
+
+Prozeduren  und  Funktionen  erlauben  es  Ihnen,  Routinen innerhalb eines
+größeren  Blocks  zu  schreiben.   Prozeduren  werden durch Prozeduraufrufe
+aufgerufen,  Funktionen, wenn Sie in Ausdrücken benutzt werden.  Das Format
+für Prozedur- und Funktionsdefinitionen ist das folgende:
+
+<Prozedurdeklaration> ::= Procedure <Bezeichner> ; <Körper> |
+                          Procedure <Bezeichner>
+                                 ( <Formale Parameter> ); <Körper>
+
+<Körper> ::= <Block> | External | Forward
+
+<Formale Parameter> ::= <Bezeichnerliste> : <Typenbeschreibung> |
+                        var <Bezeichnerliste> : <Typenbeschreibung>
+
+Funktionsdeklaration> ::= Function <Bezeichner> :
+                                 <Typenbeschreibung> ; <Körper> |
+                          Function <Bezeichner> ( <Formale Parameter> ) :
+                                 <Typenbeschreibung> ; <Körper>
+
+Auch  wenn  ich  mich  wiederhole, denken Sie daran, daß Sie Prozeduren nur
+dort benutzen können, wo die BNF eine <Anweisung> verlangt, und Funktionen,
+wo  die  BNF  einen <Ausdruck> verlangt.  Trotzdem können Sie natürlich die
+$X-Direktive   benutzen,   um   Funktionsergebnisse  zu  ignorieren  (siehe
+"Compilerdirektiven" für nähere Informationen).
+
+
+ Parameterübergabe
+-------------------
+
+Pascal  unterstützt  zwei  verschiedene  Arten  der Parameterübergabe.  Die
+erste  Art  wird Wertparameter genannt.  Dieses ist der normale Fall.  Wenn
+Sie einen Wertparameter übergeben, macht der Compiler eine Kopie des Wertes
+und  übergibt  diese.   Das  ist so, als wenn Ihnen jemand sagt, Sie sollen
+sich  die  Mona Lisa anschauen, indem er Ihnen ein paar Fotos gibt, die Sie
+sich  anschauen  können.   Sie können einen Schnurrbart auf das Foto malen,
+das  wird  sich nicht auf die echte Mona Lisa auswirken; was auch immer die
+Prozedur  oder  Funktion mit dem Parameter machen wird, Ihre ursprünglichen
+Werte  bleiben  erhalten.  Wenn Sie die Prozedur aufrufen, können Sie jeden
+beliebigen (korrekten) Ausdruck als aktuellen Parameter verwenden.
+
+Der  andere  Typ  Parameter  wird  Referenzparameter genannt.  Diese werden
+spezifiziert,  indem  man das reservierte Wort "var" vor den Parameternamen
+im  Kopf  der  Prozedur  oder  Funktion  setzt.  Wenn Sie Referenzparameter
+benutzen,  ist das etwa so, als wenn Ihnen jemand sagt, Sie sollen sich die
+Mona  Lisa  anschauen,  Sie  zum  Louvre schickt und Ihnen sagt, wo Sie das
+Gemälde  finden.   Da  Sie  mit  dem  Original arbeiten, sollten Sie lieber
+vorsichtig  sein.   Referenzparamter  müssen als Variable angegeben werden,
+Sie können nicht aus Ausdrücken bestehen.  Auch müssen sie einen strengeren
+Kompatibilitätstest  bestehen  als  Wertparameter,  da  die  Prozedur keine
+4-Byte-Ganzzahl auf einen 1-Byte-großen Platz schreiben kann.
+
+Normalerweise   sollten  Sie  Wertparameter  gegenüber  Referenzparametern
+vorziehen  (es treten weniger Programmierfehler auf), außer in drei Fällen.
+Erstens,  wenn  Sie  es  wollen, daß der ursprüngliche Wert betroffen wird.
+Zweitens,  wenn  der  Parameter  groß  ist.   Wenn  Sie einen Wertparameter
+verwenden,  macht der Compiler eine vollständige Kopie davon auf dem Stack,
+bevor  er  die Routine aufruft, was sowohl Zeit als auch Stackplatz kostet.
+Wenn Sie einen Referenzparameter benutzen, schreibt der Compiler nur dessen
+Adresse auf den Stack.  Drittens, wenn es sich um einen Dateitypen handelt,
+denn der kann muß über einen Referenzparameter übergeben werden.
+
+PCQ-Pascal  schreibt  die Argumente normalerweise von links nach rechts auf
+den  Stack.   C-Compiler  schreiben Argumente von rechts nach links auf den
+Stack,  da  sie  unbestimmte  Anzahlen  von Parametern unterstützen müssen.
+Daher   müssen   Sie,   wenn   Sie   C-Routinen   aufrufen   wollen,   die
+Argument-Reihenfolge   umkehren,   oder   die   externe   Routine  mit  der
+eingeschalteten  Direktive  $C+  deklarieren (siehe Compiler-Direktiven für
+weitere Informationen).
+
+
+ Ungenannte Parameter
+----------------------
+
+Wenn  Sie  C  etwas kennen, wissen Sie, daß es Ihnen diese Sprache erlaubt,
+jede  beliebige  Anzahl  Parameter an eine Funktion zu übergeben.  Das kann
+natürlich Ärger ohne Ende bedeuten, und ist nicht recht im Einklang mit den
+Prinzipien  des  Programmierens in Pascal.  Unglücklicherweise machen viele
+Libraries  ausgiebig Gebrauch von dieser Eigenart, wie auch die Version 2.0
+des  Amiga-Betriebssystems.   PCQ-Pascal  erlaubt es Routinen deshalb, eine
+beliebige Anzahl Parameter zu haben, auf die gleiche Weise wie in C.
+
+Um  eine  Prozedur  oder Funktion zu deklarieren, die eine beliebige Anzahl
+Parameter  annimmt,  müssen  Sie  als  erstes die -Aufruf-Konventionen ein-
+schalten.   Dann  benutzen Sie einfach eine Auslassung (sieht so aus:  ...)
+als den letzten Parameter in der Deklaration.  Z.B.:
+
+    {$C+ wir müssen C-Aufruf-Konventionen benutzen }
+    Procedure VieleArgumente(Format : String; ... );
+
+Die  Prozedur  VieleArgumente  akzeptiert  mindestens  einen Parameter, den
+Format-String,  plus null oder mehr weitere Parameter.  VieleArgumente kann
+nicht  feststellen,  wie  viele  Argumente sie denn wirklich erhält:  Diese
+Information  muß  in  einem der genannten Parameter enthalten sein, oder in
+irgendeiner anderen Weise der aufgerufenen Routine bekannt gemacht werden.
+
+Die  weiteren  Parameter müssen einen einfachen Typ haben, was bedeutet, da
+sie  nicht  Records,  Felder,  Dateien  etc.   sein  können.   Sie  können,
+trotzdem, Zeiger auf solche Typen sein, Real-Werte, oder irgenein ordinaler
+Typ wie Integer, Boolean, Aufzählungstypen, etc.
+
+Um  den  Methoden  der  C-Compiler zu entsprechen, schreibt PCQ-Pascal alle
+ordinalen Typen als Langwörter (d.h.  4 Bytes).  C schreibt Gleitkommawerte
+normalerweise  als  Doppel  (8 Byte), aber da PCQ-Pascal noch keine doppelt
+genauen  Werte  unterstützt, schreibt es nur FFP-Werte mit einfacher Genau-
+igkeit.
+
+Um  die  ungenannten Parameter zu erreichen, sollte die Routine erst einmal
+eine    Variable   des   Type   Adresse   mittels   der   VA_Start-Prozedur
+initialisieren.   Wenn  das  getan  ist,  ergibt  die  Funktion  VA_Arg die
+Parameter   nacheinander.    Z.B.    schreibt  die  folgende  Routine  alle
+Parameter, die ihr übergeben werden, und nimmt an, daß das alles Ganzzahlen
+wären:
+
+    {$C+}
+    Procedure SchreibeInts(Num : Short; ... );
+    var
+        ArgPtr : Address;
+        i      : Short;
+    begin
+        VA_Start(ArgPtr);
+        for i := 1 to Num do
+            Writeln(VA_Arg(ArgPtr,Integer));
+    end;
+
+Siehe weiter unten für eine Beschreibung von VA_Start und VA_Arg;
+
+
+
+ Forward-Prozeduren und -Funktionen
+------------------------------------
+
+In  Pascal  muß  jeder  Bezeichner deklariert sein, bevor er benutzt werden
+kann.   Da  sich  daraus  Probleme ergeben, wenn Prozeduren oder Funktionen
+gegenseitig  voneinander  abhängig  sind, erlaubt es Pascal, Prozeduren und
+Funktionen vorzudefinieren, die später im Quelltext voll definiert werden.
+
+Eine  Forward-Referenz  sieht  genauso  aus wie eine normale Prozedur- oder
+Funktionsdeklaration,  hat  aber  das reservierte Wort "Forward" hinter dem
+Kopf.  Der Kopf enthält all die Informationen, die der Compiler braucht, um
+die  Routine  korrekt  aufrufen  zu  können,  so  daß  die Routine nach der
+Forward-Deklaration  benutzt  werden  kann.   Wenn  die  Routine  dann voll
+definiert  wird, setzt der Compiler vorraus, daß sie der vorher definierten
+entspricht.   Das  heißt,  daß  sie  die  gleiche Anzahl Parameter hat, die
+Parameter  müssen  die  gleichen  Typen besitzen, und wenn es eine Funktion
+ist,  muß  das  Ergebnis das gleiche sein.  Beachten Sie, daß die Namen der
+Parameter unterschiedlich sein können, nur ihre Anzahl, Reihenfolge und Typ
+werden verglichen.
+
+Eine  Forward-Referenz  muß  im gleichen Block aufgelöst werden, in dem sie
+definiert  wurde,  und  die  gleiche  Routine  kann  nicht  mehr als einmal
+forward-definiert werden.
+
+
+ Externe Referenzen
+--------------------
+
+Externe  Referenzen sind den Forward-Referenzen ziemlich ähnlich - sie sind
+Deklarationen  von  Routinen,  die  tatsächlich  gar  nicht  voll definiert
+wurden.   Der  Unterschied  ist,  daß Forward-Referenzen später im gleichen
+Quelltext  definiert  werden  müssen,  wohingegen  Externe Referenzen nicht
+einmal im Quelltext selbst definiert werden.
+
+Die  Deklaration  von  Externen  Referenzen  ist  die  gleiche  wie die von
+Forward-Referenzen,  das  reservierte  Wort "External" wird jedoch anstelle
+von "Forward" gebraucht.
+
+Externe  Referenzen  werden  für zwei Anwendungsgebiete gebraucht.  Erstens
+erlauben   sie  es,  Prozeduren  und  Funktionen  in  externen  Dateien  zu
+definieren.   Alle  Systemroutinen,  die  in den Include-Dateien deklariert
+werden,  werden  als  externe  Dateien  definiert.   Sie  erlauben es auch,
+Routinen  aufzurufen,  die  in  einer  anderen  Sprache geschrieben wurden,
+solange  sie einige Regeln der Parameterübergabe befolgen.  Sie das Kapitel
+"Externe  Dateien"  für  weitere  Informationen  zum  Gebrauch von externen
+Routinen.
+
+
+ Standardprozeduren
+--------------------
+
+Es  gibt eine ganze Reihe von Prozeduren, die in PCQ-Pascal eingebaut sind.
+Sie beinhalten:
+
+
+                    Close(Dateivariable : Ein Dateityp)
+
+Die   "Close"-Prozedur  löst  die  Dateivariable  von  der  physikalischen
+Diskettendatei  und gibt sämtliche Systemresourcen frei, die belegt wurden,
+um  die  Datei offen zu halten.  Siehe das Kapitel über Eingabe/Ausgabe für
+weitere Informationen.
+
+    Dec(V : Ein ordinaler Typ oder Zeiger) oder Dec(V, Wert : Integer)
+
+Dec (was kurz ist für Dekrementiere) subtrahiert Eins (oder mehr) von einer
+Variable.   "Dec(x,n)"  ist  das  gleiche  wie  "x  := x-n", ist aber etwas
+effizienter.   Die  Variable muß entweder ein ordinaler Typ sein, sei Char,
+Byte,  Integer,  etc., oder eine Zeigervariable.  Der Parameter "Wert", der
+optional  ist,  muß  ein  Ganzzahl-Typ sein - wenn er nicht angegeben wird,
+wird der Wert Eins angenommen.
+
+Wenn  die Variable ein ordinaler Typ ist, wird der Wert normal subtrahiert.
+Wenn  die  Variable ein Zeigertyp ist, multipliziert Dec() den Wert mit der
+Größe  des  Typs,  auf  den der Zeiger zeigt.  Mit anderen Worten, wenn Sie
+einen  Zeiger  des Typs ^Integer haben, subtrahiert Dec(p) tatsächlich Vier
+vom Zeiger.
+
+                      Dispose(Variable : ^Irgendwas)
+
+Die  "Dispose"-Prozedur gibt den Speicher wieder frei, der vorher mit "New"
+angefordert  wurde  (siehe  unten).  Siehe das Kapitel "Speichermanagement"
+für Informationen über PCQ's Speicherroutinen.
+
+                  Exit oder Exit(Rückgabecode : Integer)
+
+Exit,  wie  die  gleichnamige  AmigaDOS-  und  die  C-Funktion, beendet das
+Programm.   Wenn  ein  Rückgabecode  angegeben  wird,  wird er dem AmigaDOS
+übergeben.   Nach  normaler  Konvention  liegen die Rückgabecodes bei 5 für
+geringe   Probleme  (Warnungen),  bei  10  für  schwerwiegendere  Probleme
+(Fehler),  und  bei  20, wenn alles schiefgeht (Ausfall).  Das Benutzen von
+Exit  ohne einen Rückgabecode ist das gleiche wie Exit(0), was anzeigt, das
+alles gut ging.
+
+Exit  ist  die  systemkonforme  Art,  ein Programm zu beenden - Sie sollten
+nicht  die  AmigaDOS-Routine  DOSExit()  benutzen.  Wenn Sie Exit aufrufen,
+werden   zuerst   alle  Exit-Prozeduren  aufgerufen.   Das  beinhaltet  die
+Standardroutine,  die  alle  Dateien  schließt  und  allen  Speicher wieder
+freigibt.
+
+                   Get(var Dateivariable : Ein Dateityp)
+
+Die  "Get"-Prozedur  bewegt  den Dateizeiger auf das nächste Element in der
+Datei, ohne irgendetwas zu lesen.  Auf das Element im Dateipuffer kann über
+die   Dateivariable^-Syntax   zugegriffen   werden.    Siehe   das  Kapitel
+"Eingabe/Ausgabe" für Details.
+
+            Inc(Variable : Ordinale Variable oder Zeiger) oder
+       Inc(Variable : Ordinale Variable oder Zeiger, Wert : Integer)
+
+Die "Inc"-Anweisung addiert eine Ganzzahl Wert zur Variablen Wenn kein Wert
+angegeben  wird, wird Eins angenommen.  Wenn die Variable ein ordinaler Typ
+ist,  wird  die Addition normal ausgeführt, aber wenn es ein Zeigertyp ist,
+wird  zuerst der Wert mit der Größe des Objektes multipliziert, auf den der
+Zeiger  zeigt.   Mit  anderen Worten addiert Inc(p), wobei p ein Zeiger auf
+einen Integer ist, Vier zu p.
+
+                     New(Zeigervariable : ^Irgendwas)
+
+Die  "New"-Prozedur belegt einen Block Speicher in der Größe, die der Größe
+des  Typs  entspricht,  auf  den die Variable (die ein Zeigertyp sein muß),
+zeigt.   Die  Adresse  des  belegten  Blocks wird der Variablen zugewiesen.
+Siehe das Kapitel "Speichermanagement" für weitere Informationen.
+
+                   Put(var Dateivariable : Ein Dateityp)
+
+Die  "Put"-Routine  bewegt  den Dateizeiger hinter das aktuelle Element und
+schreibt  das aktuelle Element auf die Diskette, falls nötig.  Das aktuelle
+Element  kann  über  die  Dateivariable^-Syntax  gesetzt werden.  Siehe das
+Kapitel "Eingabe/Ausgabe" für Details.
+
+           Read(var Dateivariable : Text oder Datei, Variablen)
+
+Die  "Read"-Prozedur  liest  Informationen  von  einer AmigaDOS-Datei.  Die
+Dateivariable  ist  optional,  und  die  Prozedur  ist  eine der wenigen in
+Pascal,  die  eine  beliebige  Anzahl von Argumenten haben kann.  Siehe das
+Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+                Readln(var Dateivariable : Text, Variablen)
+
+Die  "Readln"-Prozedur  ist  "Read"  ziemlich  ähnlich,  kann  aber nur auf
+Textdateien  angewendet werden; und nachdem sie alle Argumente gelesen hat,
+die es sollte, schreitet sie zum Beginn der nächsten Zeile fort.  Siehe das
+Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+                 Reset(Var Dateivariable : File oder Text;
+                               Dateiname : String;
+                             Puffergröße : Integer);
+
+Die   "Reset"-Prozedur  öffnet  eine  Datei  zum  Lesen.   Die  Angabe  der
+Puffergröße  ist  optional.  Wenn Sie die {$I-}-Direktive benutzt haben, um
+manuelle  Ein/Ausgabekontrolle anzuzeigen, sollten Sie IOResult überprüfen,
+um  zu  sehen,  ob  die  Datei  korrekt  geöffnet  werden konnte.  Wenn Sie
+automatische  Ein/Ausgabekontrolle  eingeschaltet  haben, wird das Programm
+mit  einem  Laufzeitfehler  beendet,  wenn die Datei nicht korrekt geöffnet
+werden  konnte.   Sie  das  Kapitel  "Eingabe/Ausgabe"  für  weitere Infor-
+mationen.
+
+                Rewrite(var Dateivariable : File oder Text;
+                                Dateiname : String;
+                              Puffergröße : Integer);
+
+Die  "Rewrite"-Prozedur  öffnet  eine  Datei  zur  Ausgabe  und löscht eine
+bereits   vorher   bestehende  Datei  desselben  Namens.   Die  Angabe  der
+PUffergröße  ist  optional.   Wenn  die Datei nicht geöffnet werden konnte,
+wird  IOResult auf einen Wert ungleich Null gesetzt.  Wenn Sie automatische
+Ein/Ausgabefehler-Überprüfung  benutzen,  wird  das  zu einem beenden Ihres
+Programms   mit   einem   Laufzeitfehler   führen.    Senn   Sie  manuelle
+Ein/Ausgabefehler-Überprüfung  verwenden,  sein  Sie  sicher,  IOResult  zu
+überprüfen,  um  zu  sehen, ob die Datei geöffnet werden konnte.  Siehe das
+Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+                        Trap(TrapNummer : Integer)
+
+Die   "Trap"-Prozedur   kann   von  einigen  Debuggern  als  eine  Art  von
+automatischem  Breakpoint  benutzt  werden.   Wenn  Sie  den richtigen Trap
+einsetzten, wird Ihr Debugger an dieser Stelle abbrechen.  Oder auch nicht.
+
+                  VA_Start(VAR ArgumentZeiger : Address)
+
+Die  "VA_Start"-Prozedur  läßt ArgumentZeiger auf das erste der ungenannten
+Argumente  zeigen,  die  der  Prozedur  übergeben  wurden.  Sie können dann
+VA_Arg  benutzen,  um  auf  jedes  der  Argumente zugreifen zu können.  Sie
+können  VA_Start  nur  in einer Routine benutzen, die eine beliebige Anzahl
+von Argumenten erwartet.
+
+           Write(Dateivariable : Text oder Datei, Ausdrücke...)
+
+Die  "Write"-Prozedur  gibt  Informationen an eine AmigaDOS-Datei aus.  Die
+Dateivariable   ist  optional,  und  Write()  kann  eine  beliebige  Anzahl
+Argumente  annehmen.   Siehe  das  Kapitel  "Eingabe/Ausgabe"  für  weitere
+Informationen.
+
+                Writeln(Dateivariable : Text, Ausdrücke...)
+
+Die  "Writeln"-Prozedur ist "Write" ziemlich ähnlich, funktioniert aber nur
+mit   Textdateien  und  beendet  die  Zeile,  nachdem  sie  alle  Argumente
+geschrieben  hat.   Siehe  wieder das Kapitel "Eingabe/Ausgabe" für weitere
+Informationen.
+
+
+
+ Standardfunktionen
+--------------------
+
+Es  gibt  auch  eine  ganze  Reihe  von  in den Pascal-Compiler eingebauten
+Funktionen.  Es sind die folgenden:
+
+                          Adr(Variable) : Address
+
+Die  Adr()-Funktion  liefert  die  tatsächliche  Adresse  des Parameters im
+Speicher.   Dieses  entspricht  Turbo-Pascal's  Addr()-Funktion, und wie in
+Turbo-Pascal kann man auch den @-Operator benutzen.
+
+            Abs(Numerischer Ausdruck) : derselbe numerische Typ
+
+
+Der  Funktionsaufruf  Abs(n)  liefert n, wenn n positiv ist, und -n, wenn n
+negativ ist.
+
+               ArcTan(Numerischer Ausdruck) : Real Bogenmaß
+
+Die  ArcTan()-Funktion liefert den angenäherten Arcustangens des Parameters
+in Bogenmaß.
+
+                      Bit(Bitnummer) : Maskenganzzahl
+
+Die  Bit()-Funktion liefert eine Ganzzahl, in der nur das spezifizierte Bit
+gesetzt ist.  Das entspricht (1 shl Bitnummer).
+
+                     Chr(Numerischer Ausdruck) : Char
+
+Die  Chr()-Funktion  transformiert jeden numerischen Ausdruck in das ASCII-
+Zeichen, das ihm entspricht.
+
+                     Ceil(Gleitkommaausddruck) : Real
+
+Ceil()  liefert die kleinste Ganzzahl, die größer oder gleich dem Parameter
+ist.
+
+               Cos(Numerischer Ausdruck im Bogenmaß) : Real
+
+Die Cos()-Funktion liefert den Cosinus des gegebenen Winkels im Bogenmaß.
+
+                  EOF(Datei- oder Textvariable) : Boolean
+
+EOF  liefert True, wenn die Datei an ihrem Ende ist, sonst False.  Die EOF-
+Funktion  ist  nur  für  zum  Lesen  geöffnete Dateien zulässig.  Siehe das
+Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+                     Exp(Numerischer Ausdruck) : Real
+
+Die  Funkiton  Exp(x)  liefert  e  hoch  x.   Falls es Ihnen entfallen sein
+sollte, ist e ca.  2.71828...
+
+                          Float(Ganzzahl) : Real
+
+Die  Float()-Funktion  konvertiert  jeden  ganzzahligen  Ausdruck  in seine
+Gleitkommarepräsentation.   Wenn  die  Ganzzahl  recht  groß  ist, wird sie
+vielleicht angenähert.  Daher ist "Trunc(Float(Ganzzahl)) = Ganzzahl" nicht
+immer wahr.
+
+                        Floor(Real-Ausdruck) : Real
+
+Die  Floor()-Funktion  liefert die größte Ganzzahl, die kleiner oder gleich
+dem Parameter ist.
+
+                            IOResult : Integer
+
+Die  IOResult()-Funktion  testet, ob seit ihrem letzten Aufruf irgendwelche
+Fehler aufgetreten sind.  Normalerweise fügt PCQ-Pascal Anweisungen ein, um
+IOResult  automatisch  zu  überprüfen,  doch  wenn  Sie  die  automatische
+Ein-/Ausgabekontrolle  ausgeschaltet  haben  (mittels der {$I-}-Direktive),
+müssen Sie es explizit abfragen.
+
+                      Ln(Numerischer Ausdruck) : Real
+
+Die   Ln()-Funktion   liefert   den  natürlichen  Logarithmus  (d.h.   den
+Logarithmus zur Basis e) des Parameters.
+
+                    Odd(Numerischer Ausdruck) : Boolean
+
+Die  Odd()-Funktion  liefert  TRUE,  wenn  ihr Argument ungerade ist, sonst
+FALSE.
+
+                Open(fname       : String;
+                     var fvar    : file oder Text;
+                     Buffergröße : Integer) : Boolean;
+
+Open ist die Funktionsform der Rewrite-Prozedur.  Sie öffnet eine Datei für
+die  Eingabe  und  löscht  eine  vielleicht  vorhandene Datei mit demselben
+Namen.   Wenn  sich die Datei richtig öffnen läßt, liefert Open true.  Wenn
+nicht,  liefert  sie false.  Der Buffergröße-Parameter ist optional.  Siehe
+das Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+                     Ord(Ordinaler Ausdruck) : Integer
+
+Die  Ord()-Funktion  liefert den ordinalen Wert des Arguments als Ganzzahl.
+Mit  anderen Worten kann es Zeichen, Wahrheitswerte und Aufzählungstypen in
+ihre  numerischen  Werte  konvertieren.   Da  sie  tatsächlich  den Typ des
+Arguments in eine Ganzzahl ändert, wird sie eine Transfer-Funktion genannt.
+
+                  Pred(Ordinaler Ausdruck) : derselbe Typ
+
+Die   Pred()-Funktion  liefert  den  nächstkleineren  Wert  des  ordinalen
+Ausdrucks  mit demselben Typ.  Zum Beispiel ist Pred(2) gleich 1.  Wenn das
+Argument  den kleinstmöglichen Wert des Typs hat (z.B.  Pred(Bytevariable),
+wobei Bytevariable den Wert 0 hat), ist ihr Verhalten undefiniert.
+
+              ReOpen(fname       : String;
+                     var fvar    : file oder Text;
+                     Buffergröße : Integer) : Boolean
+
+ReOpen  ist  die  Funktionsform von Reset.  Sie öffnet eine Datei zum Lesen
+und  gibt  True  zurück,  wenn  alls geklappt hat.  Wenn sich die Datei aus
+irgendeinem  Grund  nicht  richtig  öffnen ließ, liefert ReOpen False.  Der
+Buffergröße-Parameter  ist  optional und kann beliebige Größe haben.  Siehe
+das Kapitel "Eingabe/Ausgabe" für weitere Informationen.
+
+                    Round(Gleitkommaausdruck) : Integer
+
+Die  Round()-Funktion rundet einen Gleitkommawert zur nächstgelegenen Ganz-
+zahl.   Sie ist tatsächlich als Trunc(Wert+0.5) implementiert, braucht also
+etwas länger als die Trunc-Funktion.  Auch rundet sie 0.5 immer auf.
+
+               Sin(Numerischer Ausdruck im Bogenmaß) : Real
+
+Die Sin()-Funktion errechnet den Sinus des gegebenen Winkels im Bogenmaß.
+
+                     SizeOf(Typenbezeichner) : Integer
+
+Die  SizeOf()-Funktion  liefert  die tatsächliche Größe des gegebenen Typs.
+Denken  Sie  daran,  daß  der Typ als einzelner Bezeichner angegeben werden
+muß.
+
+                 Sqr(Numerischer Ausdruck) : derselbe Typ
+
+Die Funktion Sqr(x) liefert x*x.
+
+                     Sqrt(Numerischer Ausdruck) : Real
+
+Die  Funktion  Sqrt(x) liefert die Quadratwurzel von x.  Mit anderen Worten
+ist Sqrt(x) * Sqrt(x) = x.
+
+                  Succ(Ordinaler Ausdruck) : derselbe Typ
+
+Die  Succ()-Funktion  liefert  den  nächstgrößeren ordinalen Wert desselben
+Typs.  Wenn der Wert nicht definiert ist (z.B.  Succ(n), wobei n der größte
+Wert innerhalb des Typs ist), ist die Funktion nicht definiert.
+
+               Tan(Numerischer Ausdruck im Bogenmaß) : Real
+
+Liefert  den  Tangens  des  Winkels  im  Bogenmaß.   Wenn der Parameter ein
+ungerades Vielfaches von Pi/2 ist, nimmt die Funktion undefinierte Werte an
+(der Tangens eines ungeraden Vielfaches von Pi/2 ist nicht definiert).
+
+                    Trunc(Gleitkommaausdruck) : Integer
+
+Die Trunc()-Funktion liefert den ganzzahligen Teil der Gleitkommazahl.  Sie
+ist   der   schnellste  Weg,  einen  Gleitkommawert  in  eine  Ganzzahl  zu
+konvertieren.
+
+        VA_Arg(VAR ArgPtr : Address; Einfacher Typ) : Einfacher Typ
+
+Die  VA_Arg-Funktion  liefert das nächste ungenannte Argument und läßt dann
+ArgPtr  auf  das  nächste  Argument  zeigen.   Sie müssen zunächst VA_Start
+aufrufen,    um    ArgPtr    zu    initialisieren.    Siehe   das   Kapitel
+Typendeklarationen für Informationen über Typenspezifikationen.
+
+
+
+
+===========================================================================
+
+                         Sprungmarkendeklarationen
+
+===========================================================================
+
+Sprungmarken  müssen  im  Deklarationsteil  deklariert werden, bevor sie im
+Programm  benutzt  werden  können.   Die  Sprungmarkendeklaration  hat  die
+folgende Form:
+
+<Sprungmarkendeklaration> ::= Label <Bezeichner(pl.)> ;
+
+<Bezeichner(pl.)> ::= <Bezeichner(sg.) | <Bezeichner(sg.), <Bezeichner(pl.)
+
+Bemerken  Sie, daß Standard- und Turbo-Pascal auch es Bezeichnern erlauben,
+numerische   Werte   anzunehmen,   doch   PCQ-Pascal  erlaubt  nur  normale
+Bezeichner.   Wenn  Sie  durch  ein  Programm  mit numerischen Sprungmarken
+gehen, könnten Sie einfach einen Buchstaben vor die Sprungmarken setzen, um
+sie  gebrauchen  zu  können.   Eine  bessere  Lösung  wäre  vielleicht, das
+Programm wegzuschmeißen.
+
+
+
+===========================================================================
+
+                                 Ausdrücke
+
+===========================================================================
+
+PCQ-Pascal  erlaubt  Ausdrücke  in  einer Form, die sehr ähnlich der in den
+meisten  anderen  Pascal-Implementationen  benutzten  ist.  Diese ist Ihnen
+vielleicht  schon  sehr  vertraut,  doch  sicherheitshalber  wollen wir sie
+nochmal  definieren.   Lassen  Sie  uns  mit  den  Konstanten beginnen, die
+PCQ-Pascal akzeptiert:
+
+<Zahl>              ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
+<Zahlen>            ::= <Zahl> | <Zahl> <Zahlen>
+
+<Binärzahl>         ::= 0 | 1
+
+<Binärzahlen>       ::= <Binärzahl> | <Binärzahl> <Binärzahlen>
+
+<Hexzahl>           ::= <Zahl> | a | b | c | d | e | f
+
+<Hexzahlen>         ::= <Hexzahl> | <Hexzahl> <Hexzahlen>
+
+<Gleitkommakonst.>  ::= <Gleitkommawert> |
+                        <Gleitkommawert> <Gleitkommascale>
+
+<Gleitkommawert>    ::= <Zahlen> | <Zahlen> . <Zahlen>
+
+<Gleitkommascale>   ::= E <Vorzeichen> <Zahlen> | E <Zahlen>
+
+<Vorzeichen>        ::= + | -
+
+<Ganzzahlkonstante> ::= <Zahlen> | $ <Hexzahlen> | %Binärzahlen
+
+<Zeichenwert>       ::= <ASCII-Zeichen> | \ <Escapesequenz>
+
+<Zeichenwerte>      ::= <Zeichenwert> | <Zeichenwert> <Zeichenwerte>
+
+<Zahlkonstante>     ::= <Ganzzahlkonst.> | <Gleitkommakonst.>
+
+<Zeichenkonstante>  ::= ' <Zeichenwert> '
+
+<Stringkonstante>   ::= " <Zeichenwerte> '
+
+<Zeichenfeldkonst.> ::= ' <Zeichenwerte> '
+
+Das sollte die Dinge etwas verwirren.  Was das aussagt, ist, das Sie immer,
+wenn  der  Compiler  eine  Ganzzahl  erwartet,  dezimale, hexadezimale oder
+binäre  Werte  angeben  können.   Das  sagt  auch  aus,  daß  Sie  C-mäßige
+Escape-Sequenzen  vor  jede  Textkonstante  benutzen können - diese Escape-
+Werte  werden  im  String-Kapitel  behandelt.   Bemerken  Sie,  daß frühere
+Versionen  von  PCQ-Pascal  nicht  die  Gleitkommadarstellung  in  der Form
+"2.5e6" erlaubten, doch die aktuelle kann's.
+
+Wie werden diese Dinge nun zu kompletten Ausdrücken zusammengesetzt?
+Beachten Sie die folgenden Definitionen:
+
+<Ausdruck> ::= <Einfacher> <Vergleichsoperator> <Einfacher> | <Einfacher>
+
+<Vergleichsoperator> ::= = | <> | < | > | <= | >=
+
+<Einfacher> ::= <Term> <Additionsoperator> <Term> | <Term>
+
+<Additionsoperator> ::= + | - | or | xor
+
+<Term> ::= <Faktor> <Multiplikationsoperator> <Faktor> | <Faktor>
+
+<Multiplikationsoperator> ::= * | / | div | mod | and | shr | shl
+
+<Faktor> ::= <Numerische Konstante>              |
+             <Vorzeichen> <Numerische Konstante> |
+             <Zeichenkonstante>                  |
+             <Stringkonstante>                   |
+             <Zeichenfeldkonstante>              |
+             <Variablenreferenz>                 |
+             @ <Variablenreferenz>               |
+             not <Faktor>                        |
+             ( <Ausdruck> )                      |
+             <Funktionsaufruf>
+
+Was  bedeutet das nun alles?  Das bedeutet, daß Ausdrücke aus Faktoren, den
+grundlegenden  Bausteinen von Ausdrücken, zusammengesetzt sind.  Ein Faktor
+kann aus einer Konstante, einer Variable, einem Klammerausdruck und all den
+anderen  aufgeführten Sachen zusammengesetzt sein.  Die folgenden Beispiele
+sind alles Faktoren:
+
+                                    23
+                                (4.0 - 2.3)
+                                 %01000001
+                                    'a'
+                          RecordPtr^.Feld1[45,23]
+                                   @Var1
+                                 Abs(Var2)
+
+Faktoren können einen Ein-Ausdruck-Operator haben (einen Operator, der sich
+nur  auf einen Wert bezieht, nicht wie binäre Operatoren, die sich auf zwei
+beziehen).  Es gibt die folgenden:
+
+           @  Dieser Operator ist der Adresse-von-Operator.  Er liefert die
+              Adresse  der Variablenreferenz, die ihm direkt folgt.  Er ist
+              äquivalent zur Adr()-Funktion.
+           -  Vorzeichenumkehr.  Liefert  die Negation des Faktors, der ihm
+              folgt.
+           +  Vorzeichenbeibehalt.  Wird akzeptiert, hat aber keine Auswir-
+              kung.
+          not Boolesche  oder  bitweise  Negation.   Wenn  der  Faktor  ein
+              Boolescher  Wert  ist, liefert er das Gegenteil.  Wenn es ein
+              Ganzzahltyp ist, liefert er das bitweise Komplement.
+
+Diese Faktoren werden in Termen eingebaut.  Terme sind entweder das gleiche
+wie   Faktoren,   oder  zwei  Faktoren  mit  einem  Multiplikationsoperator
+dazwischen.  Die Multiplikationsoperatoren sind die folgenden:
+
+           *  Multiplikation
+           /  Gleitkommadivision.   Beide Argumente dieses Operators werden
+              ins   Gleitkommaformat   umgewandelt,   bevor  die  Operation
+              stattfindet.
+          div Ganzzahldivision. Beide Argumente dieses Operators werden ins
+              Ganzzahlformat umgewandelt, bevor die Operation stattfindet.
+          mod Die Restoperation.  Beide Argumente werden ins Ganzzahlformat
+              umgewandelt, falls notwendig.
+          and Logische AND-Funktion.  Wenn  beide Argumente Boolesche Werte
+              sind,  und der linke Faktor sich als FALSE herausstellt, wird
+              die  Operation  abgebrochen.  Irgendwelche Gleitkommafaktoren
+              werden in Ganzzahlen umgewandelt.
+          shl Linksverschiebung.  Verschiebt  die Bits im linken Operand um
+              die  Anzahl  Positionen,  die  im  rechten  Operand angegeben
+              werden.   Beide  Argumente  werden in Ganzzahlen umgewandelt,
+              falls erforderlich.
+          shr Rechtsverschiebung.  Verschiebt die Bits im linken Operand um
+              die  Anzahl  Positionen,  die  im  rechten  Operand angegeben
+              werden.    Dieses   ist  eine  logische  Verschiebung,  keine
+              arithmetische,  das am weitesten links stehende Bit wird also
+              0.   Wenn  Sie also einen negativen Wert verschieben, um eine
+              Division  durchzuführen,  werden Sie unsinnige Ergebnisse er-
+              halten  (benutzen  Sie  div anstelle - es wird Verschiebungen
+              anwenden,  wenn  möglich).   Beide  Argumente werden in Ganz-
+              zahlen umgewandelt.
+
+Terme  wiederum werden in einfache Ausdrücke eingebaut.  Einfache Ausdrücke
+sind  entweder  das  gleiche  wie Terme, oder zwei Terme werden durch einen
+Additionsoperator gruppiert.  Die Additionsoperatoren sind die folgenden:
+
+           +  Addiert die beiden Operanden.
+           -  Subtrahiert den zweiten Operand vom ersten.
+           or Logisches Oder. Wenn beide Operanden Boolesche Werte sind und
+              der linke Operand sich als TRUE herausstellt, wird der rechte
+              Operand gar nicht erst ausgewertet. Beide Argumente werden in
+              Ganzzahlen umgewandelt, falls erforderlich.
+          xor Exklusives Oder. Odert den linken Term exklusiv mit dem rech-
+              ten.   Dieses wird nie abgebrochen.  Wenn eines der Argumente
+              ein Gleitkommawert ist, wird er in eine Ganzzahl umgewandelt.
+
+Diese  einfachen  Ausdrücke  werden  zu  vollständigen  Ausdrücken  zusam-
+mengesetzt.   Ausdrücke  sind  entweder das gleiche wie einfache Ausdrücke,
+oder zwei einfache Ausdrücke werden von einem Vergleichsoperator gruppiert.
+Diese Operatoren erzeugen Boolesche Werte, und werden wie folgt definiert:
+
+           =  Liefert TRUE, wennn beide Argumente gleich sind.
+           <> Liefert TRUE, wennn beide Argumente verschieden sind.
+           >  Liefert TRUE, wennn das linke Argument größer ist als das
+              rechte.
+           <  Liefert TRUE, wennn das linke Argument kleiner ist als das
+              rechte.
+           >= Liefert  TRUE,  wennn das linke Argument entweder größer oder
+              gleich dem rechten Argument ist (das braucht übrigens nur ei-
+              nen Vergleich).
+           <= Liefert TRUE, wennn das linke Argument entweder kleiner oder
+              gleich dem rechten Argument ist.
+
+              (wennn ist eine Abkürzung für "Wenn und nur wenn")
+
+
+ Auswertungsreihenfolge und Operationsabbrüche
+-----------------------------------------------
+
+Die  normalen  Regeln  der  Mathematik  sind  die  Grammatik  für Ausdrücke
+eingebaut.   Die  Ein-Ausdruck-Operatoren  werden  zuerst ausgewertet, dann
+alle  Multikplikationsoperatoren, dann Additionsoperatoren, und zuletzt die
+Vergleichsoperatoren.  Daher sieht die Rangfolge wie folgt aus:
+
+                    Operator                 Rangfolge
+                 ----------------------------------------
+                    @,not,Ein-Operator-+/-   Erste (höchste)
+
+                    *,/,div,mod,
+                    and,shr,shl              Zweite
+
+                    +,-,or,xor               Dritte
+
+                    =,<>,<,>,>=,<=           Vierte (niedrigste)
+
+Alle Ausdrücke in Klammern werden natürlich zuerst ausgewertet.  Denken Sie
+auch  daran,  daß  all  diese Operatoren links-bezüglich sind - mit anderen
+Worten  wird ein Faktor zwischen zwei Operatoren gleicher Rangfolge mit dem
+auf   der   linken  Seite  verbunden  (z.B.   wird  "x+y+z"  als  "(x+y)+z"
+behandelt).
+
+Sie  sollten  keine  Vorhersagen  über  die  Reihenfolge, in der die beiden
+Operanden  eines  binären  Operators  ausgewertet werden, machen.  Wenn Sie
+z.B.  den Ausdruck "Funktion1 + Funktion2" in Ihrem Programm haben, gibt es
+keine Möglichkeit zu sagen, welche Funktion zuerst ausgewertet wird.
+
+Die  Ausnahme  zu  dieser  Regel gilt für Boolesche Auswertungen, aber nur,
+wenn  sie  abbrechende Auswertungen benutzen (die Voreinstellung).  Was ist
+eine  abbrechende Auswertung?  Stellen Sie sich vor, sie haben den Ausdruck
+"A  or B" in Ihrem Programm.  Wenn das Programm A auswertet und feststellt,
+daß es wahr ist, weiß es schon den endgültigen Wert des gesamten Ausdrucks.
+Daher  gibt es keinen Grund dafür, auch B auszuwerten.  Ganz analog ist das
+für  "A  and  B",  wenn  A sich als falsch herausstellt.  Sie können sicher
+sein,  daß  die  Operanden eines Booleschen Ausdrucks von links nach rechts
+ausgewertet werden.
+
+Abbrechende   Operationen  sind  oft  schneller  als  normale,  haben  aber
+zusätzlich  den  Vorteil, den Programmierer zu schützen.  Zum Beispiel wäre
+die Anweisung:
+
+      If OeffneMeinFenster(w) and (w^.Width = wasauchimmer) then ...
+
+...   ein  Problem ohne abbrechende Auswertung, da z.B.  die Variable w gar
+nicht definiert wäre, wenn die Funktion nicht erfolgreich gewesen ist.  Der
+Wert  der  Funktion  würde sich nicht ändern, doch wenn w auf eine ungerade
+Adresse  zeigen  würde, würde das einen Guru provozieren.  Mit abbrechenden
+Auswertungen  wird  der zweite Faktor nicht ausgewertet, bis sich der erste
+als wahr herausstellt.
+
+
+ Konstante Ausdrücke
+---------------------
+
+Konstante  Ausdrücke  sind das gleiche wie normale Ausdrücke, müssen jedoch
+vollständig  während  des  Kompilierens  ausgewertet  werden können.  Daher
+können  Sie  keine  externen Funktionen oder Variablenreferenzen verwenden,
+jedoch alle in den Compiler eingebauten Funktionen und Operatoren.
+
+
+ Variablenreferenzen
+---------------------
+
+Variablenreferenzen  können  schrecklich  kompliziert werden, besonders mit
+Zeigern und Records und Feldern und so weiter.  Die grundlegende Syntax ist
+wie folgt:
+
+<Variablenreferenz> ::= <Variablenzeichen> |
+                        <Variablenzeichen> <Selektoren>
+
+<Variablenzeichen> ::= <Variablenbezeichner> |
+                       <Typenbezeichner> ( <Variablenreferenz> )
+
+<Selektoren> ::= <Selektor> | <Selektor> <Selektoren>
+
+<Selektor> ::= ^ | .<Feldbezeichner> | [ <Indexausdrücke> ]
+
+Um  es generell zu sagen, besteht eine Variablenreferenz aus dem Bezeichner
+der globalen oder lokalen Variable, gefolgt von einer beliebigen Anzahl von
+Selektoren  in  beliebiger  Kombination.  Eine weitere Möglichkeit (das ist
+zur   Version   1.2   des   Compilers   unterschiedlich),   daß   Sie  eine
+Typenumwandlung  irgendwo  in  die Mitte von all diesem setzen können.  Das
+Folgende sind alles Beispiele für Variablenreferenzen:
+
+         Var1
+         Var1^
+         Var1^.Field1[34,56]
+         Type2(Var1)^.Field2^^[23]
+
+Wenn  Sie  damit  anfangen,  Code zu schreiben, der wie das letzte Beispiel
+aussieht, sollten Sie sich eine Pause gönnen.
+
+
+
+
+===========================================================================
+
+                                Anweisungen
+
+===========================================================================
+
+Anweisungen  sind das Fleisch und die Kartoffeln eines Programms - sie sind
+das, was zwischen dem Begin und End steht.  Sie haben die folgende Form:
+
+<Anweisung> ::= <If-Anweisung>            |
+                <While-Anweisung>         |
+                <Repeat-Anweisung>        |
+                <For-Anweisung>           |
+                <Case-Anweisung>          |
+                <With-Anweisung>          |
+                <Verbundanweisung>        |
+                <Zuweisung>               |
+                <Prozeduraufruf>          |
+                <Return-Anweisung>        |
+                <Goto-Anweisung>
+
+
+ If-Anweisungen
+----------------
+
+Die  If-Anweisung  erlaubt  es  Ihnen, verschiedene Alternativen zu testen.
+Sie hat die folgende Form:
+
+<If-Anweisung> ::= if <Boolescher Ausdruck> then <Anweisung> |
+                   if <Boolescher Ausdruck> then <Anweisung>
+                                            else <Anweisung>
+
+Wenn  sich  der Boolsche Ausdruck als True herausstellt, wird die Anweisung
+hinter  dem  Wort  "then" ausgeführt.  Wenn sich der Boolesche Ausdruck als
+False   herausstellt,   wird   die   Anweisung  hinter  der  "else"-Klausel
+ausgeführt,  falls  eine  existiert.   Wenn keine "else"-Klausel existiert,
+wird mit der Anweisung hinter der If-Anweisung fortgefahren.
+
+Hier  gibt  es  eine  Zweideutigkeit  -  betrachten  Sie  das folgende Pro-
+grammfragment:
+
+       if Ausdruck then if Ausdruck then Anweisung1 else Anweisung2
+
+Zu  welchem  "if"  gehört  die "else"-Klausel?  PCQ, wie die meisten Imple-
+mentationen, verknüpft den "else"-Teil immer mit dem letzten "if".
+
+Wenn  der  Boolesche  Ausdruck  schon  während des Kompilierens vollständig
+ausgewertet  werden  kann  (wenn  es also mit anderen Worten eine Konstante
+ist),  und  es  sich  als  FALSE herausstellt, wird für die ganze Anweisung
+überhaupt  kein  Code  generiert.   Sie können daher Debugging-Code in eine
+If-Anweisung  fassen,  und  eine  globale  Konstante  setzen,  ob  der Code
+eingefügt  werden  soll  oder  nicht.   Da  Sie jeden beliebigen konstanten
+Ausdruck nehmen können, könnten Sie sogar Debugging-Stufen benutzen.  Z.B.:
+
+                     if DEBUGGING_LEVEL > 2 then begin
+                                                   ...
+                                                 end;
+
+Diese  Anweisung  würde  nur  Code  generieren,  wenn  die Konstante DEBUG-
+GING_LEVEL größer als 2 ist.  Wenn es stattdessen eine Variable wäre, würde
+immer Code generiert werden.
+
+
+ While-Anweisungen
+-------------------
+
+Die "while"-Anweisung ist eine der vielen, die es Ihnen erlauben, Schleifen
+zu bilden.  Sie hat die folgende Form:
+
+<While-Anweisung> ::= while <Boolescher Ausdruck> do <Anweisung>
+
+Am  Anfang  der  Schleife  wird der Boolsche Ausdruck ausgewertet.  Wenn er
+sich  als  True  herausstellt,  wird  der  Anweisungsteil ausgeführt.  Wenn
+dieser  endet,  wird  der  Boolesche  Ausdruck  erneut ausgewertet, und der
+Prozeß wiederholt sich, bis der Boolesche Ausdruck "falsch" ergibt.  Sobald
+das   passiert,   wird   mit   der  Anweisung  hinter  der  While-Anweisung
+fortgefahren.
+
+
+ Repeat-Anweisungen
+--------------------
+
+Die  "Repeat"-Anweisung  liefert  ein  etwas  anderes  Mittel zum Schleifen
+Erstellen.  Sie hat die folgende Form:
+
+<Repeat-Anweisung> ::= repeat <Anweisungen> until <Boolescher Ausdruck>
+
+<Anweisungen> ::= <Anweisung> | <Anweisung> ; <Anweisungen>
+
+Wenn  auf  die  Repeat-Anweisung  gestoßen  wird,  wird  der Anweisungsteil
+ausgeführt,  danach  der  Boolesche  Ausdruck  ausgewertet.   Wenn sich der
+Ausdruck als False herausstellt, wird der Anweisungsteil erneut ausgeführt.
+Wenn sich der Ausdruck als True herausstellt, wird mit der Anweisung hinter
+der  Repeat-Anweisung  fortgefahren.   Bemerken Sie, daß "repeat"-Schleifen
+immer  mindestens  einmal  ausgeführt  werden, wohingegen "while"-Schleifen
+vielleicht  überhaupt  nicht ausgeführt werden.  Bemerken Sie auch, daß der
+<Anweisungen>-Teil leer sein kann.
+
+
+ For-Anweisungen
+-----------------
+
+Die  "for"-Anweisung  stellt einen dritten Typ Schleife dar, für die Fälle,
+wenn Sie genau die Anzahl Schleifendurchgänge wissen, die ausgeführt werden
+sollen.  Sie hat die folgende Form:
+
+<For-Anweisung> ::= for <Variablenreferenz> := <Ausdruck> <Richtung>
+                                               <Ausdruck> do <Anweisung>
+
+<Richtung> ::= to | downto
+
+Bemerken  Sie,  daß folgenes unterschiedlich zur PCQ-Version 1.1 ist:  Wenn
+auf  eine  "for"-Schleife  gestoßen  wird,  wird  der  erste  Ausdruck (der
+Anfangswert)  ausgewertet,  und  sein  Wert in der Variablenreferenz (Index
+genannt)  gespeichert.   Dann  wird  der  Index  mit  dem  zweiten Ausdruck
+verglichen  (dem  Endwert).   Wenn  die  Richtung  "to"  ist, und der Index
+kleiner  oder  gleich  dem Endwert ist, wird der Anweisungsteil ausgeführt.
+Danach wird der Index um eins erhöht und erneut mit dem Endwert verglichen.
+Dieses  wiederholt  sich,  bis der Index größer ist als der Endwert, worauf
+dann mit der nächsten Anweisung fortgefahren wird.
+
+Wenn  die Richtung "downto" ist, passiert das gleiche, außer, daß der Index
+jedesmal  herabgesetzt  wird,  und  solange  wiederholt wird, bis der Index
+kleiner ist als der Endwert.
+
+Bemerken  Sie, daß die "for"-Schleife vielleicht gar nicht ausgeführt wird,
+wenn  der  Anfangswert größer ist als der Endwert (bei "to"-Schleifen, oder
+anders  herum  bei "downto"-Schleifen).  Bemerken Sie auch, daß der Endwert
+bei  jedem  Schleifendurchgang  voll  ausgewertet  wird,  wenn  es also ein
+komplexer  Ausdruck  ist,  wollen  Sie  ihn  vielleicht  in  einer Variable
+zwischenspeichern, bevor Sie zur "for"-Anweisung kommen.
+
+Sie können anstelle einer "for"-Schleife immer eine "while"- oder "repeat"-
+Schleife  benutzen,  und  die  "for"-Schleife wird tatsächlich seltener be-
+nutzt.   Niklaus  Wirth,  der Mensch, der Pascal und Modula-2 erfunden hat,
+hat  diese  Anweisung  aus  seiner  letzten  Sprache  "Oberon"  völlig her-
+ausgelassen.
+
+Es  wird  als  Fehler  betrachtet, wenn Sie die Indexvariable innerhalb der
+Schleife  modifizieren,  doch  PCQ-Pascal stört sich nicht daran.  Das wäre
+natürlich trotzdem keine gute Idee.
+
+
+ Case-Anweisungen
+------------------
+
+Die  Case-Anweisung  wird benutzt, um einen Wert gegen eine ganze Reihe von
+Alternativen  zu  testen,  und demzufolge Anweisungen auszuführen.  Sie hat
+die folgende Form:
+
+<Case-Anweisung> ::= case <Ausdruck> of <Alternativen> end |
+                     case <Ausdruck> of <Alternativen>
+                                        else <Anweisung> end
+
+<Alternativen> ::= <Alternative> | <Alternative> ; <Alternativen>
+
+<Alternative> ::= <Fälle> : <Anweisung>
+
+<Fälle> ::= <Fall> | <Fall> , <Fälle>
+
+<Fall> ::= <Konstante> | <Konstante> .. <Konstante>
+
+Wenn die Case-Anweisung ausgeführt wird, wird der Ausdruck ausgewertet.  Er
+wird dann mit allen Fällen und Bereichen verglichen, bis er irgendwo passt,
+dann  wird  die  entsprechende Anweisung ausgeführt.  Wenn keine der Alter-
+nativen  passt,  wird  die  else-Anweisung ausgeführt, falls sie existiert.
+Wenn   nicht,   wird  einfach  mit  der  Anweisung  fortgefahren,  die  der
+Case-Anweisung folgt.
+
+Bemerken   Sie,   daß  der  Ausdruck  nur  einmal  ausgewertet  wird,  eine
+Case-Anweisung   kann   daher   effizienter   sein   als   eine  Reihe  von
+"if"-Anweisungen.   Bemerken  Sie  auch,  daß  höchstens eine Anweisung der
+Case-Anweisung  ausgeführt  wird  -  das  ist  anders  als  in  C,  wo alle
+Anweisungen ausgeführt werden, bis Sie sagen, das aufgehört werden soll.
+
+
+ With-Anweisungen
+------------------
+
+Die  With-Anweisung  erlaubt es, eine Record-Variable zu spezifizieren, auf
+die  sich  eine  Anweisung  bezieht.   Innerhalb  der  Anweisung können Sie
+Referenzen  auf  die Felder des Records abkürzen, indem Sie einfach nur den
+Feldnamen angeben.  Das erspart Ihnen etwas an Typ-Arbeit, und der Compiler
+generiert  etwas  effizienteren Code.  Das dient keinem funktinellen Zweck.
+Das Format der With-Anweisung ist das folgende:
+
+<With-Anweisung> ::= with <Ausdrücke> do <Anweisung>
+
+<Ausdrücke> ::= <Ausdruck> | <Ausdruck> , <Ausdrücke>
+
+Wenn  Sie  mehr als einen Record angeben (getrennt durch Kommas), behandelt
+der Compiler sie wie verschachtelte With-Anweisungen, mit dem ersten Record
+auf der äußersten Stufe und dem letzten auf der innersten Stufe.
+
+In  der  Anweisung  werden  alle  Referenzen  zu  den Feldern des innersten
+Records  gebildet,  auf  den sie passen.  Zweideutigkeiten können aufgelöst
+werden, indem Sie die vollständige Record-Spezifikation benutzen.
+
+With-Anweisungen  können  besonders nützlich sein, wenn die Record-Referenz
+lang  und  verschlungen  ist  -  sie  wird  nur  einmal ausgeführt, was die
+Effizienz  erhöht.   Die  andere  Möglichkeit, wo sie nützlich sein können,
+kommt  dann,  wenn  es  darum geht, einen Record mit Werten zu füllen.  Sie
+erhöhen nicht immer die Effizienz eines Programms, sparen einem jedoch eine
+Menge Tipparbeit.
+
+Wenn  Sie  eine  Anweisung  der Form "with p^ do..." ausführen, wird es als
+Fehler  betrachtet,  den Wert von p zu ändern.  Z.B.  ist es ein Fehler, in
+einer  With-Anweisung  den  Speicher  freizugeben,  den  ein Record belegt.
+Dieser  Fehler wird von PCQ-Pascal nicht entdeckt, es wäre jedoch eine gute
+Idee, ihn zu vermeiden.
+
+
+ Verbundanweisungen
+--------------------
+
+Die Verbundanweisung erlaubt es Ihnen, eine ganze Reihe an Anweisungen dort
+zu  benutzen,  wo  nur  eine Anweisung erwartet wird.  Sie hat die folgende
+Form:
+
+<Verbundanweisung> ::= begin <Anweisungen> end
+
+Eine  Verbundanweisung kann in der Tat überall dort benutzt werden, wo eine
+Anweisung  erlaubt  ist,  und  die Verbundanweisung ansich generiert keinen
+Extra-Code.   Mit  anderen Worten ändert das Eingrenzen von Anweisungen mit
+"begin"  und  "end"  den  Code  nicht,  den  der  Compiler  generiert  - es
+verdeutlicht jedoch Ihre Absicht.
+
+
+ Zuweisungen
+-------------
+
+Zuweisungen werden benutzt, um den Wert von Variablen zu setzen.  Sie haben
+die folgende Form:
+
+<Zuweisung> ::= <Variablenreferenz> := <Ausdruck>
+
+Denken  Sie  daran,  daß der Typ der Variablen gleich dem Typ des Ausdrucks
+sein  muß  (siehe  das  Kapitel  "Typendeklarationen"  für  die  besonderen
+Regeln).
+
+
+ Prozeduraufrufe
+-----------------
+
+Prozeduraufrufe  setzen  die Ausführung in einer vorher definierten Routine
+fort  und  übergeben  evtl.   geforderte Parameter.  Sie haben die folgende
+Form:
+
+<Prozeduraufruf> ::= <Bezeichner> |
+                     <Bezeichner> ( <Aktuelle Parameter> )
+
+<Aktuelle Parameter> ::= <Aktueller Parameter> |
+                         <Aktueller Parameter> ; <Aktuelle Parameter>
+
+<Aktueller Parameter> ::= <Ausdruck>
+
+Prozeduren  sind  insofern  verschieden  von  Funktionen, daß eine Funktion
+einen  Wert  zurückgibt und nur aus einem Ausdruck heraus aufgerufen werden
+kann.   Prozeduren  geben  keinen  Wert zurück und sind nur als Anweisungen
+aufrufbar.   Sie  können  mit  der $X+-Direktive PCQ-Pascal anweisen, diese
+Unterschiede  zu  ignorieren, womit Sie Funktionen wie Prozeduren behandeln
+können.
+
+Wenn  ein  Prozeduraufruf  ausgeführt  wird,  wird jeder aktuelle Parameter
+ausgewertet  und  auf dem Stack gespeichert, von links nach rechts.  Weil C
+eine  variable Anzahl von Parametern erlaubt, schiebt es aktuelle Parameter
+von  rechts nach links auf den Stack.  Daher müssen Sie die Reihenfolge der
+Parameter  umkehren,  wenn  Sie  C-Routinen  aufrufen wollen, oder sein Sie
+sicher,  die  $C+-Direktive  aktiviert  zu  haben, wenn die Externe Routine
+definiert wird.
+
+
+ Return-Anweisungen
+--------------------
+
+Normalerweise  schreitet  die  Ausführung  einer Prozedur bis zu ihrem Ende
+fort,  bis  die  Ausführung  an  ihren  Aufrufer  zurückgegeben  wird.  Die
+"return"-Anweisung  erlaubt  es  Ihnen,  sofort  aus einer gerade laufenden
+Prozedur auszusteigen.  Sie hat die folgende sehr einfache Form:
+
+       <Return-Anweisung> ::= return
+
+Die  "return"-Anweisung  ist nur innerhalb von Prozeduren erlaubt.  Sie ist
+nicht  in  Funktionen erlaubt, da diese einen Wert zurückgeben müssen - die
+analoge   Anweisung   innerhalb  einer  Funktion  ist  eine  Zuweisung  zum
+Funktionsbezeichner,  was  dazu  führt,  daß  die Funktion sofort verlassen
+wird.   Die  "return"-Anweisung ist auch nicht im Hauptprogramm erlaubt, da
+sie  zum  Beenden  des  Programms führen würde.  Stattdessen müssen Sie das
+Programm mit der Exit-Anweisung beenden.
+
+
+ Goto-Anweisungen
+------------------
+
+Die  "goto"-Anweisung setzt die Ausführung unmittelbar an einer angegebenen
+Stelle  fort.   Sie  sollte  mit extremster Vorsicht gebraucht werden, nach
+Möglichkeit überhaupt nicht.  Ihre Form ist:
+
+<Goto-Anweisung> ::= goto <Bezeichner>
+
+Standard-Pascal  verlangt  es,  daß  eine goto-Sprungmarke aus einer Anzahl
+Ziffern  besteht,  in  Turbo-Pascal erweitert diese Definition so, daß auch
+Bezeichner  als  Sprungmarken  dienen  können.   PCQ-Pascal  macht dann den
+nächsten logischen Schritt, daß Sprungmarken Bezeichner sind, keine Zahlen.
+
+Die   meisten   Programmierer   sagen,  daß  die  "goto"-Anweisung  einfach
+schlechter  Programmierstil  sei,  da sie Programmer schwierig zu verstehen
+und  zu  debuggen macht.  Es gibt auch noch weitere Probleme:  Wenn Sie zum
+Beispiel  aus  einer  "for"-Schleife mit "goto" aussteigen, bringen Sie den
+Stack des Programms durcheinander, bis Sie die Routine verlassen.  Ähnliche
+Dinge  passieren  bei  der "with"-Anweisung.  Ich will Ihnen gar nicht erst
+sagen,   was   passiert,   wenn  Sie  von  draußen  in  eine  For-Schleife
+hineinspringen.
+
+Die Moral der Geschichte ist: Versuchen Sie, "goto"s zu vermeiden!
+
+
+
+===========================================================================
+
+                              Eingabe/Ausgabe
+
+===========================================================================
+
+
+ Pascal Ein/Ausgabe
+--------------------
+
+Sie  können  sich  die  Pascal  IO  Routinen  als eine Schnittstelle zu den
+AmigaDOS-Routinen   vorstellen.   Die  Pascal  IO  Routinen  benutzen  alle
+AmigaDOS zum Lesen und Schreiben, wenn Sie es also möchten, können Sie auch
+eine AmigaDOS-Datei benutzen.
+
+Pascal  IO  hat  natürlich  einige  Vorteile.   Zuallererst werden alle PCQ
+Pascal  Dateien  gepuffert, was bedeutet, daß das Lesen und Schreiben nicht
+unbedingt  auf  das AmigaDOS zugreifen muß.  Das beschleunigt die Sache ein
+wenig.
+
+Ein  anderer  Vorteil  ist  es,  die Pascalroutinen Read, ReadLn, Write und
+WriteLn benutzen zu können, was schrecklich einfach sein kann.
+
+Wenn  Sie  in  Ihrem Programm eine Datei deklarieren, die entweder "File of
+einTyp"  oder  "Text"  ist,  belegen  Sie  in der Tat einen Record.  Dieser
+Record würde, wenn Sie auf ihn zugreifen könnten, wie folgt aussehen:
+
+     PCQFile = record
+         Handle      : Ein AmigaDOS FileHandle
+         Next        : Ein Zeiger auf die nächste offene Pascal-Datei
+         Buffer      : Die Adresse des Dateipuffers
+         Current     : Die Position im Puffer, an der das nächste Lesen
+                       oder Schreiben geschieht
+         Last        : Die letzte Position eines Lesens
+         Max         : Die Adresse des Endes des Puffers+1
+         RecSize     : Die Größe der Dateielemente
+         Interactive : Ein Wahrheitswert - True heißt, daß die Datei mit
+                       einem CLI-Fenster verbunden ist.
+         EOF         : Ein Wahrheitswert
+         Access      : Ein Short-Wert, entweder MODE_NEWFILE oder
+                       MODE_OLDFILE
+     end;
+
+
+ Text und Typisierte Dateien
+-----------------------------
+
+Pascal  unterstützt  zwei sehr verschiedene Arten von Dateien.  Die normale
+Art  einer  Datei  wird  typsisierte  Datei  genannt,  und  wird  mit einer
+Typendeklaration der folgenden Art deklariert:
+
+                    Dateivariable : File of Elementtyp
+
+Typisierte  Dateien  sind im Grunde unbegrenzte Sequenzen von Elementen des
+Elementtyps.    Der  Write-Befehl  kann  benutzt  werden,  um  individuelle
+Elemente  ans Ende der Datei zu schreiben, und der Read-Befehl kann benutzt
+werden,  um  das  aktuelle  Element  einzulesen und den Dateizeiger auf das
+Nächste zeigen zu lassen.
+
+Typsisierte  Dateien  speichern ihre Elemente genau in der Form, in der sie
+auch   im  Speicher  stehen,  sind  also  oft  unlesbar.   Eine  Datei  aus
+Zeichenelementen  ist  lesbar,  doch eine Datei aus Ganzzahlelementen würde
+unverständlich  sein.   Da  typsisierte Dateien immer vollständige Elemente
+speichern, hat jedes Element eine feste Größe.
+
+Sie  brauchen  tatsächlich nichts außer typisierten Dateien - alles was Sie
+mit  Pascal-Dateien  machen  können,  können  Sie  mit  ihnen  machen.  Der
+Bequemlichkeit wegen benutzt Pascal auch den Textdateientyp.  Die Textdatei
+ist  eine  besondere  Art  des  "File of Char", ist jedoch nicht kompatibel
+damit.   Textdateien  bestehen  aus ASCII-Zeichen, die auf Zeilen variabler
+Länge  verteilt  sind.   Jede  Zeile  wird  von  einem besonderen Neue-Zei-
+le-Zeichen  beendet,  welches  auf dem Amiga das Zeilenvorschub-Zeichen ist
+(ASCII   10.    Auf   MS-DOS-Maschinen   ist   das  Neue-Zeile-Zeichen  die
+Wagenrücklauf/Zeilenvorschub-Sequenz).
+
+Da  Textdateien  (wie diese Dokumentation, und all die Quelltextdateien) so
+verbreitet  sind,  hat Pascal eine ganze Reihe von eingebauten Routinen zum
+Lesen und Schreiben von Werten von und zu ihnen.  Die meisten Standardtypen
+haben   zum  Beispiel  spezielle  Routinen,  um  sie  in  ASCII-Zeichen  zu
+übersetzen   und  in  eine  Datei  zu  schreiben.   Diese  Routinen  werden
+automatisch   vom   Compiler   aufgerufen,   um  jeden  Ausdruck  in  einer
+Write-Prozedur  in  eine  Textdatei  zu  schreiben.  Ähnliche Routinen exi-
+stieren,  um  dieselben  Typen  zu lesen.  Die Beschreibungen der Read- und
+Writeprozeduren  weiter  unten beschreiben genau, wie diese Konvertierungen
+stattfinden.
+
+Es  gibt  sogar  eine spezielle Form der Read- und Writeprozeduren, die nur
+mit  Textdateien  funktionieren  -  die  ReadLn-  und WriteLn-Befehle.  Sie
+werden  weiter  unten  beschrieben,  aber  bedenken  Sie,  daß  sie nur für
+Textdateien funktionieren, da typisierte Dateien keine Zeilen haben.
+
+
+
+ Dateien öffnen
+----------------
+
+Es  gibt  viele  eng  verbundene  Routinen, um Pascaldateien zu öffnen.  Um
+Eingabedateien  zu öffnen, welches existierende Dateien sind, die zum Lesen
+geöffnet  werden,  können Sie entweder die ReOpen()-Funktion verwenden oder
+die Reset()-Prozedur.  Sie sind wie folgt definiert:
+
+
+                 Reset(var Dateivariable : File oder Text;
+                               Dateiname : String;
+                             Puffergröße : Ganzzahl);
+
+Die   "Reset"-Prozedur   öffnet   eine  Datei  zum  Lesen.   Der  Parameter
+"Dateivariable"   spezifiziert   die   Pascal-Dateivariable,  die  mit  der
+AmigaDOS-Datei  verknüpft  werden  soll.   Der Dateiname ist der Dateiname,
+eventuell  mit  einem  kompletten  Pfad,  wenn erforderlich.  Da dies jeder
+zulässige AmigaDOS-Dateiname sein kann, kann er sich auf einen Drucker, ein
+Konsolen-Fenster oder auf irgendwelche anderen Sachen beziehen.
+
+Der  Parameter  "Puffergröße"  spezifiziert  die Größe des Puffers, die Sie
+wollen,  in  Bytes.   Wenn PCQ versucht, Ihre Datei zu öffnen, versucht es,
+diese  Menge Speicher als Puffer zu belegen.  Wenn es das nicht kann, setzt
+es  IOResult  und  schlägt  fehl.   Tatsächlich  versucht PCQ-Pascal, einen
+Puffer  zu  belegen,  der  ein ganzes Vielfaches der Dateielementgröße ist,
+nicht  größer  als  Puffergröße,  doch  mindestens  ein  Element  lang (die
+Elementgröße für Textdateien ist ein Zeichen).  Der Parameter "Puffergröße"
+ist  ganz  optional  -  wenn er nicht angegeben wird, wird ein Wert von 128
+benutzt.
+
+Wenn  Sie  automatische  Ein/Ausgabeprüfung benutzen, wird Ihr Programm mit
+einem  Laufzeitfehler  stoppen,  wenn die Datei nicht geöffnet werden kann.
+Wenn Sie manuell prüfen, wird nur IOResult gesetzt.
+
+Die  Variable  Dateivariable sollte sich nicht auf eine Datei beziehen, die
+schon  offen  ist.   Entweder sollte die Datei zunächst geschlossen werden,
+oder eine andere Variable benutzt werden.
+
+
+
+                       ReOpen(Dateiname   : String;
+                        var Dateivariable : File oder Text;
+                   Puffergröße : Integer) : Boolean;
+
+ReOpen  ist die Funktionsform von Reset.  Sie versucht es, in derselben Art
+und  Weise  eine  Datei zu öffnen, wie Reset, und wenn alles gut geht, gibt
+sie True zurück.  Wenn es ein Problem gegeben hat, liefert sie False.
+
+ReOpen  setzt  nie  IOResult; wenn Sie also automatische Ein/Ausgabeprüfung
+benutzen,  wird ein Aufruf von ReOpen nie das Programm beenden.  Wie in der
+Reset-Prozedur ist der Puffergröße-Parameter optional.
+
+
+Wenn  Sie  eine  Datei  zum  Schreiben öffnen wollen (was eine existierende
+Datei  desselben  Namens löscht!), können Sie die Rewrite-Prozedur oder die
+Open()-Funktion benutzen.  Sie sind wie folgt definiert:
+
+                Rewrite(var Dateivariable : File oder Text;
+                                Dateiname : String;
+                              Puffergröße : Integer);
+
+Rewrite  öffnet eine AmigaDOS-Datei zum Schreiben und löscht eine eventuell
+existierende   Datei   desselben  Namens.   Die  Parameter  sind  wie  beim
+Reset-Befehl, und der Puffergröße-Parameter ist wieder optional.
+
+Rewrite    setzt    IOResult;   wenn   Ihr   Programm   also   automatische
+Ein/Ausgabekontrolle  benutzt,  wird  es  abgebrochen, wenn die Datei nicht
+geöffnet  werden  kann.   Programme,  die  ihre eigene Ein/Ausgabekontrolle
+durchführen, sollten auf jeden Fall auf IOResult schauen.
+
+Wie   bei  allen  Routinen  zum  Öffnen  von  Dateien,  sollten  Sie  keine
+Dateivariable benutzen, die sich auf eine schon offene Datei bezieht.
+
+
+
+                       Open(Dateiname : String;
+                    var Dateivariable : File oder TExt;
+                          Puffergröße : Integer) : Boolean
+
+Open ist äquivalent zu Rewrite, jedoch in Funktionsform.  Es versucht, eine
+Datei  zum  Schreiben  zu öffnen, und wenn alles gut geht, liefert es True.
+Wenn  ein  Problem auftaucht, liefert es False.  Denken Sie immer daran, da
+das  Öffnen  einer  Datei zum Lesen zum Löschen einer bereits existierenden
+Datei mit demselben Namen führt.
+
+Open setzt nicht IOResult; Programme, die automatische Ein/Ausgabekontrolle
+benutzen,  können  es  also  benutzen,  ohne  abzubrechen.  Der Puffergrös-
+se-Parameter ist wie bei allen Dateiöffnungs-Routinen optional.
+
+
+
+ In Dateien schreiben
+----------------------
+
+Die   Ausgabe   in  Pascal  wird  von  den  Write-  und  WriteLn-Prozeduren
+ausgeführt.   Anders  wie  die meisten Pascal-Prozeduren, akzeptieren diese
+Routinen  eine  unbegrenzte  Anzahl  von  Parametern.   Wenn  Sie  in  eine
+Textdatei  schreiben,  können  die Parameter eine Vielzahl von Typen haben.
+Die Write-Prozedur hat die folgende Form:
+
+    Write(var Dateivariable : Text oder typisierte Datei; Ausdrücke...)
+
+Die  Dateivariable  ist  optional.  Wenn sie nicht angegeben wird, wird die
+Standard  Textdatei Output benutzt.  Wenn die Dateivariable eine typisierte
+Datei  ist,  muß  jeder  Ausdruck  den  Elementtyp  haben.  Sie werden ohne
+irgendwelche Zwischenräume in die Datei geschrieben, formatiert genauso wie
+im Speicher.
+
+Wenn  Sie in eine Textdatei schreiben, ist alles ganz anders.  Erstens kann
+jeder  Ausdruck die Form "A:m:n" haben, wobei A der Ausdruck selbst ist und
+m  und  n  konstante  Ganzzahlen.  M spezifiziert die minimale Feldbreite -
+wenn  der  Ausdruck  weniger  als  m  Zeichen  in  Anspruch  nimmt,  werden
+Leerzeichen geschreiben, um das Feld auszufüllen.  N ist nur bei Ausdrücken
+des  Typs  Real  erlaubt,  und  spezifiziert,  wie viele Stellen rechts vom
+Dezimalpunkt  geschrieben  werden.  Die Voreinstellungen für m und n sind 1
+und  2.   Was  nun  geschrieben  wird,  hängt  vom Typ ab, entsprechend dem
+Folgenden:
+
+Integer
+Word
+Short
+Byte     Diese vier Typen werden alle wie erwartet als eine Folge  von  AS-
+         CII-Ziffern    geschrieben.    Sie   haben   keine   vorangehenden
+         Leerzeichen,  doch können Short und Integer-Typen ein Minuszeichen
+         haben,  wenn  sie  negativ sind.  Sie werden nicht von Leerzeichen
+         gefolgt.
+
+Real     Der volle Ganzzahlteil (der Teil links vom Dezimalpunkt) wird  ge-
+         schrieben. Wenn n nicht 0 ist, wird ein Dezimalpunkt mit n Ziffern
+         geschrieben.   Denken  Sie daran, daß m bei Real-Zahlen die Anzahl
+         Stellen  vor  dem Komma, nicht die gesamte Feldbreite, angibt (das
+         wird vielleicht in der nächsten Version geändert).
+
+Char     Ein Zeichen wird einfach als  einzelnes  Zeichen  unverändert  ge-
+         schrieben.
+
+Array of Char
+         Das  ganze  Feld,  in  ganzer deklarierter Länge, wird Zeichen für
+         Zeichen geschrieben.
+
+String   Der ganze String bis zum, jedoch nicht einschließlich,  dem  been-
+         denden null-Zeichen, wird geschrieben.
+
+Boolean  Entweder das Wort TRUE oder das Wort FALSE wird geschrieben,  ohne
+         vorangehende Lehrzeichen.
+
+
+
+              WriteLn(var Dateivariable : Text; Ausdrücke...)
+
+Writeln  ist  genau  dasselbe wie Write, wenn es jedoch all seine Ausdrücke
+entsprechend  den obigen Regeln geschrieben hat, schreibt es zusätzlich ein
+Neue-Zeile-Zeichen.  WriteLn kann nur auf Textdateien angewendet werden.
+
+
+ Lesen von Dateien
+-------------------
+
+Die  Eingabe  wird  in  Pascal  von  der Read-Prozedur übernommen.  Wie die
+Write-Prozeduren  akzeptiert Read eine beliebige Anzahl von Parametern, und
+viele  Parametertypen  können  benutzt werden, wenn Sie aus einer Textdatei
+lesen.  Das Format ist das folgende:
+
+           Read(var Dateivariable : Text oder Typisierte Datei;
+                    Variablenreferenzen...)
+
+Der  Dateivariable-Parameter  ist optional.  Wenn er weggelassen wird, wird
+die Standard-Eingabedatei Input benutzt.
+
+Wenn   Dateivariable   auf   eine  typisierte  Datei  verweist,  wird  jede
+Variablenreferenz  mit aufeinanderfolgenden Dateielementen gefüllt, bis EOF
+erreicht  wird,  oder  vorher  ein anderer Fehler auftaucht.  Das Lesen aus
+einer  Textdatei  ist  eine  etwas  flexiblere  Arbeit.   Ähnlich  wie  die
+Write-Anweisungen,  hängt  das, was passiert, vom Typ ab, der gelesen wird,
+dem Folgenden entsprechend:
+
+Integer
+Word
+Short
+Byte     Alle weißen Leerzeichen, die als ein Zeichen  mit  dem  ASCII-Wert
+         von  kleiner  oder  gleich  32  (dem  Leerzeichen) definiert sind,
+         werden  übergangen.   Wenn das erste nicht-weiße Leerzeichen keine
+         Ziffer  ist  oder  EOF  erreicht  ist,  wird ein Ein/Ausgabefehler
+         erzeugt  (siehe  Exit-Prozeduren für weitere Informationen).  Wenn
+         nicht,  werden  die  Ziffern  bis zur ersten Nicht-Ziffer gelesen.
+         Die  sich  daraus  ergebende  Zahl  wird  zurückgegeben,  und  der
+         Dateizeiger verbleibt auf dieser Nicht-Ziffer.
+
+Real     Zuerst wird wie oben eine Ganzahl gelesen. Wenn das  nächste  Zei-
+         chen  ein  Dezimalpunkt  ist, werden wieder Ziffern bis zur ersten
+         Nicht-Ziffer als Nachkommastellen gelesen.  Der Dateizeiger bleibt
+         auf  dieser  ersten  Nicht-Ziffer.   Ein  Real-Wert braucht keinen
+         Nachkommaanteil und keinen Dezimalpunkt.
+
+Char     Liest das nächste einfache Zeichen. Standard-Pascal übersetzt Zei-
+         len-Ende-Zeichen  in  Leerzeichen,  doch  PCQ-Pascal  läßt Sie als
+         ASCII-Zeilenvorschübe durchgehen, wie Turbo-Pascal.
+
+Array of Char
+         Liest Zeichen in das Feld bis entweder das Feld voll ist, oder das
+         Zeilenende  erreicht wird.  Wenn das Zeilenende erreicht ist, wird
+         der  Rest  des  Feldes mit Leerzeichen gefüllt und der Dateizeiger
+         bleibt  auf  dem  Zeilenende-Zeichen  - Sie werden ReadLn benutzen
+         müssen, um es loszuwerden.
+
+String   Liest Zeichen in den Stringpuffer, bis das  Zeilenendezeichen  er-
+         reicht  wird.   An  diesem  Punkt wird der String mit einem 0-Byte
+         beendet,  und  der  Dateizeiger  zeigt  auf das Zeilenendezeichen.
+         Denken  Sie daran, daß diese Routine nicht auf die Länge aufpasst;
+         Sie müssen also einen Puffer in ausreichender Größe für den String
+         bereitstellen für die Datei, die Sie lesen.
+
+Boolean  Kann nicht gelesen werden.
+
+Eine  Reihe  von  Variablenreferenzen  in  einer Read-Prozedur verhält sich
+genauso wie jede Referenz in einer eigenen Read-Prozedur.  Daher ist:
+
+                         Read(Input, Var1, Var2);
+
+äquivalent zu:
+
+                   Read(Input, Var1); Read(Input, Var2);
+
+was auch äquivalent ist zu:
+
+                          Read(Var1); Read(Var2);
+
+
+         ReadLn(var Dateivariable : Text; Variablenreferenzen...)
+
+ReadLn  ist  das  gleiche wie Read, doch wenn alle spezifizierten Variablen
+gelesen  wurden,  schluckt  dieser  Befehl  Zeichen,  bis  er  das  nächste
+Zeilenende  findet,  und  liest  das auch noch.  Dieser Befehl kann nur auf
+Textdateien angewendet werden.
+
+
+ Dateipuffer
+-------------
+
+Wie  Standard-Pascal,  doch  nicht wie Turbo-Pascal, erlaubt es PCQ, direkt
+auf  den  Dateipuffer zuzugreifen.  Die Syntax der Referenz sieht wie folgt
+aus:
+
+                        <Dateivariablenreferenz> ^
+                            d.h. Dateivariable^
+
+Dieser  Ausdruck  hat  den  gleichen  Typ wie die Elemente der Datei selbst
+(Textdateien  haben Char-Elemente).  Bei Eingabedateien schaut diese Syntax
+auf  das nächste Element, daß mit der Read()-Prozedur eingelesen würde, wie
+vorausschauend.  Wenn EOF(Dateivariable) wahr ist, ist Dateivariable^ nicht
+zulässig.
+
+Bei    Ausgabedateien    zeigt   einem   die   Dateivariablenreferenz   den
+Ausgabepuffer.   Dieses  ist  nicht  der Wert, der mit der Write()-Prozedur
+geschrieben werden wird - siehe die Beschreibung von Put() weiter unten für
+weitere Informationen.
+
+Logischerweise   ist  der  Dateipuffer,  auf  den  Sie  mit  dieser  Syntax
+zugreifen,  nur  so  lang  wie ein Element, doch der tatsächliche Puffer im
+Speicher  kann  fast beliebige Größe haben.  Siehe die Dateiöffnungsbefehle
+für weitere Informationen über das Setzen der Puffergröße.
+
+Das   Gebrauchen   dieser   Syntax   wird  in  PCQ  tatsächlich  als  eine
+Ein/Ausgabeoperation  angesehen, in dem Sinne, daß es IOResult setzen kann.
+Dieses  tritt  nur  auf,  wenn  die Datei interaktiv ist, da die Puffer von
+interaktiven Dateien nicht voll bewahrt werden.
+
+Wenn  Sie  den  Dateipuffer benutzen, werden Sie vielleicht eine oder beide
+folgenden Routinen gebrauchen:
+
+            Get(var Dateivariable : Text oder typisierte Datei)
+
+Get  bewegt  einfach  nur  den  Dateizeiger  vom  aktuellen Element auf das
+nächste.   Das  kann  dazu  führen,  das  DOS  den  Puffer  neu füllt, doch
+normalerweise  setzt  es  einfach  nur ein Feld in der Dateivariable selbst
+neu.   Es  ist  ein  Fehler,  diese  Routine  mit  einer  Datei,  für  die
+EOF(Dateivariable) wahr ist, zu benutzen.
+
+Jedes     Lesen     von     einer     typisierten     Datei     der    Form
+"Read(Dateivariable,Element)" kann man sich als folgendes vorstellen:
+
+      Element := Dateivariable^; { Um den aktuellen Wert zuzuweisen }
+      Get(Dateivariable);        { Um den Dateizeiger weiterzubewegen }
+
+Put   bewegt   den   Dateizeiger  hinter  das  aktuelle  Element  in  einer
+Ausgabedatei  und schreibt den Puffer auf die Diskette, falls erforderlich.
+Jede  Anweisung  der Form "Write(Dateivariable,Ausdruck)", wo Dateivariable
+eine typsisierte Datei ist, könnte so implementiert werden:
+
+      Dateivariable^ := Ausdruck; { Setze den Pufferwert }
+      Put(Dateivariable);         { Schreibe den Puffer }
+
+Denken  Sie  daran, daß bis zum Aufruf der Put-Prozedur alle Zuweisungen an
+den Dateipuffer sich gegenseitig überschreiben.
+
+
+ Ein/Ausgabekontrolle
+----------------------
+
+Die  Eingabe  &  Ausgabe  kann mehr unvorhergesehene Fehler verursachen als
+jeder  andere  Teil des Programmierens.  PCQ Pascal fängt Ein/Ausgabefehler
+in    einer   von   zwei   Arten   ab.    Die   erste   wird   automatische
+Ein/Ausgabekontrolle  genannt  -  PCQ  überprüft  nach  jeder  Ein/Ausgabe-
+operation  auf  Fehler.  Wenn ein Fehler aufgetreten ist, wird das Programm
+mit einem Laufzeitfehler angehalten.  Glauben Sie's oder nicht, das ist das
+voreinstellungsmäßige Verhalten.
+
+Wenn  Sie  die  automatische Kontrolle mittels der {$I-}-Kompiler-Direktive
+abschalten,  werden Sie selbst verantwortlich für irgendwelche Fehler.  Sie
+tun  dieses, indem Sie die IOResult-Funktion aufrufen, die 0 zurückliefert,
+wenn  alles  geklappt  hat,  oder  einen  anderen Wert, wenn es ein Problem
+gegeben  hat.   Wenn  Sie IOResult aufrufen, löschen Sie automatisch seinen
+Wert,  wenn  Sie  also diesen Fehlercode später noch gebrauchen, müssen Sie
+ihn in einer Variablen speichern.
+
+IOResult    wird    von    jeder    Ein/Ausgaberoutine    gesetzt.    Keine
+Ein/Ausgaberoutinen  werden  funktionieren,  wenn IOResult nicht 0 ist, Sie
+sollten  also  so oft wie möglich auf Fehler überprüfen, um kein Lesen oder
+Schreiben zu übergehen.
+
+Die  Werte,  die  von IOResult zurückgegeben werden, sind die gleichen, wie
+die  Laufzeitfehler  -  mögliche  Werte werden im Kapitel "Exit Prozeduren"
+aufgelistet.
+
+
+ Standard-Ein/Ausgabe
+----------------------
+
+Einer  der  verzwickten  Teile  des Programmierens auf dem Amiga ist es, da
+ein  Programm  von zwei sehr verschiedenen Umgebungen aus aufgerufen werden
+kann.   Der  CLI  ruft  ein Programm in ziemlich der gleichen Art und Weise
+auf,  wie  es  auch  MS-DOS tut - das Programm hat offensichtliche Ein- und
+Ausgabekanäle.   Die  Workbench  dagegen bietet nichts dergleichen an.  Ein
+Programm, das Ein- und Ausgabekanäle braucht, muß diese explizit anlegen.
+
+Jedes  PCQ-Programm  richtet  eine Art von Ein- und Ausgabekanälen ein, die
+durch  die  Textdateien  Input  und  Output angesprochen werden.  Was diese
+Dateien  repräsentiert,  hängt  natürlich  von der Umgebung ab, von der das
+Programm aufgerufen wurde.
+
+Lassen  Sie  uns erst den einfachen Fall betrachten.  Wenn Sie ein Programm
+vom CLI starten, beziehen sich Input und Output auf das CLI-Fenster selbst.
+Wenn Sie keine Ein/Ausgabekanalumleitung benutzen, weil sich dann Input und
+Output  auf  die in der Kommandozeile angegebenen Kanäle beziehen (siehe im
+AmigaDOS-Handbuch  für  weitere  Informationen).   Kann  sein, daß das doch
+nicht so einfach war.
+
+Wenn  das  Programm  von  der  Workbench  aus  gestartet  wird,  macht  der
+Startup-Code  einige Schritt, um Input und Output anzulegen.  Zuerst schaut
+er  auf  den  Inhalt  der  Standard-Typisierten  Konstante  des Typs String
+StdInName.  Wenn StdInName Nil ist, wird keine Datei geöffnet, und das sich
+Beziehen  auf  Input  wird  gravierende  Probleme  auslösen.   Wenn  nicht,
+versucht  der  Startup-Code  die  Datei zu öffnen.  Wenn es das nicht kann,
+stoppt  es mit einem Laufzeitfehler 53.  Wenn alles geklappt hat, ist Input
+angelegt.
+
+Danach  schaut  der  Startup-Code  auf  StdOutName.   Wenn er Nil ist, wird
+Output  nicht  angelegt,  irgendwelche Write-Prozeduren sollten lieber eine
+explizite   Datei  benutzt  haben.   Wenn  StdOutName  sich  auf  denselben
+Dateinamen  bezieht wie StdInName (nicht zwei String mit denselben Inhalten
+-  es muß tatsächlich auf den gleichen Speicherbereich gezeigt werden), und
+wenn die Datei, auf die sich Input bezieht, interaktiv ist (z.B.  mit einem
+Konsolenfenster  verbunden  ist), dann wird Output mit demselben FileHandle
+wie  Input  verknüpft.   Die  voreingestellten  Werte  von  StdOutName  und
+StdInName haben diese Eigenschaft.  Wenn einer dieser Tests nicht bestanden
+wird,  versucht  der  Startup-Code  eine Datei StdOut- Name entsprechend zu
+öffnen, und wenn das funktioniert hat, wird Output dementsprechend gesetzt.
+Sonst wird das Programm mit einem Laufzeitfehler 57 abgebrochen.
+
+Die  Voreinstellungswerte  für  die beiden Kanäle sind in PCQ.lib wie folgt
+definiert:
+
+          CONST
+              StdInName  : String = "CON:0/0/640/200/";
+              StdOutName : String = StdInName;
+
+Den  obengenannten  Regeln  entsprechend  wird das einen Konsolen-Schirm in
+voller  Größe  ergeben,  aus  dem  Eingaben  kommen,  und  in  dem Ausgaben
+dargestellt werden.
+
+Denken  Sie  daran,  daß StdInName und StdOutName als typisierte Konstanten
+definiert  sind.  Sie können keine Variablen sein, daß Sie geöffnet werden,
+bevor  irgendwas  von  Ihrem  Code  ausgeführt  wird.  Wenn sich daraus ein
+großes  Problem  ergeben  sollte,  können Sie beide als Nil definieren, und
+innerhalb  Ihres  Programms  Input und Output beliebig setzen.  Sie sollten
+vielleicht  Input  und  Output  nur  neu  setzen, wenn Ihr Programm von der
+Workbench  aus  gestartet wurde (Sie können überprüfen, ob Ihr Programm von
+der    Workbench    gestartet    wurde,   indem   Sie   GetStartupMsg   aus
+"Utils/Parameters.i" abfragen).
+
+Wenn  Sie  Ihr  Programm  mit  der  "-s"  Small  Initialization Code Option
+compiliert haben, ist nichts weiter möglich:  Input und Output werden nicht
+eingerichtet,  und  in der Tat werden keine der anderen Ein/Ausgaberoutinen
+initialisiert.   Siehe  das Kapitel "Small Initialization Code" für weitere
+Informationen.
+
+
+
+
+===========================================================================
+
+                               Zeichenketten
+
+===========================================================================
+
+PCQ-Pascal-Zeichenketten  sind ähnlich wie C-Zeichenketten, und haben nicht
+zu  tun  mit  Turbo-Pascal-Zeichenketten.   Das ist zu schlecht, da man mit
+Turbo-Pascal-Zeichenketten viel einfacher arbeiten kann.  Vielleicht werden
+PCQ-Pascal-Zeichenketten       mal      das      gleiche      sein      wie
+Turbo-Pascal-Zeichenketten, doch der Tag muß noch kommen.
+
+Der  Zeichenkettentyp  kann man sich einfach als "^Char" vorstellen.  Daher
+belegen Zeichenkettenvariablen exakt 4 Bytes, und speichern die Adresse des
+tatsächlichen  Textes.   Der  Text kann beliebige Länge haben, und wird vom
+Zeichen Chr(0) beendet.  Eine Anweisung wie:
+
+                     StringVar := "Eine Zeichenkette"
+
+...   speichert  tatsächlich die Adresse der konstanten Zeichenkette in der
+Zeichenkettenvariablen,  und kopiert nicht die Zeichenkette selbst in einen
+bereits existierenden Bereich.
+
+Zeichenkettenkonstanten  werden  im  Pascaltext  von Anführungszeichen ein-
+geschlossen,  gegenüber  den  einfachen  Apostrophs von Zeichenfeldkonstan-
+ten.    Daher   wird  "Eine  Zeichenkette"  als  eine  Konstante  des  Typs
+Zeichenkette  angesehen, wohingegen 'keine Zeichenkette' als eine Konstante
+vom Typ "Array[0..17] of Char" angesehen wird.
+
+Zeichenketten   sind   als   einfache   Zeiger   definiert,   die  Referenz
+Zeichenkettenvariable^  ist  also  erlaubt,  und  ist  vom  Typ  Char.  Sie
+verweist  tatsächlich  auf  das erste Zeichen im Zeichenkettenpuffer.  Doch
+anders  als  bei anderen Zeigern kann auf einzelne Zeichen über Indizierung
+zugegriffen  werden.  Um z.B.  den vierten Buchstaben in einer Zeichenkette
+zu  erhalten,  könnten Sie "Zeichenkettenvariable[3]" benutzen.  Denken Sie
+daran, daß "Zeichenkettenvariable[0]" das erste Element ist.
+
+
+ Speicherplatz für Zeichenketten reservieren
+---------------------------------------------
+
+Da  die  eigentlichen  Zeichenkettenvariablen  nur  eine Adresse speichern,
+müssen  Sie  etwas Platz für den tatsächlichen Text reservieren.  C erlaubt
+es  Ihnen,  diesen  Platz  zu  definieren,  wenn  Sie  den Zeichenkettentyp
+deklarieren, doch PCQ-Pascal bietet nicht einmal das.  In PCQ-Pascal müssen
+Sie  explizit  Speicher  vom  System  anfordern,  oder  die  Adresse  einer
+Puffervariablen der Zeichenkette zuweisen.  Es gibt einige Funktionen, alle
+in der Include-Datei StringLib.i definiert, die den Platz für Zeichenketten
+bereitstellen.  Es sind die folgenden:
+
+                   AllocString(Größe : Integer) : String
+
+AllocString   liefert  einfach  die  Adresse  eines  nicht  initialisierten
+Speicherbereichs,  der  wenigstens  Größe Bytes lang ist.  Dieser Speicher-
+bereich   wird   als  PCQ-Speicher  angesehen,  er  wird  also  dem  System
+zurückgegeben,  nachdem  er  nicht  mehr  gebraucht wird (siehe das Kapitel
+Speichermanagement für weitere Informationen).
+
+                 strdup(InZeichenkette : String) : String
+
+Die strdup (string duplicate) Funktion ist äquivalent zum Folgenden:
+
+               temp := AllocString(strlen(InZeichenkette));
+               strcpy(temp,InZeichenkette);
+               strdup := temp;
+
+Mit   anderen   Worten   belegt   sie   gerade   genug   Speicher,  um  die
+Eingabezeichenkette   zu   speichern,   macht   danach   eine   Kopie   der
+Eingabezeichenkette  in  den  neuen  Puffer.  Dieser Speicher wird auch als
+PCQ-Speicher  betrachtet, wird also auch dem System zurückgegeben, wenn das
+Programm beendet wird.
+
+Die  andere  Möglichkeit,  einen  Zeichenkettenpuffer zu bekommen, ist, der
+Zeichenkettenvariable   die  Adresse  eines  woanders  deklarierten  Feldes
+zuzuweisen.  Daher richtet das Folgende:
+
+               Var
+                   Zeichenkette1 : String;
+                   Puffer1       : Array [0..127] of Char;
+               begin
+                   Zeichenkette1 := Adr(Puffer1);
+
+...  einen 128-Zeichen-Speicher für Zeichenkette1 ein.  Wenn sie versuchen,
+hierin  eine  129 Zeichen lange Zeichenkette zu speichern, tauchen Probleme
+jeglicher Art auf, seien Sie also vorsichtig.
+
+
+
+ Der Gebrauch von Escape-Zeichen
+---------------------------------
+
+Es  gibt  natürlich eine Menge von nützlichen Zeichen, die nicht einfach in
+eine Quelltextdatei geschrieben werden können.  Das Zeilenendezeichen, z.B.
+wird  immer  als Zeilenende angesehen, nicht als Konstante.  Wenn Sie diese
+Art  Zeichen  in  einer  Textkonstante  (einem  Zeichen,  Zeichenfeld  oder
+Zeichenkette)  haben  wollen,  können Sie die C-Escape-Schreibweise, in der
+ein  Schrägstrich-Rückwärts  "\",  gefolgt  von  einem  besonderen Zeichen,
+benutzen.   Die  Escape-Sequenzen, die von PCQ unterstützt werden, sind die
+Folgenden:
+
+           \n   Zeilenvorschub, chr(10)
+           \t   Tabulator, chr(9)
+           \0   Null, chr(0)
+           \b   Rückschritt, chr(8)
+           \e   ESC, chr(27)
+           \c   CSI (Control Sequence Introducer), chr($9B)
+           \a   Achtung, chr(7)
+           \f   Seitenvorschub, chr(12)
+           \r   Wagenrücklauf, chr(13)
+           \v   Vertikaler Tabulator, chr(11)
+
+Jedes  andere  Zeichen  wird  unverändert  durchgelassen,  so  ist auch das
+Folgende definiert:
+
+           \\   Ein einzelner Schrägstrich-Rückwärts
+           \'   Ein einzelner Apostroph, auch in einer Konstante, die von
+                Apostrophs begrenzt wird
+           \"   Ein Anführungszeichen, auch in einer Zeichenkettenkonstante
+
+Daher wird aus der Zeichenkette "Ein\tJunge\nund\\sein \"Hund.":
+
+         |Ein    Junge
+         |und\sein "Hund
+
+... wobei der senkrechte Strich | den linken Rand repräsentiert.
+
+
+ StringLib
+-----------
+
+StringLib.i ist eine Include-Datei im Utils-Verzeichnis, die eine Reihe von
+C-ähnlichen Funktionen für den Gebrauch mit Zeichenketten definiert.  Diese
+Funtionen  sind  in  der  Include-Datei  selbst erklärt.  Der Quellcode für
+diese Routinen ist im Runtime-Library-Quelltext, der auf Anfrage erhältlich
+ist.
+
+
+
+
+===========================================================================
+
+                            Speichermanagement
+
+===========================================================================
+
+Eins  der  Probleme  bei  der  Programmierung  des  Amiga ist, daß es keine
+Resourcen-Verfolgung  gibt.   In  einem MS-DOS-Programm können Sie wie ver-
+rückt  Dateien  öffnen und Speicher belegen; wenn Sie das Programm beenden,
+ist  alles  O.K.   Auf  dem  Amgia  würden  all diese Dateien offen und der
+Speicher  belegt bleiben.  Es wird von Ihnen erwartet, daß Sie hinter Ihnen
+aufräumen.
+
+Um   Ihnen   dabei   zu   helfen,   benutzt   PCQ-Pascal   eine  besonderes
+Speicherbelegungsschema,   das   die  AllocRemember-Routine  von  Intuition
+benutzt,  um  all  Ihre  Speicherbelegungen  zu  verfolgen.   Wenn  Sie Ihr
+Programm beenden, wird der ganze Speicher, den Sie noch nicht zurückgegeben
+haben, automatisch von einer Exit-Prozedur wieder freigegeben.
+
+Dieses  funktioniert  nur  für  Speicher,  den Sie mit einer der speziellen
+PCQ-Routinen  New,  AllocString  (aus  Utils/StringLib.i)  oder GetMem (aus
+Utils/PCQMemory.i)  belegt  haben.   Speicher,  den  Sie  mit  einer dieser
+Routinen  belegt  haben,  unterscheidet  sich  natürlich nicht von normalem
+Systemspeicher, außer, daß er wieder freigegeben wird.
+
+Auch  wenn  er  automatisch  freigegeben  wird, sollten Sie Speicher selbst
+wieder freigegeben, wenn Sie ihn nicht mehr brauchen.  Es könnte da ja noch
+ein  anderes  laufendes  Programm geben, das ihn gebrauchen kann.  Wenn Sie
+PCQ-Speicher  freigeben,  müssen  Sie  Dispose,  FreeString oder FreePCQMem
+nutzen,  um  das  zu  tun.   Wenn  nicht,  wird  der  Speicher  dem  System
+zurückgegeben,  doch  die  PCQ-Speicher-Routinen  wissen nichts davon.  Sie
+werden daher nochmal versuchen, den Speicher freizugeben, wenn Ihr Programm
+aufhört.  Guru.
+
+PCQ-Speicher wird immer mit den Flags MEMF_PUBLIC und MEMF_CLEAR allokiert.
+Wenn  Sie  CHIP-Speicher  brauchen,  müssen  Sie  die normale Exec-Funktion
+AllocMem aus Exec/Memory.i benutzen.
+
+
+ HeapError
+-----------
+
+Was  passiert  nun,  wenn  die  PCQ-Speicher-Routinen  den  Speicher  nicht
+bekommen  können,  den  der  User  angefordert hat?  Das hängt vom Wert von
+HeapError,  einer  Standard-Adressen-Variable, ab.  HeapError speichert die
+Adresse einer Funktion, die einen Kopf der folgenden Form hat:
+
+               Function HeapFunc(Größe : Integer) : Integer;
+
+Der Größe-Parameter gibt die Menge Speicher an, die der Allokierer bekommen
+wollte,  und der zurückgegebene Integer gibt an, wie der Allokierer auf das
+Probelem  reagiert.   Wenn  er  0 ist, wird der Allokierer das Programm mit
+einem Laufzeitfehler 54 beenden (dieses ist die Voreinstellung).  Wenn er 1
+ist,  wird  der  Allokierer  den Wert Nil zurückgeben, Sie müssen also nach
+jedem Aufruf von New, AllocString oder GetMem auf Nil überprüfen.  Wenn die
+HeapError-Funktion  2 zurückgibt, versucht der Allokierer die Belegung noch
+einmal.   Dieses  gibt  Ihnen  die Möglichkeit, etwas Speicher freizugeben,
+wenn  möglich.   Wenn  diese  Belegung  nicht  klappt,  wird die HeapError-
+Funktion erneut aufgerufen.
+
+Um  eine Funktion als die HeapError-Funktion einzurichten, werden Sie etwas
+wie das Folgende benutzen:
+
+                        HeapError := @HeapFunktion;
+
+... wo HeapFunktion wie oben definiert ist.
+
+
+
+===========================================================================
+
+                              Exitprozeduren
+
+===========================================================================
+
+Exitprozeduren  sind  Routinen,  die  Sie einrichten, aufgerufen zu werden,
+wenn die Hauptroutine beendet ist, oder wenn ein Laufzeitfehler aufgetaucht
+ist.   Sie  werden  benutzt, um dem System Resourcen zurückzugeben, oder um
+würdevoll auszusteigen, oder um mit Laufzeitfehlern fertig zu werden.
+
+Dies  funktioniert  so:   Wenn ein Programm beendet wird, aus welchem Grund
+auch    immer,    untersucht    PCQ    den   Wert   von   ExitProc,   einer
+Standard-Adressen-Variable.  Wenn sie nicht Nil ist, setzt PCQ ExitProc auf
+Nil  und  ruft die Prozedur auf, auf die es gezeigt hat.  Wenn die Prozedur
+beendet  ist, überprüft PCQ ExitProc erneut, und fährt damit fort, Exitpro-
+zeduren   aufzurufen,   bis  ExitProc  nil  ist.   Der  normale  PCQ-Initi-
+alisierungs-Code   richtet   eine   Exitprozedur   ein,  die  den  Speicher
+zurückgibt,  der  mit  New oder AllocString angefordert wurde, und schließt
+alle   Dateien,  die  noch  offen  sind.   Normale  Programme  haben  daher
+mindestens eine Exitprozedur.
+
+Um  aus  einer  Prozedur eine Exitprozedur zu machen, definieren Sie zuerst
+eine     Prozedur     ohne     Parameter.      Dann    setzen    Sie    die
+ExitProc-Standardvariable  auf  die  Adresse Ihrer Routine.  In den meisten
+Fällen  werden  Sie  den ursprünglichen Wert von ExitProc zwischenspeichern
+wollen,  sodaß  alle anderen Exitprozeduren auch ausgeführt werden.  Inner-
+halb  der  Exitprozedur  selbst sollten Sie ExitProc auf den ursprünglichen
+Wert setzen.
+
+Es  gibt im Zusammenhang mit Exitprozeduren zwei zusätzliche Variablen, die
+nur  während  des  Laufens  der Prozedur als Exitprozedur gültig sind.  Sie
+existieren immer, doch ihr Wert wird nur gesetzt, wenn das Programm beendet
+wird.  Es sind die Folgenden:
+
+ExitCode  ExitCode beinhaltet den Wert eines Laufzeitfehlers, der dafür ge-
+          sorgt hat, daß das Programm beendet wird. Dieses ist entweder ein
+          Wert, den Sie mit der Exit()-Routine geliefert  haben,  oder  ein
+          Laufzeitfehler-Code.
+
+ExitAddr  ExitAddr ist die Adresse, an der ein  Laufzeitfehler  aufgetreten
+          ist.   Sie  ist  nur gültig, wenn ExitCode nicht 0 war.  Sie kann
+          (theoretisch)  benutzt werden, um mit einem Laufzeitfehler fertig
+          zu   werden,   doch   werden   Sie  schrecklich  genau  über  den
+          Laufzeitcode  Bescheid  wissen  müssen,  um  das  zum  Laufen  zu
+          bringen.   Natürlich  können  Sie  den Laufzeit-Quellcode von mir
+          erhalten.
+
+
+
+ Laufzeitfehler
+----------------
+
+Es  gibt  eine  ganze  Reihe  von  Fehlern,  die  dafür  sorgen,  daß  ein
+PCQ-Programm  sofort  beendet  wird.   Wenn das passiert, wird ExitCode auf
+einen  bestimmten  Wert gesetzt, der möglicherweise an das AmigaDOS zurück-
+gegeben  wird.   AmigaDOS  wiederum  wird ihn normalerweise ignorieren, Sie
+werden  ihn  daher nie sehen.  Die zwei Wege, die ich kenne, die es möglich
+machen,  einen  nicht-0-Rückgabewert  sichtbar zu machen, sind entweder das
+Programm  in  einem  Script  aufzurufen  oder  den  AmigaDOS-Befehl  Run zu
+benutzen.  In jedem Fall wird AmigaDOS, falls der Rückgabewert nicht 0 ist,
+"ProgrammName failed returncode #" schreiben.
+
+Die  Laufzeitfehler,  die  von  PCQ-Programmen  generiert  werden, sind die
+Folgenden:
+
+
+             Code           Beschreibung
+           --------------------------------------------------
+              50   Kein Speicher für Ein/Ausgabepuffer (1)
+              51   Lesen nach EOF (1)
+              52   Eingabedatei nicht offen (2)
+              53   Konnte StdInName nicht öffnen (3)
+              54   New() klappte nicht (4)
+              55   Ganzzahldivision durch 0
+              56   Ausgabedatei nicht offen (2)
+              57   Konnte StdOutName nicht öffnen (3)
+              58   EOF vor der ersten Ziffer beim Lesen einer
+                   Ganzzahl gefunden (1)
+              59   Keine Ziffern beim Lesen einer Ganzzahl ge-
+                   funden (1)
+              60   Bereichsfehler (5)
+              61   Konnte angeforderte Library nicht öffnen
+
+          Die folgenden AmigaDOS-Fehlercodes können bei einem Aufruf von
+          Open, ReOpen, Write, Read, etc. entstehen (1)
+
+             103   Unzureichender freier Speicher
+             202   Objekt in Benutzung
+             203   Objekt existiert bereits
+             204   Verzeichnis nicht gefunden
+             205   Objekt nicht gefunden
+             206   Ungültige Fensterspezifikation
+             210   Ungültiger Komponentenname
+             212   Objekt hat falschen Typ
+             213   Disk nicht validiert
+             214   Disk schreibgeschützt
+             218   Gerät nicht angemeldet
+             221   Disk voll
+             223   Datei ist schreibgeschützt
+             224   Datei ist lesegeschützt
+             225   Keine DOS-Disk
+             226   Keine Disk im Laufwerk
+
+        (1) Diese Fehler verursachen nur Laufzeitfehler,  wenn automatische
+            Ein/Ausgabekontrolle  eingeschaltet ist (was die Voreinstellung
+            ist).    Wenn   Sie   die  {$I-}-Direktive  benutzt  haben,  um
+            anzuzeigen,  daß  Sie  IOResult explizit kontrollieren möchten,
+            wird das Programm nicht automatisch beendet.
+        (2) PCQ  kann nicht immer ausmachen,  ob die Datei nicht offen ist.
+            Wenn  es  das  kann,  führt  das zu diesem Fehler.  Wenn nicht,
+            stürzt der Rechner ab.
+        (3) Diese  Fehler  treten  im  Initialisierungscode  auf, bevor die
+            Exitprozeduren eingerichtet werden konnten.
+        (4) Siehe  das  Kapitel  Speichermanagement,  wie  Sie diese Fehler
+            verhindern können.
+        (5) Dieses tritt nur auf, wenn Sie die Bereichsüberprüfung mit  der
+            {$R+}-Direktive eingeschaltet haben.
+
+
+
+
+===========================================================================
+
+                            Compilerdirektiven
+
+===========================================================================
+
+Es  gibt  eine  ganze  Reihe von Optionen, die PCQ-Pascal bereitstellt, die
+nicht  für  jedes Programm nützlich sind.  Eine große Anwendung sollte z.B.
+nicht  mit  einem  Laufzeitfehler  aufhören, wenn eine Datei nicht geöffnet
+werden  konnte.   Daher erlaubt es PCQ-Pascal, einige Aspekte des Programms
+festzulegen, das aus Ihrem Code generiert wird.
+
+Sie   kontrollieren   diese   Optionen   mittels   der  Compilerdirektiven.
+Compilerdirektiven  sind  in  Kommentaren  enthalten,  und müssen mit einem
+Dollarzeichen   "$"   als  dem  ersten  Zeichen  des  Kommentars  beginnen.
+Unmittelbar  hinter  dem Dollarzeichen ist der Buchstabe, der die Direktive
+bestimmt,  der  wiederum  von  null  oder  mehr  Zeichen  gefolgt wird, die
+zusätzliche Informationen geben.
+
+Sie  können  mehrere  Direktiven  in einem Kommentar angeben, indem Sie die
+Direktiven  durch Kommata separieren.  So schalten die folgenden Direktiven
+Ein/Ausgabekontrolle aus, und Bereichsüberprüfung ein:
+
+                                 {$I-,R+}
+
+Die folgenden Direktiven werden unterstützt:
+
+                {$A Beliebige Anzahl von Assemblerbefehlen}
+
+Die  $A-Direktive  erlaubt es Ihnen, Assemblerbefehle an der entsprechenden
+Stelle  in den Quelltext einzufügen.  Der Text der Befehle wird unverändert
+an   den   Assembler   weitergegeben,   Sie  sollten  also  Kommentare  und
+Variablenreferenzen der Assemblersprache entsprechend formulieren.
+
+Da Kommentare überall dort erlaubt sind, wo weiße Leerzeichen erlaubt sind,
+könnten  Sie  theoretisch Assemblerbefehle mitten in einen Ausdruck setzen.
+Das   produziert   jedoch  unvorhersagbare  Ergebnisse,  Sie  sollten  also
+Assemblerbefehle nur zwischen Anweisungen setzen.
+
+                             {$B+} oder {$B-}
+
+Die  $B-Direktive  schaltet  abbrechende Auswertungen an und aus.  Wenn Sie
+die  $B+-Direktive benutzen, um abbrechende Auswertungen einzuschalten, was
+tatsächlich  die  Voreinstellung  ist,  wird PCQ Boolesche Ausdrücke normal
+auswerten, doch wenn der endgültige Wert des Ausdrucks bekannt ist, wird es
+den  ganzen  Rest  des Ausdrucks überspringen.  So wird also in einer Reihe
+von  "and"-Sätzen der Rest, nachdem ein Element sich als False ergeben hat,
+nicht  mehr  ausgewertet.   In  einer  Reihe von "or"-Sätzen wird der Rest,
+nachdem  sich  eins von ihnen als True ergeben hat, übersprungen.  Wenn Sie
+abbrechende  Auswertungen  benutzen, wird der Ausdruck immer von links nach
+rechts ausgewertet.  Abbrechende Auswertungen machen Boolesche Auswertungen
+etwas schneller, besonders in langen Ausdrücken.
+
+Wenn  Sie  abbrechende  Auswertungen  mit  der  $B--Direktive ausgeschaltet
+haben,  werden  alle  Teile des Booleschen Ausdrucks ausgewertet, auch wenn
+das  Ergebnis  nicht  mehr  zweifelhaft  ist,  und  der Ausdruck wird nicht
+unbedingt von links nach rechts ausgewertet.
+
+                             {$C+} oder {$C-}
+
+Die  $C-Direktive  kontrolliert,  ob  PCQ  das  normale  oder  das C-mäßige
+Prozeduraufrufformat  benutzt.   Bei  der Voreinstellung, {$-}, schiebt PCQ
+Prozedur-  und  Funktionsargumente von links nach rechts auf den Stack.  Im
+{$C+}-Modus  werden  die  Argumente  von  rechts  nach  links auf den Stack
+geschrieben.   Dieses  macht  es  einfacher,  Objektbibliotheken,  die in C
+geschrieben  wurden,  aufzurufen,  und  das macht es auch möglich, variable
+Anzahlen von Parametern zu benutzen.
+
+                             {$I "dateiname"}
+
+Diese  Direktive  fügt  die  Datei  "dateiname"  in den Eingabestrom an der
+aktuellen  Position  in  der  Quelltextdatei  ein.   Wenn die Include-Datei
+vollständig  eingelesen  ist,  wird weiter die ursprüngliche Datei gelesen.
+Sie können nach dieser Direktive keine anderen Direktiven, jedoch beliebige
+Kommentare setzen.
+
+Um  zu  verhindern,  daß eine Datei mehr als einmal eingelesen wird, behält
+der  Compiler eine Liste der Dateien, die schon eingefügt wurden.  Wenn der
+Dateiname  einem  in der Liste entspricht, wird die Datei nicht noch einmal
+eingefügt.  Denken Sie daran, daß nur der tatsächliche Dateiname, nicht der
+Pfad  verglichen  wird.   So  sollten  Sie  dafür  sorgen, daß all Ihre In-
+clude-Dateien einzigartige Namen haben.
+
+Fast   alle   der   Beispielprogramme   demonstrieren   den   Gebrauch  von
+Include-Dateien.
+
+                             {$I+} oder {$I-}
+
+Die   andere   Form   der   $I-Direktive   besagt,  wie  Ihr  Programm  auf
+Ein/Ausgabefehler  reagiert.  Beim voreinstellungsmäßige Verhalten, was der
+{$I+}-Direktive  entspricht,  wird  ein  Laufzeitfehler ausgelöst, wenn ein
+Fehler  in  einer  Ein/Ausgaberoutine  entdeckt  wird.   Die andere Option,
+spezifiziert  durch  die {$I-}-Direktive, zeigt an, daß das Programm selbst
+die  IOResult-Funktion nach Ein/Ausgabeoperationen überprüfen wird, und auf
+Fehler  entsprechend  reagieren  wird.   Siehe  das Kapitel Ein/Ausgabe für
+weitere Informationen.
+
+                             {$N+} oder {$N-}
+
+Diese  Direktive  besagt,  welche  Routinen  eingefügt werden, um die Stan-
+dardfunktionen    sin,    cos,    exp,   etc.    zu   implementieren.    Im
+voreinstellungsmäßigen  Fall,  {$N-},  benutzt  der  Compiler seine eigenen
+Routinen.   Im {$N+}-Fall ruft der Compiler die mathtrans.library des Amiga
+für  diese  Funktionen  auf.   Die  MathTrans-Routinen  sind  schneller und
+genauer  als  PCQs  eigenen  Routinen, doch sie verlangen, daß der User die
+richtige Library im LIBS:-Verzeichnis hat.
+
+                             {$O+} oder {$O-}
+
+Diese Optionen sind identisch mit den {$I+} und {$I-}-Optionen.
+
+                             {$R+} oder {$R-}
+
+Die  $R-Direktive  gibt  an,  ob  der  Compiler  die  Indexwerte  in  einem
+angegebenen  Bereich  eines  Feldes  überprüfen soll.  Das voreinstellungs-
+mäßige  Verhalten  ist  {$R-}, was bedeutet, daß der Compiler keinen Extra-
+Code  generiert.   Das spezifizieren von {$R+} löst einen Laufzeitfehler 60
+aus.   Das  Einschalten  dieser  Option erzeugt langsamere und größere Pro-
+gramme, ich würde das nur für die Testphase empfehlen.
+
+                  {$SN} oder {$SX} oder {$SP} oder {$SD}
+
+Die  $S-Option  kontrolliert  die  Speicherung  von  globalen Variablen und
+typisierten  Konstanten.   Die  N-Option (für normale Speicherung) sagt dem
+Compiler,  daß  er  für alle weiteren globalen Variablen Speicher im Daten-
+segment  belegen soll, und auch eine externe Definition (XDEF in Assembler)
+für  den  Bezeichner  anlegen  soll,  so  daß  er auch in externen Routinen
+benutzt  werden  kann.   Dieses  ist  das  normale  Speicherungsschema  für
+PCQ-Programme.
+
+Die  X-Option  (für  eXterne  Speicherung)  sagt  dem  Compiler,  daß  alle
+folgenden  globalen  Variablen  außerhalb  des  Programms definiert werden.
+Daher  sollte  der  Compiler  keinen  Speicher  für  die Variablen belegen,
+sondern einfach externe Referenzen (XREF in Assembler) anlegen.  Dieses ist
+das normale Speicherungsschema für externe Dateien.
+
+Die  P-Option  (für  Private  Speicherung)  sagt  dem Compiler, daß er zwar
+Speicher  für globale Variablen anlegen, jedoch den Bezeichner selbst nicht
+exportieren soll.  Dieses erlaubt es externen Dateien, globale Variablen zu
+haben, die nichts mit dem Hauptprogramm zu tun haben.
+
+Die  D-Option (für voreinstellungsmäßige Speicherung) setzt die Speicherung
+auf  ihren  Standardwrt.   In  einem  externen Programm verhält es sich wie
+{$SX}, und in einem normalen Programm wie {$SN}.
+
+                             {$X+} oder {$X-}
+
+Im  voreinstellungsmäßigen  $X--Modus  können  Sie  Funktionen nur aus Aus-
+drücken  heraus  aufrufen.  Wenn Sie die $X+-Direktive benutzen, können Sie
+Funktionen  aufrufen,  als  wären  sie Prozeduren, und ignorieren die Rück-
+gabewerte.
+
+
+
+===========================================================================
+
+                             Typenumwandlungen
+
+===========================================================================
+
+Wenn  Sie  eine  Sprache  mit streng definierten Typen wie Pascal benutzen,
+brauchen  Sie  eine  Möglichkeit,  um  diese Regeln zu umgehen.  PCQ-Pascal
+benutzt   die  gleiche  Methode  wie  Turbo-Pascal  und  Modula-2,  um  die
+Typenkontrollen  zu  umgehen.   Das Format für eine Typenumwandlung ist das
+Folgende:
+
+         <Typenbezeichner> ( <Ausdruck> oder <Variablenreferenz> )
+
+Dieses sieht einfach aus wie eine Funktion, ist aber definitiv keine.  Eine
+Typenumwandlung  generiert  niemals  Code  - sie läßt den Code vom Compiler
+bekommen.   Natürlich  kann  das  auch zu schwerwiegenden Problemen führen.
+Eine  Typenumwandlung  "Short(Aufzählungstyp)"  z.B.   wird Probleme verur-
+sachen,  da  Aufzählungstypen  normalerweise ein Byte lang sind.  Sie haben
+dem  Compiler  gesagt, daß er ihn als 2-Byte-Wert betrachten soll, doch das
+andere  Byte ist undefiniert.  Der richtige Weg für diesen Aufruf wäre, die
+Ord()-Funktion  zu  benutzen,  oder den Wert zumindest in einen 1-Byte-Wert
+umzuwandeln.
+
+Der  Unterschied  zwischen  Short()  und  Ord()  in diesem Beispiel ist, da
+Ord()  eine  Transfer-Funktion  ist,  wohingegen  Short()  überhaupt  keine
+Funktion   ist.    Als   anderes  Beispiel  betrachten  Sie  den  folgenden
+Ausschnitt:
+
+        Writeln(Integer(2.0));
+        Writeln(Trunc(2.0));
+
+Diese zwei Zeilen werden nicht die gleichen Werte schreiben.  Trunc(), eine
+weitere   Tranfer-Funktion,  konvertiert  den  Gleitkommawert  2.0  in  den
+Ganzzahlwert  2,  bevor  er geschrieben wird.  Die Integer-"Funktion" macht
+überhaupt  nichts,  das Programm schreibt also den Gleitkommawert, als wäre
+es eine Ganzzahl, was mit Sicherheit eine alberne Zahl erzeugt.
+
+Im  allgemeinen  ist  es  ein  schleches  Vorhaben, einen Ausdruck in einen
+größeren  Ausdruck  umwandeln zu wollen, und die Umwandlung eines einfachen
+Ausdrucks   (eines   ordinaler   Typs,   einer  Gleitkommazahl  oder  eines
+Zeigertyps)  in  einen  komplexen  Typ  (ein  Feld  oder  ein  Record) oder
+umgekehrt wird fast immer zu unsinnigen Ergebnissen führen.
+
+
+
+===========================================================================
+
+                       Kleiner Initialisierungs-Code
+
+===========================================================================
+
+Sie  wollen vielleicht einmal ein Programm generieren, daß nicht den ganzen
+Kopf   von   normalen   PCQ-Pascal-Programmen  hat.   Wenn  Sie  z.B.   nie
+Pascal-Dateien benutzen, gibt es keinen Grund dafür, den Code für Writeln()
+in Ihrem Programm zu haben.  Wenn Sie den Start- und Beendungscode, den PCQ
+Ihrem  Programm hinzufügt, auf ein Minimum gegrenzen wollen, können Sie die
+"-s"-Option  (für  Small)  in  der Kommandozeile benutzen.  Um zum Beispiel
+"Winzig.p"  mit  Small  Initialisation  Code zu kompilieren, müssen Sie die
+folgende Zeile benutzen:
+
+                       Pascal Winzig.p Winzig.asm -s
+
+Der  Kopf, den Sie damit loswerden, ist trotzdem nicht umsonst zu groß, und
+eins  der  Probleme,  die  Sie  haben, wenn Sie ihn nicht in Ihrem Programm
+haben,  ist,  daß Sie ihn nicht benutzen können.  Mit anderen Worten werden
+Sie  nicht  in  der  Lage  sein, irgendwelche Pascal-Ein/Ausgabe-Routine zu
+benutzen,  wenn  Sie die "-s"-Option in der Kommandozeile angeben.  Es sind
+genau  die  folgenden  Prozeduren  und Funktionen, die nicht mehr eingefügt
+werden:
+
+                    Write, WriteLn, Read, ReadLn, Get,
+                    Put, Open, ReOpen, Close, IOResult
+
+Der  Compiler  wird Referenzen zu all diesen Bezeichnern bemängeln, mit der
+Ausnahme  IOResult,  doch denken Sie daran, daß der Compiler nie Referenzen
+in seperat compilierten Dateien (externe Dateien) oder Objektcode-Libraries
+finden  wird.   Die  Moral der Geschichte ist, daß Sie diese Option nur mit
+äußerster  Vorsicht  benutzen  sollten,  oder  Sie werden schließlich beide
+Startup-Codes zu Ihrem Programm linken und die Maschine dann doch abstürzen
+lassen.
+
+Was fehlt denn nun ganz genau? Der normale Startup-Code macht das Folgende:
+
+      1. Behandelt den Kommandozeilen- bzw. Workbenchparameter.
+      2. Öffnet die Intuition-, DOS- und MathFFP-Library.
+      3. Setzt Input und Output und öffnet ein Fenster, falls erforderlich.
+      4. Initialisiert die Speicherbelegungs und Dateiöffnungsliste, so daß
+         sie am Programmende wieder freigegeben werden können.
+      5. Setzt eine Exitprozedur, die den Speicher wieder freigibt und die
+         Dateien wieder schließt.
+
+Wie  Sie sehen, gibt es einige ganz schön große Routinen:  Open(), Close(),
+das  Setzen von Input und Output abhängig davon, wie das Programm gestartet
+wurde, und von den Inhalten von StdInName und StdOutName, die ExitProzedur,
+die  alles  wieder  freigibt,  etc.   Der kleine Initialisierungscode macht
+dieses:
+
+      1. Behandelt den Kommandozeiln- bzw. Workbenchparameter.
+      2. Öffnet die Intuition-, DOS- und MathFFP-Library.
+      3. Initialisiert die Speicherliste und erzeugt eine einfache Routine,
+         die den ganzen New()-Speicher wieder freigibt.
+
+Und das ist alles.  Nach meinen Ergebnis wird das Programm:  "Program test;
+begin end." normalerweise auf ca.  2.5k compiliert, und auf weniger als 700
+Bytes, wenn Sie den kleinen Initialisierungs-Code benutzen.
+
+
+
+===========================================================================
+
+                          Ausführungsüberwachung
+
+===========================================================================
+
+Ich  habe  vor  kurzem eine Geschichte über einen Typen gelesen, der einige
+Wochen  damit  verbrachte,  eine spezielle Routine zu optimieren, obwohl er
+wußte,  daß diese nur wenig benutzt wurde.  Einige Zeit später erfuhr er in
+einem  Fehlerreport,  daß  die Routine nie funktioniert hatte - doch einige
+Jahre  lange  hatte  das  niemand  bemerkt,  daß die Routine nie aufgerufen
+wurde,  nicht  ein  einziges  Mal.   Der Typ hat Wochen seiner Zeit einfach
+verschwendet.
+
+Eine  Ausführungsüberwachung  hilft  Ihnen,  diese Art Fehler zu vermeiden,
+indem sie Ihnen zeigt, wo Ihr Programm die meiste Zeit verbringt.  Sie gibt
+Ihnen  die  Zeit,  die  in  einer Routine verbracht wird, den Anteil an der
+gesamten Laufzeit, und die Anzahl der Aufrufe der Routine.
+
+Um  die  Ausführungsüberwachung  zu  benutzen,  fügen Sie einfach den "-p"-
+Schalter an Ihre Kommandozeile an, wenn Sie Ihr Programm compilieren.  Wenn
+Ihr  Programm  externe  Dateien  benutzt,  und  Sie  wollen, daß diese auch
+überwacht  werden,  sein  Sie  sicher,  sie  auch  mit dem "-p"-Schalter zu
+compilieren.  Wenn Sie das Programm laufen lassen, wird ein spezieller Code
+die  Zeit überwachen, die in jeder einzelnen Routine verbracht wird, und am
+Programmende  wird  ein  Report  ausgegeben.   Er wird mittels der normalen
+Write()-  und WriteLn()-Routinen ausgeben, Ihr Programm darf also nicht den
+Standard-Ausgabekanal  entfernen  (z.B.   sollten  Sie  nicht  den  kleinen
+Initialisierungs-Code verwenden, oder StdOutName als Nil definieren).
+
+Denken Sie daran, daß Programme mit dem Code für die Ausführungsüberwachung
+etwas  länger  werden  als normale Programme, und viel langsamer laufen, da
+sie  über  so  vieles  Buch  führen  müssen.   Da alle Routinen gleichmäßig
+verlangsamt  werden,  ändert sich der relative Anteil an der Gesamtlaufzeit
+nicht  wesentlich;  Sie  werden jedoch die Ausführungsüberwachung auf jeden
+Fall  wieder  ausbauen  wollen,  wenn  Sie  das Programm in der endgültigen
+Version compilieren.
+
+Wie funktioniert die Ausführungsüberwachung?  Am Beginn einer jeden Routine
+wird  eine spezielle Prozedur aufgerufen, die sich die aktuelle Zeit merkt.
+Wenn  die  Routine  beendet  wird,  wrid  eine  andere  spezielle  Prozedur
+aufgerufen,  um  die  festgestellte  Zeit zur Gesamtzeit der entsprechenden
+Routine  zu  addieren.   Denken  Sie  daran,  daß die Zeit für jede Routine
+einzeln  zusammengezählt  wird,  die  Summe  der  Zeiten  für alle Routinen
+zusammen sollte also in etwa der Gesamt-Laufzeit des Programms entsprechen.
+Am  Ende  der  Ausführung  wird  eine spezielle Routine aufgerufen, die die
+Ergebnisse anzeigt.
+
+Die Ergebnisse, die Sie von der Ausführungsüberwachung erhalten, sind grobe
+Annäherungswerte.   Um  ihre  Genauigkeit  zu  erhöhen,  versuchen Sie, das
+Programm  so  lange  wie  möglich auszuführen.  Da die Ausführungsgeschwin-
+digkeit herabgesetzt ist, kann das unheimlich langweilig sein.
+
+Falls Sie daran interessiert sind:  Der Code für die Ausführungsüberwachung
+ist in der Laufzeit-Library unter Utils/Profile.p.  Wenn Sie das Format des
+Reports  nicht mögen oder auch andere Information haben möchten, können Sie
+ja mal einen Blick darauf werfen.
+
+
+
+===========================================================================
+
+                              Externe Dateien
+
+===========================================================================
+
+Beim Entwickeln des Compilers stellte ich fest, das es einfach zu viel war,
+das   ganze   Ding   in   eine   einzige  Quelldatei  zu  schreiben  -  die
+Assemblerdateien  waren  riesig,  und die Compilierzeiten waren lächerlich.
+Um  die  Dinge  etwas mehr aufzuteilen, fügte ich eine Methode für seperate
+Compilierung  hinzu,  im  Zweck  ähnlich den Units von Turbo Pascal, jedoch
+weniger mächtig.
+
+Externe Dateien haben das folgende Format:
+
+                <Externe Datei> ::= External; <Definitions>
+
+Mit  anderen  Worten  beginnt  eine externe Datei mit dem reservierten Wort
+External,   einem   Semikolon,   darauf  dann  eine  beliebige  Anzahl  von
+Definitionsblöcken.   Diese  Definitionsblöcke,  wie oben definiert, können
+Funktionen sein, Prozeduren, Variablen u.s.w.
+
+Immer,  wenn  Sie  eine  Prozedur  oder Funktion definieren, exportiert PCQ
+Pascal  den  Bezeichner, so daß er von anderen Dateien benutzt werden kann.
+Diese  anderen  Dateien  greifen auf die Routine zu, indem sie eine externe
+Referenz  in  ihrem Code haben (siehe Externe Referenzen im Prozeduren- und
+Funktionenkapitel).   Wenn  Sie  also  die Prozedur TueEs in Ihrer externen
+Datei  definieren,  werden  Sie  die  folgende Deklaration in Ihren anderen
+Dateien, die diese Routine benutzen, verwenden:
+
+                              Procedure DoIt;
+                                External;
+
+Diese  Deklaration  sagt  dem  Compiler,  daß  er  den Bezeichner aus einer
+anderen Datei importieren soll.
+
+Die  Definition von Variablen und typisierten Konstanten auf globaler Ebene
+in  einer  externen  Datei  ist  etwas komplizierter.  Stellen Sie sich zum
+Beispiel  vor,  Sie  haben  eine  globale  Variable in Ihrem Hauptprogramm,
+wollen  aber  auch  in Ihrer externen Datei darauf zugreifen.  Wenn Sie sie
+normal  in der externen Datei definieren, werden Sie wohl erwarten, daß PCQ
+zwei  Speicherbereiche für die eine Variable anlegt, einen im Hauptprogramm
+und einen in der externen Datei.
+
+Aufgrund  dieses  Problems  wird  angenommen,  daß  Variablen und typsierte
+Konstanten  auf  globaler  Ebene (nur dort) nur in normalen Programmdateien
+definiert  werden.   Wenn  Sie also eine globale Variable in einer externen
+Datei  definieren,  nimmt PCQ Pascal an, daß die Variable aus einer anderen
+Datei  importiert  wird,  und legt keinen besonderen Platz dafür an.  Diese
+Voreinstellung kann jedoch durch die $S-Direktive überschrieben werden.
+
+Wenn Sie eine externe Datei benutzt haben, müssen Sie sicher sein, daß ihre
+Routinen  in  das  fertige  Programm  aufgenommen  werden.  Um dies zu tun,
+müssen Sie wie folgt den Dateinamen in den Linkeraufruf integrieren.
+
+         Blink Main.o Exter1.o ... to MainProgram Library PCQ.lib
+
+Mit  anderen  Worten fügen Sie alle externen Objektdateien (die Ausgabe des
+Assemblers)  dem  Linkeraufruf  hinter der Hauptdatei hinzu, jedoch vor dem
+"TO"-Schlüsselwort.  Sie können in beliebiger Reihenfolge auftreten.
+
+Obwohl  Pascal  nicht  auf  Groß/Kleinschreibung  achtet,  tut  dieses  der
+Assembler.   Wenn  Sie  also  externe  Referenzen machen, müssen Sie sicher
+sein,   daß   die   erste   Referenz   in   Ihrem   Code   -  entweder  die
+Variablendeklaration  oder  der  aktuelle Kopf der Prozedur oder Funktion -
+genauso  geschrieben  ist,  wie  die  Definition in der externen Datei.  In
+allen  folgenden  Fällen  ist  die  Groß/Kleinschreibung  egal  - das erste
+Vorkommen wird benutzt, um die Referenz zu generieren.
+
+
+
+
+===========================================================================
+
+                            Aufrufkonventionen
+
+===========================================================================
+
+PCQ   Pascal   schiebt   Funktionsargumente  normalerweise  in  umgekehrter
+Reihenfolge  auf den Stack, wie ein C-Compiler dieses tun würde.  Das macht
+es  schwierig,  C-Routinen  aufzurufen,  da  die  Reihenfolge der Parameter
+umgekehrt  werden  muß.   PCQ  läßt  Sie  daher angeben, daß Sie lieber die
+C-Aufrufkonventionen für eine Routinen benutzen wollen.
+
+Um  dieses  zu  tun,  benutzen  Sie die Compiler-Direktive {$C+}.  Wenn die
+C-Aufrufkonvention  aktive  ist,  wenn eine Routine deklariert wird, werden
+ihre  Parameter  von rechts nach links auf den Stack geschrieben.  Wenn Sie
+eine  Routine  aus  einer externen Datei benutzen, die C-Aufrufkonventionen
+benuzt,  müssen  Sie  sicher  sein,  daß  $C+  aktiv  ist, wenn die externe
+Referenz  im  Hauptprogramm gemacht wird.  Ähnlicherweise wird eine Routine
+C-Aufrufkonventionen    benutzen,    wenn    $C+   aktiv   ist   und   eine
+Forward-Deklaration  gemacht  wird,  unabhängig von der Einstellung bei der
+Definition der Routine.
+
+Wenn  Sie  eine  variable  Anzahl  von Parametern übergeben wollen, muß die
+Routine  unter  C-Aufrufkonventionen deklariert werden.  Wenn Sie das nicht
+tun  wollen  und  keine  C-Routinen aufrufen wollen, sollten Sie lieber die
+$C+-Direktive weglassen.  Später werden Sie sie vielleicht in einer Routine
+weglassen und dann wird es ziemlich schwierig, den Fehler zu finden.
+
+
+
+===========================================================================
+
+                  Bemerkungen für Assembler-Programmierer
+
+===========================================================================
+
+In früheren Versionen des Compiler waren die Register von d2 bis d7, a2 und
+a3  immer  zugänglich,  und die Scratch-Register waren zwischen Anweisungen
+zugänglich.   Das  ist  nicht  länger  der  Fall, einige Assembler-Routinen
+müssen also vielleicht neu geschrieben werden.
+
+Die  Version  1.2 von PCQ benutzt Register nun viel effizienter, was heißt,
+daß  alle  Datenregister benutzt werden können.  PCQ belegt Register von d7
+an  runter,  um  Zwischenausdrücke  zu  speichern;  die  Zugänglichkeit der
+Register  innerhalb von Ausdrücken hängt also vom Pascal Code ab.  Zwischen
+Anweisungen sind alle Datenregister zugänglich.
+
+Adress-Register  werden  wie  vorher  benutzt:   a7 ist der Stackzeiger, a6
+zeigt  auf  Libraries, a5 zeigt auf den Stackframe, und a4 wird benutzt, um
+auf  andere  Frames  zu  zeigen.   Der Compiler kann a3 und a2 benutzen, um
+Zwischenadressen zu speichern.
+
+Die Systemroutinen betrachten d0, d1, a0 und a1 als Scratch, sichern jedoch
+alle anderen Register.
+
+
+
+
+===========================================================================
+
+                                  Fehler
+
+===========================================================================
+
+Wenn  der  Compiler auf einen Fehler in Ihrem Programm stößt, druckt er die
+aktuelle und die vorhergehende Zeile aus, mit dem Bereich hervorgehoben, in
+dem  der  Fehler  sein  könnte.   In  der nächsten Zeile nennt er Ihnen die
+Zeilennummer  und die aktuelle Prozedur oder Funktion, die gerade definiert
+wird, und etwas (hoffentlich) beschreibenden Text.
+
+Der  erste  Fehler  wird  normalerweise recht genau bestimmt.  Danach kommt
+einem  der Compiler wahrscheinlich mit einer ganzen Reihe von zweifelhaften
+Beanstandungen,  die  man  am besten ignoriert.  Deswegen stoppt PCQ Pascal
+automatisch nach vier Fehlermeldungen.
+
+Wenn  Sie die "-q" (Quiet) Kommandozeilenoption verwenden haben, werden die
+Fehlermeldungen viel regelmäßiger aufgebaut sein, wie folgt nämlich:
+
+"Quelltextname" At ##,## : Fehlertext
+
+Die  Anführungszeichen,  das  Komma, der Doppelpunkt und das Wort "At" sind
+wörtlich zu nehmen.  Das erste ## ist die Zeile, das zweite ist die Spalte.
+Dieses Format wurde eingeführt, um einfacher automatische Compilierroutinen
+entwickeln zu können.
+
+
+===========================================================================
+
+                                Quelltexte
+
+===========================================================================
+
+Ich  habe  PCQ  Pascal  als  eine  Übung  geschrieben, und falls Sie danach
+fragen, ich habe eine Menge gelernt.  Wo habe ich mir Informationen geholt?
+Lassen  Sie  uns  zuerst die Informationen betrachten, die den Amiga direkt
+betreffen.
+
+Amiga  1.3  Native  Deleloper's  Update.   Dieses  ist  ein  Paket aus vier
+Disketten,  die von Commodore (CATS, um genauer zu sein) vertrieben werden.
+Darauf  sind  die vollständigen C- und Assemblerincludes, Amiga.lib, ALink,
+und  eine  Menge  andere  Dinge.  Es enthält auch, was vielleicht wichtiger
+ist,  die Amiga Autodocs, das sind Dokumentationsdateien, die jede einzelne
+Funktion  in den Standard-Amiga-Libraries und -Devices beschreiben.  Da sie
+jede   Funktion   einzeln   beschreiben,   brauchen  Sie  also  eine  etwas
+allgemeinere  Quelle.   Die  Disketten  sind jedoch ihre $20 wert.  Das 2.0
+Update  sollte demnächst erhältlich sein, war es jedoch noch nicht, als ich
+dieses  schrieb.   Sie sollten also $20 ein- senden und nach dem 1.3-Update
+fragen bei:
+
+         C.A.T.S.
+         1200 Wilson Drive
+         West Chester, PA 19380
+
+
+Amiga  Rom  Kernel  Manuals.   Dieses  sind die offiziellen Bücher über das
+Programmieren  des  Amiga,  und  wenn  Sie  diese  nicht  haben,  sind  Sie
+benachteiligt.   Die  letzte Version, die ich habe, ist über Amiga DOS 1.1,
+ich  weiß  also  nicht  sicher,  wie  sie  heute organisiert sind, trotzdem
+sollten  Sie sich auf jeden Fall das, welches Intuition beschreibt, kaufen,
+und  wenn  Sie es sich dann noch leisten können, das, welches die Libraries
+und  Devices  beschreibt.   Sie  sind  groß  und  sehr teuer, es ist jedoch
+schwierig,  ohne sie auszukommen.  Einige Leute werden Ihnen zwar sagen, da
+sie fehlerhaft und schwer zu verstehen sind, ich meine jedoch, daß sie sehr
+genau  und  klar  sind.   Ich  denke,  daß  einige  Programmierer gerne ihr
+Unverständnis auf andere schieben...
+
+Anders Bjerin's C Manual.  Ich habe nie einen Blick auf dieses geworfen, so
+weiß  ich  auch nicht, was es abdeckt.  Es scheint eine Menge von Intuition
+und  Graphics  zu  behandeln,  und  das es für C ist, ist wohl nicht so ein
+großes  Problem.   Es ist auf den Fred Fish-Disketten 456 & 457 erhältlich,
+und entpackt sich auf vier volle Disketten an Dokumentation.
+
+
+Die  folgenden  Quellen  habe  ich  wegen  Informationen  über  Compiler im
+besonderen konsultiert:
+
+PDC,  ein  frei  vertreibbarer C-Compiler von Jeff Lydiatt.  Dieses ist ein
+sehr  gutes  Programm,  obwohl es inzwischen von DICC, GCC und anderen sehr
+guten  C-Compilern  verdrängt wurde.  Ich habe viel über Aktivierungsframes
+von  PDC's  output  gelernt  und  benutzt, obwohl der Quelltext von PDC ein
+Mysterium ist.
+
+Pascal-S  Quelltext.   Dieses  ist ein kleines Beispiel eines Pascal P-Code
+Compilers, der vor einigen Jahren an Wirth's Heimat, ETH Zürich, entwickelt
+wurde.   Er  kann einige Fragen beantworten, ist jedoch kein gutes Beispiel
+von gutem Programmierstil.
+
+Small-C Quelltext.  Small-C ist ein weiterer frei vertreibbarer C-Compiler,
+im  Original beschrieben in Dr.  Dobb's Journal vor einigen Jahren.  Er ist
+nicht sehr mächtig, doch macht die Einfachheit des Quelltextes ihn zu einer
+sehr  praktischen Referenz.  Er ist einer der Compiler, die benutzt wurden,
+um PCQ ursprünglich zu entwickeln.
+
+Brinch Hansen über Pascal Compiler, von Per Brinch Hansen.  Dieses Buch war
+etwas  nützlich,  was mehr ist, als ich über das andere halbe Dutzend sagen
+kann,  das  ich  gelesen  habe,  während  ich dieses geschrieben habe.  Aus
+diesem Buch habe ich gelernt, was ich alles falsch mache.  Toll.
+
+Die  Toy-Compiler-Serie  in  Amiga  Transactor, geschrieben von Chris Gray.
+Diese Serie ist sehr informativ, und wurde vom Autor von Draco geschrieben.
+Gray  schreibt  auch  einfach  so  Compiler,  weiß  also, wovon er spricht.
+Dummerweise  ist diese Serie schwer zu finden, da der Transactor nicht mehr
+arbeitet.  Fragen Sie einfach herum - es lohnt sich.
+
+Compiler:   Principles,  Techniques  and  Tools, von Aho, Sethi und Ullman.
+Dieses ist das große Buch, das sogenannte Drachenbuch, das erste und letzte
+Wort  über  das  Schreiben  von  Compilern.   Wenn Sie etwas darüber wissen
+wollen,  es steht drin, Sie sollten jedoch einiges an mathematischem Wissen
+mitbringen.   Obwohl  es  ein Textbuch für die Klasse war, die ich genommen
+habe, habe ich nie mehr als ein paar Seiten darin gelesen.
+
+
+
+===========================================================================
+
+                         Zukünftige Entwicklungen
+
+===========================================================================
+
+Ich  habe 1.2 einige Monate lang benutzt, bevor ich es vertrieben habe, bin
+also relativ zuversichtlich über seine Qualität.  Trotzdem, das ist eine so
+große  Weiterentwicklung,  daß  ich  erwarte,  daß  es Probleme geben wird.
+Daher wird es meine höchste Priorität sein, Fehler auszubessern.
+
+Danach     kommen     dann    optionale    C-Aufkonventionen,    eingebaute
+Peephole-Optimierung,   und   vielleicht   IEEE-Gleitkommazahlen  einfacher
+Genauigkeit.  Das ist alles einfach genug.
+
+Version  1.3  wird  eine  Kompatibilitäts-Veröffentlichung  sein.  Sie wird
+Strings  im Turbo-Stil beinhalten, Funktionsrückgabewerte, Gleitkommazahlen
+mit  doppelter Genauigkeit, und Turbo-Typen:  Word, LongInt, ShortInt, etc.
+Address  wird  zu  Pointer  werden,  Integer wird zu LongInt, Short wird zu
+Integer, Exit wird zu Halt, etc.  Vielleicht baue ich sogar die Unit-Syntax
+ein.
+
+Das  weitere Feld, das ich gerne erforschen würde, sind Debugger, besonders
+auf   Quelltextebene.    Ich   habe   schon  den  Quelltext  eines  solchen
+Monitor-Programms gesucht, jedoch noch nicht gefunden.
+
+
+
+===========================================================================
+
+                             Updategeschichte
+
+===========================================================================
+
+Version 1.2d (18. September 1991)
+
+    o   Fehler bei mehrdimensionalen Feldreferenzen behoben.
+    o   Fehler in der Exec/Execbase.i-Datei behoben.
+    o   Unterstützung von variabler Anzahl Parameter eingebaut, was die
+        va_startup und va_arg-Routinen beinhaltet.
+    o   Unterstützung von C-mäßiger Parameterübergabe, was von rechts nach
+        links bedeutet.
+    o   Hinzufügung der $X-Dirktive, um Funktionsrückgabewerte zu ignorie-
+        ren.
+
+Version 1.2c (10. August 1991)
+
+    o   Der Compiler erlaubte es nicht, New() und Dispose() in einem Pro-
+        gramm   zu   benutzen,   das   unter  kleinem  Initialisierungscode
+        compiliert wurde.
+    o   Da Typenumwandlungen keine Funktionen sind,  wurden konstante Ganz-
+        zahlen nie ausgedehnt, wenn sie  z.B.  in   einen  Zeigertyp  umge-
+        wandelt  wurden.   Das  ist  zwar kein richtiger Fehler, doch da es
+        schwierig   ist,   damit  fertig  zu  werden,  dehnt  der  Compiler
+        Ganzzahltypen aus, wenn er sollte.
+    o   Die CHIP- und FAST-Schlüsselwörter wurden hinzugefügt.
+    o   Variante Verbundtypen wurden eingeführt.
+    o   Die  Ausnahme,  daß Zeigerdeklarationen sich auf undefinierte Typen
+        beziehen können, wurde eingeführt.
+    o   Neue Unterstützung der e-Form in Gleitkommazahl-Konstanten, z.B.
+        bedeutet "2e2" 2*10^2.
+    o   $N-Direktive wurde hinzugefügt.
+    o   (* und *) wurden als Synonyme für { und } hinzugefügt.
+    o   Die Ausführungsüberwachung wurde eingebaut.
+    o   Einige der Ausbesserungen der Gleitkommazahl-Ausgaberoutinen waren
+        noch nicht in die PCQ.lib eingebaut worden.
+    o   Modifizierung der If-Anweisung, um Code innerhalb von konstanten
+        FALSE-IF-Anweisungen wegzulassen.
+    o   Fehler in der ReadInt-Routine wurde behoben, der auftrat, wenn kei-
+        ne Ziffern gelesen werden sollten.
+
+Version 1.2b (22. Juni 1991)
+
+    o   Der Compiler hat Funktions- und Prozedurparameter übergangen, die
+        negativen Konstanten folgten.
+    o   Der Compiler stellt nun sicher, daß jedes Element eines Feldes auf
+        Word-Adressen liegt, wenn das Element größer als ein Byte ist.
+    o   Schleifenproblem bei REPEAT/UNTIL behoben.
+    o   $A funktionierte nicht zwischen dem Routinenkopf und dem Codebe-
+        reich.
+
+Version 1.2a (8. Juni 1991)
+
+    o   Der XOR-Operator produzierte illegale Assemblerbefehle.
+    o   Einige Gleitkommazahl-Vergleiche produzierten falsche Ergebnisse.
+    o   Die $A-Assembler-Direktive funktioniert nun überall im Code, nicht
+        nur in Funktionen und Prozeduren.
+    o   Der Compiler akzeptierte unbekannte Bezeichner in typisierten Kon-
+        stanten (als Operanden des @-Operators).
+    o   Die INC- und DEC-Anweisungen behandelten die Formen Inc(var1,var2)
+        nicht korrekt.
+
+Version 1.2 (18. April 1991)
+
+    o   Fehler strlen und CreateTask() behoben, damit sie auch mit 32-bit-
+        Speicher arbeiten.
+    o   Die Ausdruck-Auswertungs- und Codegenerierungsroutinen wurden kom-
+        plett neu geschrieben.  Die Routinen benutzen nun die Register viel
+        effizienter  und  bilden  eine  gute  Basis  für  den  zusätzlichen
+        Peephole-Optimierer.
+    o   Einige Turbo Pascal-Eigenschaften wurden hinzugefügt:   Sie  können
+        nun  überall  Typenumwandlungen  benutzen,  sogar bei Adressberech-
+        nungen.   Daher  können  Sie  etwas  wie  das  Folgende  schreiben:
+        RecordTyp(Zeiger^).Feld, was in der Version 1.1 illegal war.
+    o   Die For-Anweisung wurde stark geändert, um sie effizienter und mehr
+        wie die von Turbo zu machen. Daraus ergeben sich zwei Unterschiede:
+        FOR-Schleifen laufen jetzt nicht mehr wenigstens einmal  ab  (z. B.
+        läuft for i:=0 to 1 do... keinmal durch), und die BY-Klausel fehlt.
+    o   Abbrechende Auswertungen wurden eingeführt, automatische  Gleitkom-
+        maumwandlunge, Heap-Funktionen, Reset und Rewrite.
+    o   Sie können jetzt Standardfunktionen und  Operatoren  in  konstanten
+        Ausdrücken benutzen.
+    o   Die Read-Routinen wurden geändert, um mit Standard Pascal und Turbo
+        übereinzukommen; weiße Leerzeichen werden überlesen, bevor Ganzzah-
+        len und Gleitkommazahlen  gelesen  werden.  Vorher  stoppte  es  an
+        EOLNs.
+
+Version 1.1d (6. Mai 1990):
+
+Ich   habe   damit   angefangen,   kleine   Änderungen  unter  einer  neuen
+Versionsnummer nur der Ästhetik wegen zu machen.  Der erste Unterschied ist
+der,  daß  der  Compiler nun nur eine SECTION für Daten erzeugt, wenn er es
+muß.   Das  hört sich an, als wäre er damit effizienter, doch hat er vorher
+überhaupt  keine  SECTIONs  erzeugt, wenn er einen externen Teil compiliert
+hat.  Wenn StdOut eine Datei ist, schreibt der Compiler keine Zeilennummern
+und das andere Zeug mehr hin.  Ich habe auch den hoffentlich letzten Fehler
+bei   den   Gleitkommaleseroutinen  ausgebessert.   Die  Routine,  die  die
+Include-Dateinamen  vergleicht, ist nun Groß/Kleinschreibungsunempfindlich.
+Ich kann mir nicht vorstellen, warum sie das nicht schon vorher war.
+
+Version 1.1c (6. April 1990):
+
+Ich  hätte  es  mir  denken  können,  daß  das  Problem des Erkennens eines
+Vorzeichens  kleiner  Gleitkommazahlen  bei  der  Ausgabe ein symmetrisches
+Problem  bei  der Eingabe mit sich bringt.  Es brachte, und nun nicht mehr.
+Ich  habe  auch  das  Problem  mit  den Vorzeichen bei Gleitkommakonstanten
+behoben.   Ich  habe weiterhin die exp() und ln()-Funktionen eingefügt, die
+mir  Martin  Combs geschickt hat.  Um eine Inflation der Versionsnummern zu
+ver-  meiden,  habe  ich  das  Datum geändert, doch die Versionsnummer bei-
+behalten.
+
+Ich  habe  darüber  nachgedacht,  Peephole-Optimierungen  dem  Prozess hin-
+zuzugügen,  und  anstatt es richtig zu machen, habe ich mit einem seperaten
+Programm   herumgespielt.    Um   es   einfacher   zu   machen,   habe  ich
+Short-Verzweigungen  aus  der  Code  entfernt.   A68k fügt Sie überall dort
+wieder ein, wo sie gebraucht werden.
+
+Version 1.1c (3. März 1990):
+
+Die  einzigen Änderungen am Compiler sind die neuen Standardfunktinen.  Die
+wichtigeren Änderungen sind in der Routinenlibrary zu finden.  Erstens habe
+ich  die  sin()- und cos()-Funktionen durch die Vorschläge von Martin Combs
+ersetzt  -  das  Ergebnis ist, daß die Ergebnisse auf 3 Stellen genau sind,
+und das diese Routinen nur etwas langsamer sind.  Martin war so freundlich,
+eine  ganze Menge sehr nützlicher Routinen zu schicken, die auch die tan()-
+und  arctan()-Funktionen  beinhalten.   Ich  habe  auch  den  Fehler in der
+Routine  behoben, die Gleitkommazahlen schreibt, so daß Werte zwischen -1.0
+und 0.0 auch ein Minuszeichen bekommen.
+
+Version 1.1b (6. Februar 1990):
+
+Dieses Programm ist über ein Jahr alt.
+Ich habe die Sqr()-Funktion hinzugefügt.  Sqr(n) ist das gleiche wie n * n,
+jedoch  ein  klein  wenig  schneller  und kürzer.  Der Compiler produzierte
+einen  ganzen  Haufen  von Fehlermeldungen, wenn eine Include-Datei fehlte.
+Jetzt  überspringt  er  den  Rest  des  Kommentars,  so  wie  er es sollte.
+Gleitkommazahlen schienen nicht zu funktionieren.  Warum weiß ich das immer
+als  letzter?   Ich fügte auch die Sin()- und Cos()-Funktionen hinzugefügt,
+basierend  auf  einer Abschweifung in einer Vorlesung zu einem ganz anderen
+Thema.   Später fügte ich die sqrt()-Funktion hinzu, basierend auf Newton's
+Methode.
+
+Version 1.1a (20. Januar 1990):
+
+Ein  Fehler  in der WriteArb-Routine wurde behoben, der immer dann auftrat,
+wenn Sie etwas in ein 'File of Irgendwas' schreiben wollten.
+Ein Fehler in der Gleitkommazahl-Library wurde behoben.  Es scheint so, als
+ob  diese  in  den ganzen 1.1-Änderungen nicht erneuert wurde, so verlangte
+sie   beim   Linken   Objekte,   die  es  nun  gar  nicht  mehr  gibt.   Da
+Gleitkommaarithmetik  nun vom Compiler übernommen wird, habe ich den Fehler
+vorher gar nicht bemerkt.
+
+Version 1.1 (1. Dezember 1989):
+
+Dieses  Version wurde komplett neu geschrieben und beinhaltet viel zu viele
+Änderungen, um sie hier alle im einzelnen aufzuführen.  Die Hauptänderungen
+sind  die  with-Anweisung,  das  neue  Ein/Ausgabesystem,  eine  völlig neu
+gestaltete   Symboltabelle,   verschachtelte  Prozeduren,  und  viele  neue
+arithmetische  Operatoren.   Um  es leichter zu machen, Programme von Turbo
+Pascal und C umzusetzen, habe ich typisierte Konstanten, die Goto-Anweisung
+und die normale Syntax für multidimensionale Felder hinzugefügt.
+
+Version 1.0c (21. Mai 1989):
+
+Ich  habe  die  Eingaberoutinen  etwas  geändert,  benutze  nun DOS-Dateien
+anstatt  PCQ-Dateien.   Ich  habe  die  Eingabe gepuffert, und die Struktur
+etwas   flexibler   gestaltet,  sodaß  ich  verschachtelte  Include-Dateien
+benutzen  kann.   Anstatt  einer  IfNDef-Direktive  oder so etwas führe ich
+lieber  Buch  über die Dateinamen der Includedateien, und übergehe die, die
+schon    eingefügt    wurden.    Die   Eingabepufferung   halbierte   die
+Compilierzeiten.   Ich  hätte  nicht  gedacht,  daß  eine Pufferung so viel
+bringen  würde,  und  vielleicht  sollte  ich die PCQ-Ein/Ausgabe in diesem
+Licht neu überdenken.
+Ich  habe  Code  hinzugefügt,  um  CTRL-C  erkennen  zu  können,  sodaß Sie
+vorzeitig,  aber  richtig  aussteigen  können.  In der Ports.i-Includedatei
+waren  einige  Fehler, die ich ausgebessert habe, ich habe auch die Routine
+verbessert,  die  ein  Consolenfenster für Programme öffnet, die eins brau-
+chen.   Es  tauchten  Probleme  auf,  wenn  man  dem  ersten Write() einige
+Argumente übergeben hat.
+Ich  habe  die SizeOf()-Funktion hinzugefügt, Gleitkommaarithmetik, und die
+Standardfunktionen, die damit zu tun haben.
+Es  gab  einige  kleinere Probleme in den Includedateien, die ich fand, als
+ich die 1.3-Includes erhalten habe, das erste offizielle Set seit 1.0.
+Ich habe die Syntax von AND, OR und NOT weniger streng gestaltet, damit sie
+jeden  ordinalen  Typ  erlauben.  Dieses erlaubt Ihnen bitweise Operationen
+mit  Ganzzahlen  und  was sonst auch immer.  Ich habe eine Standardfunktion
+namens  Bit()  hinzugefügt,  die  oben  weiter beschrieben ist.  Dieses ist
+alles vorübergehend, bis ich Mengen in die Sprache eingebaut habe.
+Ich  habe  letztendlich  Stringindizierung eingebaut.  Dabei habe ich einen
+Fehler in der Adressierroutine Selector() gefunden; ich habe diese also neu
+geschrieben,  damit  sie sinnvoller wurde.  Ich meine, daß sie nun längeren
+Code  produziert,  doch  das  stört  mich  nicht  sehr, da ich bald sowieso
+Ausdruckbäume hinzufügen werde.
+
+Version 1.0b (17. April 1989):
+
+Ich  habe  einen  Fehler  in  dem  Teil  entdeckt,  der komplexe Strukturen
+miteinander  vergleicht.  Ich schien, als ob ein Byte zuviel berücksichtigt
+wurde, sodaß der Vergleich oft schiefging.
+
+Version 1.0a (8. April 1989):
+
+In dieser Version wurde 32-bit-Mathematik hinzugefügt und der Fehler in der
+Case-Anweisung  behoben.  Der Mathematikteil bestand eigentlich nur aus dem
+besorgen  eines  brauchbaren  Assemblerquelltextes, doch die Case-Anweisung
+habe  ich  komplett  geändert.   Version 1.0 des Compilers produzierte eine
+Tabelle, die sequentiell nach dem entsprechenden Wert abgesucht wurde, der,
+nachdem  er  gefunden  wurde,  mit  einer Adresse gleichgesetzt wurde.  Ich
+dachte, daß alle Compiler das so machen würden, doch als ich bei der Arbeit
+ein  Turbo  Pascal-Programm  debuggte,  habe ich herausgefunden, daß es vor
+jeder  Anweisung  eine ganze Reihe von Vergleichen durchführte, als wenn es
+eine  Reihe  von  optimierten  If-Anweisungen  ausführte.   Ich  hielt  das
+eigentlich  für zu simpel, doch wenn es für Turbo gut genug ist, ist es das
+auch für mich.
+Das  nächste,  was  ich  in  dieser Veröffentlichung geändert habe, war der
+Startup-Code.   Sie  können  PCQ-Pascal-Programme nun von der Workbench aus
+starten.   Dieses  hing  eigentlich  nur  an  der  richtigen Auswertung der
+Workbench-Meldung,    doch    ich    "betrog"    auch    etwas    mit   den
+Standard-Ein/Ausgabekanälen.   Wenn  Sie  aus  einem  Programm, das von der
+Workbench     aus     gestartet     wurde,     versuchen,     von     einem
+Standard-Ein/Ausgabekanal  zu  lesen  /  dorthin  zu  schreiben,  wird  der
+Laufzeitcode  ein  Fenster  für  Sie  öffnen.   Ich  habe auch einen Fehler
+behoben,  den  ich  gefunden  habe:   Ein  Feldindex,  der  nicht aus einem
+numerischen  Typ  bestand,  brachte  seinen Typ durcheinander.  Jetzt nicht
+mehr.
+
+Version 1.0 (1. Februar 1989):
+
+Erste Veröffentlichung.
+
+
+
+===========================================================================
+
+               Andere Bemerkungen, Copyright & meine Adresse
+
+===========================================================================
+
+Die Copyrights für diese Dokumentation, den Quelltext für den Compiler, den
+Compiler  an  sich,  den  Quelltext  für  die  Laufzeitlibrary,  die  Lauf-
+zeitlibrary an sich, hat alle (ahem):
+
+                           Patrick Quaid (1989).
+
+Die registrierte Version des Compilers darf nicht veröffentlicht werden, es
+gibt  jedoch eine Kopie der unregistrierten Version in der Veröffentlichung
+als  PCQ12b.LZH.   Wenn  Sie  diese weitergeben wollen, können Sie das tun,
+doch sollten Sie nur diese Datei, den Assembler und den Linker beigeben.
+
+Registrierte  Benutzer  können  die neueste Version des Compilers gegen die
+Kosten  einer  Diskette und dem Rückporto erhalten.  Wenn es einige schwer-
+wiegende  Neuerungen  oder  Fehlerbehebungen  gibt,  werden  ich Ihnen eine
+Postkarte schicken, die Sie wissen läßt, daß es ein Update gibt.
+
+Eine  gedruckte,  gebundene  Version  dieser  Dokumentation (kombiniert mit
+PCQ.lib.DOC) ist von mir gegen $15 erhältlich, was ungefähr den Kosten fürs
+Drucken  und  verschicken entspricht.  Es ist auch kein einfacher Ausdruck,
+sondern komplett umformatiert und mit einem Laser gedruckt.
+
+Irgendwelche  Fragen,  Kommentare  oder wasauchimmer können Sie an folgende
+Adresse schicken:
+
+      Pat Quaid
+      2250 Clarendon Blvd, Apt #1209
+      Arlington, VA 22201
+      USA
+
+      Telefon: (703) 524-8945
+
+Es  viel  wahrscheinlicher,  daß  Sie mich per Post erreichen, als über das
+Telefon,  doch  stört es mich natürlich nicht, wenn Sie es versuchen.  Viel
+Spaß mit dem Compiler.
+
+I would like to thank Jens-Jürgen Rose for translating this documentation
+for me.

@@ -1,0 +1,7 @@
+join Break.o BuildMenu.o ConsoleIO.o ConsoleUtils.o to t:Extras1.lib
+join CreateTask.o CRT.o CRT2.o DeadKeyConvert.o Profile.o to t:Extras2.lib
+join DOSUtils.o DoubleBuffer.o IOUtils.o PCQMemory.o to t:Extras3.lib
+join MathTransUtils.o Parameters.o Random.o CRC16.o ProTimer.o to t:Extras4.lib
+join RunProgram.o SameName.o TimerUtils.o DateTools.o to t:Extras5.lib
+join t:Extras1.lib t:Extras2.lib t:Extras3.lib t:Extras4.lib t:Extras5.lib to Extras.lib
+delete t:Extras?.lib

@@ -1,0 +1,6 @@
+.key source
+pascal <source>.p t:<source>.asm
+a68k t:<source>.asm t:<source>.o
+delete t:<source>.asm
+blink t:<source>.o to <source> library Work:Pascal/PCQ.lib
+delete t:<source>.o

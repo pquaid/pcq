@@ -1,0 +1,31 @@
+pascal Main.p t:main.asm
+a68k t:main.asm Main.o -q
+delete t:main.asm
+pascal Declarations.p t:declarations.asm
+a68k t:declarations.asm Declarations.o -q
+delete t:declarations.asm
+pascal Expression.p t:expression.asm
+a68k t:expression.asm Expression.o -q
+delete t:expression.asm
+pascal IO.p t:io.asm
+a68k t:io.asm IO.o -q
+delete t:io.asm
+pascal Statements.p t:statements.asm
+a68k t:statements.asm Statements.o -q
+delete t:statements.asm
+pascal StanProcs.p t:stanprocs.asm
+a68k t:stanprocs.asm StanProcs.o -q
+delete t:stanprocs.asm
+pascal StanFuncs.p t:stanfuncs.asm
+a68k t:stanfuncs.asm StanFuncs.o -q
+delete t:stanfuncs.asm
+pascal Utilities.p t:utilities.asm
+a68k t:utilities.asm Utilities.o -q
+delete t:utilities.asm
+pascal Initialize.p t:initialize.asm
+a68k t:initialize.asm Initialize.o -q
+delete t:initialize.asm
+pascal Calls.p t:calls.asm
+a68k t:calls.asm Calls.o -q
+delete t:calls.asm
+blink with radpas.w

@@ -1,0 +1,5 @@
+join Libraries/Libraries.lib Workbench/Workbench.lib to t:System1.lib
+join Rexx/Rexx.lib Graphics/Graphics.lib Exec/Exec.lib to t:System2.lib
+join Devices/Devices.lib Intuition/Intuition.lib to t:System3.lib
+join t:system1.lib t:system2.lib t:system3.lib to System.lib
+delete t:system?.lib

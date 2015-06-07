@@ -1,0 +1,917 @@
+
+
+
+                       The PCQ Make Utility
+
+
+
+PCQ is a program that automates the compilation process by running
+the compiler, optimizer, assembler and linker on the file you
+specify.  You can use PCQ with a command line as simple as "PCQ
+ProgramName", but since there are so many system organizations to
+consider, PCQ accepts all sorts of configuration options.
+
+PCQ is only available to registered users of PCQ Pascal, so it
+should not be distributed.  The program and this documentation is:
+
+        Copyright (c) 1991 by Patrick Quaid.
+        All Rights Reserved.
+
+
+
+
+ Installation
+--------------
+
+To use PCQ, you must first copy it to somewhere on your command
+path (i.e.  the series of directories used with the AmigaDOS PATH
+command, or just C: and the current directory if you don't use
+the PATH command).  In most cases you should just copy it to the
+C: directory.
+
+
+
+ Configuring PCQ
+-----------------
+
+When PCQ starts up, it does the following:
+
+        1.  Processes the configuration file in the S: directory,
+            if it exists.
+        2.  Processes the configuration file in the current
+            directory, if it exists.
+        3.  Processes all the command line arguments, from left
+            to right.
+
+The configuration files are always named PCQ.CFG, and as indicated
+above you can have up to two of them.  I normally use S:PCQ.CFG to
+store the default values I always use, then set any specific
+options using a PCQ.CFG file in each directory.
+
+The configuration files are normal text files in which each line
+is a command for PCQ.  Most of the commands just set the options
+you will use, and they are all described below.  Blank lines and
+lines beginning with an asterisk (*) are ignored.
+
+The command line arguments can include any of the configuration
+commands, but can also specify files.  What PCQ does with each
+file you specify depends on its suffix:  if it thinks it's a
+Pascal source file, for example, it compiles, assembles and links
+it.  There are four types of files that PCQ recognizes:  Pascal
+source code, Assembly source code, Object code, and Project files.
+The suffixes used to identify these files are by default .p, .asm,
+.o and .project, but you can set them to whatever you like.
+
+You know what the first three files are, but projects are new.  A
+project file defines a group of files that make up a single
+program.  The format of a project file is the same as a
+configuration file, and it can use all the same commands to set up
+specific options.  In addition to these configuration commands,
+however, there are also some commands that specify which files
+should be included with the final program.  Project files are
+explained below.  For now, let's take a look at the available
+configuration commands.
+
+
+ PCQ Commands
+--------------
+
+The commands accepted by PCQ come in two broad categories.  The
+first are switch commands, which turn options on and off.  These
+are preceded by a plus (+) or minus (-) sign to indicate the state
+you want.  For example, to turn on range checking, you would
+include the following command in you configuration file:
+
+                +Range
+
+Many of the switches have single-character synonyms to make them
+easier to include on the command line.  The second type of
+configuration command is a string definition.  To set the
+destination directory, for example, you would issue the following
+command:
+
+                Destination Work:Pascal
+
+Some of these string definition commands define lists of strings.
+For example, you can define any number of suffixes that PCQ will
+recognize for a given file type.  You issue the command just like
+a normal string definition, but instead of replacing the previous
+value, PCQ adds it to the list.  For these types of commands, if
+you don't include a string in the command, the list is cleared.
+
+PCQ commands can be entered in any case.  They include the
+following:
+
+
+
+                          Assemble or A
+
+This switch determines whether PCQ will assemble the file produced
+by the compiler.  If you specify -Assemble or -A, PCQ will leave
+an assembly language file in the destination directory.
+Otherwise, it will assemble the file and delete the intermediate
+assembly file.  The default value for this option is +A, which
+causes PCQ to assemble the file normally.
+
+
+                            Assembler
+
+This command lets you specify the command path for the assembler.
+The string following the command can directory and volume
+information as necessary.  The default value for this option is
+"A68k".
+
+
+                         AssemblerError
+
+The AssemblerError command defines the string that PCQ executes if
+there are any errors during assembly.  The command string can
+contain the special character sequences /s, /d and /e, which will
+be replaced by the source, destination and error file names before
+the string is executed.
+
+The default value for this option is "AssemErrors /s /e", which
+calls a batch file that invokes an editor to display the source
+file and the error text, then deletes the error text.  You should
+modify this batch file to fit with your system, and be sure to set
+the file's script bit using the AmigaDOS command "Protect
+AssemErrors +s".
+
+
+                            Assembly
+
+This command defines the suffixes that PCQ will use to recognize
+assembly language files.  You can specify any number of suffixes,
+and if any of them match a file's suffix the file will be
+considered an assembly language source file.  When PCQ creates an
+assembly language file, it uses the most recently defined assembly
+suffix.  To clear all the assembly suffixes, just use the Assembly
+command with a blank suffix.
+
+
+                           CCalls or C
+
+The CCalls switch determines whether PCQ Pascal uses normal Pascal
+calling conventions or those of C.  In the default -C state, PCQ
+Pascal passes parameters to procedures and functions by pushing
+them on the stack from left to right.  In the +C state, PCQ Pascal
+pushes parameters from right to left, just like C compilers.  If
+you are using unnamed parameters, you'll need to use the +C
+option.
+
+
+                          CheckIO or I
+
+The CheckIO switch determines whether PCQ Pascal will insert
+instructions to automatically check the IO status after every IO
+command.  It corresponds to the $I compiler directive, so +I
+specifies automatic IO checking and -I specifies manual checking.
+
+
+                            Compiler
+
+This command sets the command string used to invoke the compiler.
+It can include any directories and volume names that are
+necessary, and the default value is "Pascal".
+
+
+                          CompilerError
+
+The CompilerError command defines a command template to be used
+whenever the compiler finds errors in a Pascal source file.  The
+command defined here is executed by PCQ, which then quits.  In the
+command template you can use several special character sequences.
+The first is \s, which PCQ will replace with the source file name
+before executing the command.  The next is \e, which PCQ will
+replace with the name of a file that contains the error text
+produced by the compiler.  The last one is \d, which is replaced
+by the name of the assembly language file that the compiler was
+creating.
+
+The default value for this option is "CompErrors \s \d \e", which
+invokes a batch file called CompilerError that is included with
+PCQ.  This batch file, in turn, simply invokes an editor to
+display the program and error files, then deletes the error file
+and the compiler output file.  For users with Arexx and CygnusEd
+Professional, there is an alternative Arexx program that invokes
+the editor with the source file, then displays each error in turn.
+You should modify the CompilerError batch file to do something
+convenient on your system, and be sure that the script bit of the
+batch file is set (using an AmigaDOS command like "Protect
+CompErrors +s").
+
+
+                           Debug or D
+
+The Debug switch determines whether the assembler should include
+debugging information (the assembly language symbol table,
+actually) in an object file.  It corresponds to A68k's -d switch.
+The default is -Debug, so no debugging information is included.
+
+Keep in mind that this command puts the debugging information in
+the object file only.  If you want it to make it through to the
+executable file, you'll also need to specify -NoDebug (see below).
+
+
+                           Destination
+
+The Destination command defines the directory in which PCQ should
+place its final files, whether those files are executable
+programs, object files, assembly files, or whatever.  The default
+value is blank, so PCQ stores finished products in the current
+directory.  If you specify a non-blank destination directory that
+does not end with a colon or slash, PCQ will append a slash for
+you.
+
+
+                           Discard or X
+
+The Discard switch lets you ignore the results of functions so
+they can be called just like procedures.  In the normal -X state,
+you can only call functions from within expressions.  In the +X
+state, you can also call functions as simple statements, exactly
+how you would call a procedure.
+
+
+                            Force or F
+
+The Force switch tells PCQ to compile Pascal and assembly source
+files even if a more recent object file exists.  In the default -F
+state, PCQ will skip files for which a more recent object file
+exists, unless the command to process the file was received on the
+command line.  In the +F state, all source files are compiled or
+assembled.
+
+
+                              Exec
+
+The Exec command specifies the name of the executable file that
+should be produced for a project.  This command is only valid in
+project files, and it can only be used once per project.  If you
+do not include an Exec name in a project file, the executable
+program will take the name of the main file, with the suffix
+stripped off.  If the Exec name does not include a directory, it
+is placed in the destination directory.
+
+
+                             Execute
+
+The Execute command issues the string you give it as an AmigaDOS
+command.  It does not modify the string at all.
+
+
+                            External
+
+The External command specifies that the given file should be
+compiled and/or assembled, and eventually linked with the rest of
+the files in a project.  If there is already an object file that
+is more recent than the source file, the file is not compiled or
+assembled but is still included on the list.
+
+To determine the object file name, PCQ takes the source file name
+and strips off the directories and the suffix.  It then appends
+the most recently defined object file suffix, and looks for that
+file in the destination directory.
+
+The External command can only be used in project files, but you
+can (and typically will) have several for each project.  Also note
+that the external file can be a Pascal source, an Assembly source,
+or even an object file.  In the last case, the file is just
+included on the external file list.
+
+
+                             Library
+
+The Library command adds an object code library to the list of
+libraries that will be sent to the linker.  You can have any
+number of library files, and they will all be used in the linker
+command with the most recently added library first.  If you use
+the Library command without a file name, the list is cleared of
+all libraries.  The default library list is the single file
+"PCQ.lib".
+
+If you are using Matt Dillon's Dlink as your linker you should be
+sure that all of your libraries end with .lib or .l, or there
+could be conflicts between the libraries and object files.
+
+
+                            Link or L
+
+The Link switch determines whether PCQ should link object files.
+If you specify -L, PCQ will leave an object file in the
+destination directory instead of an executable program.  The
+default is +L, which makes PCQ link programs normally.
+
+
+                             Linker
+
+The Linker command specifies the command that will be used to
+invoke the linker.  This can include directories and volume names
+as necessary.  The default value is "Blink".
+
+
+                           LinkerError
+
+This command specifies the command that PCQ will execute if the
+linker reports any errors.  The command can include the special
+character sequences /s, /d and /e, which will be replaced with the
+source, destination and error file names, respectively.  The
+default value is "LinkErrors /e", which calls the batch file
+LinkerError that is included with PCQ.  The batch file just
+invokes an editor to display the error file, then erases the error
+file.  You should modify this batch file to match your system, and
+be sure to set the script bit using the AmigaDOS command "Protect
+LinkErrors +s".
+
+Note that in the case of project files, the source file name will
+be the main object file, although the error could have been caused
+by any of the external files or libraries.
+
+
+                            LinkForm
+
+The LinkForm command determines which format will be used for the
+linker command line.  You should follow the LinkForm command with
+either Alink, Blink or Dlink, depending on the linker you use (you
+can shorten it to just the first letter, if you prefer).  The
+default value is Blink.
+
+
+                              Main
+
+The Main command specifies the main program file of a project.  If
+the file specified is more recent than its corresponding object
+file, it is compiled and/or assembled as necessary.  This command
+can only be used in project files, and can only be used once per
+project.  It must be used once, however, so that PCQ knows which
+file should be listed first in the linker command line.
+
+The corresponding object file name is created by stripping the
+directories and suffix from the program name, and adding the most
+recently defined object file suffix.  PCQ looks for the file in
+the destination directory.
+
+Note that, like External file names, the Main program can be a
+Pascal source, an Assembly source, or even an object file.
+
+
+                               Map
+
+The Map command is different in that it is both a switch and a
+string definition command.  If you specify +Map, the linker will
+generate a map file.  If you include a file name after the +Map
+command, the linker will use that name for the map file.  If you
+do not specify a name, PCQ uses the name of the main file,
+stripped of directories and suffixes, and adds the suffix ".MAP".
+
+If you use -Map to specify that a map file should not be
+generated, any file name included after the command will be
+ignored.
+
+Note that only Alink and Blink can generate map files.
+
+
+                            MapOptions
+
+The MapOptions command specifies the map parameters that PCQ
+should pass on to Blink, the only linker that will accept them.
+PCQ passes the entire string you enter here, which can contain one
+or more of the following:
+
+        H for a hunk map
+        S for a symbol map
+        X for a cross-reference in the map file
+        F for a file map
+        O for an overlay map
+        FANCY to include printer control codes
+        PLAIN to suppress the printer control codes
+
+The default value for MapOptions is "S PLAIN".
+
+ 
+                         MathTrans or N
+
+The MathTrans switch determines whether PCQ should use the
+mathtrans.library or its own internal routines for trigonometric
+and exponential functions.  It corresponds to the $N compiler
+directive.  If you use the +N option, the program will attempt to
+open the mathtrans.library, which must therefore be in the LIBS:
+directory.  If you use the -N option, the default, PCQ will use
+internal routines so that mathtrans.library is not required.
+
+
+                             NoDebug
+
+The NoDebug switch determines whether PCQ issues the linker command
+NODEBUG, which strips any debugging information from object files
+before it links them.  The +NoDebug option, the default, ensures
+that any debugging information in object libraries will not be
+included in the executable.  The -NoDebug option passes any
+existing debug information through to the executable, where it can
+be accessed by debuggers and disassemblers.
+
+Incidentally, the debugging information is only included in the
+object files if you specify +Debug (see above for more information
+on Debug).
+
+
+                             Object
+
+The Object command adds to the list of suffixes that will identify
+object code files.  If you do not specify a suffix, the entire list
+is cleared.  The default object file suffix list consists of the
+single element ".o".
+
+
+                          Optimize or O
+
+This switch determines whether PCQ should run the output of the
+compiler through the peephole optimizer before it passes it on to
+the assembler.  In the default case +O, the optimizer is used.  If
+you specify -O, the optimization step is skipped.
+
+
+                            Optimizer
+
+This command defines the command string that PCQ will use to invoke
+the peephole optimizer.  It can include directories and volume
+names as necessary.  The default optimizer command is "Peep".
+
+
+                         OptimizerError
+
+The OptimizerError command defines the command that PCQ issues when
+there are errors during the optimization process.  The command can
+include the special character sequences /s, /d and /e, which will
+be replaced by the source file name, the destination file name, and
+a file containing the error text, respectively.  The default value
+for this option is "OptErrors /s /d /e".  The file
+OptimizerError is a batch file included with PCQ that invokes the
+editor to display the source and error files, then erases the
+destination and error files.  You should be sure to modify this
+file to call the editor you use, and remember to set the file's
+script bit using the command "Protect OptErrors +s".
+
+
+                             Pascal
+
+The Pascal command adds a suffix to the list of strings that will
+identify Pascal source code files.  If you do not specify a suffix,
+the list will be cleared.  The default Pascal source code suffix is
+".p".
+
+
+                          Profiler or P
+
+The Profiler switch determines whether PCQ Pascal adds execution
+profiler information to programs it compiles.  It corresponds to
+PCQ Pascal's -p command line switch.  The default state is -P,
+which omits the execution profiler code.  If you use the +P option,
+the profiler code will be added.
+
+
+                             Project
+
+The Project command adds to the list of suffixes that will identify
+project files.  If you do not specify a suffix after the Project
+command, the list is cleared.  The default Project file suffix is
+".project".
+
+
+                           Range or R
+
+The Range switch determines whether PCQ Pascal adds code to a
+program to ensure that array indexes fall within their specified
+range.  It corresponds to the $R compiler directive.  If you
+specify +R, the compiler will add the extra code, which will slow
+the program down.  If you specify -R, the default, the range
+checking code is omitted.
+
+
+                        ShortCircuit or B
+
+The ShortCircuit switch determines whether PCQ Pascal will use
+short circuit Boolean evaluations.  It corresponds to the compiler
+directive $B, so using +B allows short circuit evaluations to be
+used whenever possible, and -B ensures that all expressions will be
+fully evaluated.  The default value is +B.
+
+
+                            SmallCode
+
+The SmallCode switch determines whether the linker should combine
+all code sections into one big section.  It corresponds to Alink
+and Blink's SMALLCODE option.  Dlink combines all code sections by
+default, so not specifying SmallCode makes PCQ use Dlink's -f
+(fragment) option.  The default value is -SmallCode, which means
+that only sections with the same name and type are combined.
+
+
+                            SmallData
+
+The SmallData switch determines whether the linker should combine
+all data sections into one big section.  It corresponds to Alink
+and Blink's SMALLDATA option.  Dlink combines all data sections by
+default, so specifying -SmallData causes PCQ to use Dlink's -f
+(fragment) option.  The default value is -SmallData, which means
+that only sections with the same name and type are combined.
+
+
+                         SmallInit or S
+
+The SmallInit switch determines whether the program should use the
+normal startup code, or a minimal startup code that is much smaller
+but does not support any IO statements.  It corresponds to the
+compiler's -s command line switch.  The default value is -S, which
+causes PCQ to use the normal startup code.
+
+
+                             Source
+
+The Source command tells PCQ where it should search for Pascal,
+Assembly or Object files that can't be found in the current
+directory.  The default value is blank, which means that only the
+current directory is searched.  If you specify a non-blank value
+that does not end in a colon or slash, PCQ will append a slash.
+
+
+                              Temp
+
+The Temp command defines the directory in which all temporary files
+should be created.  Normally this directory should be located on
+the RAM: disk to speed up the compilation process, but for large
+programs on small systems you can specify any directory.  The
+default value is "T:".  If you specify a non-blank value that does
+not end in a colon or slash, PCQ will append a slash.
+
+
+                          Verbose or V
+
+This switch determines whether PCQ will write progress messages. 
+The default value is +V, which causes PCQ to print each of the
+commands as it executes.  If you specify -V, PCQ will not print any
+messages unless an error occurs.
+
+
+                               Xref
+
+The Xref command is similar to the Map command in that it is both
+a switch and a string definition.  If you precede Xref with a plus
+sign, PCQ will generate a cross-reference file.  If you specify a
+file name afterward PCQ will use that file.  Otherwise, it will
+create a file using the main file name with the directory and
+suffix stripped off and the suffix ".XREF" added.  It will be
+created in the destination directory.  If you precede Xref with a
+minus sign, any file name you specify will be ignored.
+
+Note that only Alink and Blink can generate cross-reference
+reports.  Also note that Blink can include the cross-reference
+report in a MAP file if you include the MapOption X.
+
+
+
+
+ Project Files
+---------------
+
+One of the handiest features of PCQ is that it can completely
+automate the compilation of even complex programs.  In order to do
+that, you need to create a project file for the program.  Project
+files use all the same commands as configuration files, plus a few
+special ones.  As an example, the project file I use for the
+compiler itself looks like this:
+
+        Main     Main.p
+        External Calls.p
+        External Declarations.p
+        External Evaluate.p
+        External Expr.p
+        External Initialize.p
+        External IO.p
+        External Optimize.p
+        External StanProcs.p
+        External Utilities.p
+        External Statements.p
+        Exec     Pascal2
+
+The Main command defines the file that will be included first in
+the linker command line.  The rest of the files are normally
+external files.  The External command defines each of the external
+files that make up the program, which will all be linked into the
+final executable.  The Exec command sets the name of that
+executable program, and is optional.  If it wasn't included in
+this case, the executable program would be called Main (because
+the file defined with the Main command is called Main.p).
+
+Each of the Main and External files is compiled when the command
+is processed, unless an object file exists with the same name and
+a later creation date and time.  The object files will be created
+with the same name as the source file, with any directory and
+suffixes stripped off, in the destination directory.
+
+Any configuration commands placed in the project file apply only
+to the files that follow it.  Thus in the following example:
+
+        Main     Program.p
+        +Range
+        External Ext1.p
+        External Ext2.p
+        -Range
+        External Ext3.p
+
+Only the files Ext1.p and Ext2.p will be compiled with range
+checking turned on.  On the other hand, the Main, External and
+Exec commands do not have to be in any particular order (i.e. the
+Main command doesn't have to be first).
+
+
+ Command Line Parameters
+-------------------------
+
+After reading the configuration files, PCQ begins processing the
+command line arguments.  These arguments can be any of the normal
+configuration commands, or they can be files to be processed.  If
+the argument is a configuration command, it should always be
+preceded by a plus or minus sign, even for commands that don't use
+one (PCQ will just ignore the + or - if it doesn't apply).  For
+commands that will include spaces, like the string definition
+commands, you can enclose the argument in double quotes.  For
+example:
+
+        PCQ "+Destination Work:Pascal" +r file.p
+
+This command changes the destination directory, turns range
+checking on, then compiles "file.p".
+
+If an argument is not preceded by a plus or minus sign, PCQ
+assumes that it is a file to be processed.  PCQ first checks to
+see if the file includes any of the project suffixes.  If it does,
+then it is processed as a project.
+
+If it doesn't, PCQ then checks for a Pascal suffix.  If it finds
+one, it compiles, optimizes, assembles and links the file (unless
+you have turned one or more of those steps off).  The executable
+file, if there are no errors, will have the name of the source
+file with the extension stripped off, and will be placed in the
+destination directory.
+
+If it didn't have a Pascal suffix, PCQ then checks for an assembly
+suffix.  If it has one, PCQ assembles and links the file (again
+assuming you haven't turned either step off).  The executable file
+will be formed in the same way as the Pascal file.
+
+If none of the previous suffixes apply, PCQ checks for an object
+code suffix.  If it finds one it links the file, with an
+executable name again formed the same way.
+
+If none of these suffixes match, PCQ appends the project suffixes
+to the file name and looks for a file of that name.  If it finds
+one, it processes it as a project file.  If it doesn't find one,
+it tries the same thing with all the other suffixes.  If none of
+them match, PCQ issues an error.
+
+
+ Error Handlers
+----------------
+
+Integrated programming environments tend to have built-in editors,
+and I considered adding one to PCQ.  The problem is that I
+couldn't hope to write an editor better than the one I normally
+use, so I for one wouldn't want to use the simpler one.  Instead
+of including an editor I have made "hooks" in PCQ to let you use
+your favorite editor to automatically edit files when there is an
+error.
+
+To see how these hooks work, let's use an example in which we are
+trying to compile a program called Test.p that contains errors.
+When PCQ tries to compile the program it notices the errors, and
+it looks at the definition of CompilerError to see what should be
+done.  In this case we'll assume that CompilerError still has the
+default definition, which is:
+
+        CompErrors \s \d \e
+
+The first thing that PCQ does is replace the special sequences
+beginning with the backslash.  The sequence \s is replaced by the
+name of the source file we were trying to compile, which in this
+case is Test.p.  PCQ then substitutes the name of the output
+assembly language file the compiler was creating for the sequence
+\d.  In some cases this file will be in the destination directory,
+but more often it will be an oddly named file in the temporary
+directory.  Finally, PCQ replaces the sequence \e with the name of
+a file that contains the error report from the compiler.  This
+will always be a file in the temporary directory.  For our
+example, PCQ creates the following command string:
+
+        CompErrors Test.p T:PCQ_Temp.asm T:PCQ_Temp0
+
+This command is passed along to AmigaDOS, which tries to invoke a
+program called CompErrors.  In this case the program is a batch
+file that is included with PCQ.  The batch program invokes an
+editor to display the source and error files, then deletes the
+output and error files.  It looks like this:
+
+                .key source,dest,error
+                Ed <source> <error>
+                Delete <dest>
+                Delete <error>
+
+If your editor isn't called Ed, or if it can't handle two files at
+once, you'll have to modify the batch file.  If you have a more
+powerful editor and/or Arexx, you can do much more interesting
+things.  I have included several error handlers for users with
+Arexx, and either CygnusEd Professional, DME, or QED.  For
+example, I use CygnusEd Professional with Arexx, and I've set my
+CompilerError string as follows:
+
+        rx CED-ShowError \s \d \e
+
+If you have AmigaDOS 2.0 you don't need to include the rx command.
+CED-ShowError, which along with several variations for different
+editors is included with PCQ, takes the following steps:
+
+        1. Ensures that CED and the source file are both loaded.
+        2. Moves to the first error position.
+        3. Displays the error message.
+        4. Deletes the output and error files.
+
+The error handlers for optimizer, assembler, and linker errors
+work the same way as the one for compiler errors.  Since I assume
+that you'll be using PCQ mainly to compile Pascal programs, I
+have only included good handlers for compiler errors.  If you plan
+to do a lot of assembly work you might consider writing a handler
+to parse A68k's error messages.
+
+Keep in mind that the string you specify as the CompilerError is
+simply executed by AmigaDOS, so it can be any command that
+AmigaDOS understands.  It does not have to be a batch file.
+
+
+
+
+ Using PCQ with CygnusEd Professional and Arexx
+------------------------------------------------
+
+If you use CygnusEd Professional, you need to copy CED-ShowError
+to your Rexx:  directory and include the following line in your
+PCQ.CFG file:
+
+	CompilerError rx CED-ShowError \s \d \e
+
+
+
+ Using PCQ with DME and Arexx
+------------------------------
+
+If you use DME and Arexx, you need to copy the file DME-Error to
+any of your path directories (I would recommend S:), then copy
+DME-ShowError to your Rexx:  directory.  You then need to add the
+following line to your PCQ.CFG file:
+
+	CompilerError DME-Error \s \d \e
+
+Finally, you'll need to include the following line in your .EDRC
+file (that's the DME configuration file):
+
+	rx DME-ShowError
+
+If you include the complete path for DME-ShowError, it does not
+have to be in your Rexx:  directory.  Every time DME starts up, it
+will run DME-ShowError, but the Arexx program will return
+immediately if DME was not invoked through PCQ.
+
+
+
+ Using PCQ with QED and Arexx
+------------------------------
+
+If you use QED, you need to include the Arexx program
+QED-ShowError in your Rexx:  directory, then add the following
+line to your PCQ.CFG file:
+
+	CompilerError rx QED-ShowError \s \d \e
+
+Again, if you include the complete path for QED-ShowError it
+doesn't have to be in your Rexx:  directory.
+
+
+
+ Using PCQ with MEMACS and Arexx
+---------------------------------
+
+If you use MEMACS, one of the text editors Commodore supplies with
+AmigaDOS, and Arexx, you can use the following set-up.  Copy the
+file MEMACS-ShowError to your Rexx:  directory, then add the
+following line to your PCQ.CFG file:
+
+	CompilerError rx MEMACS-ShowError \s \d \e
+
+Then, in your S:Emacs_pro file (that's the MEMACS configuration
+file, by the way), include the following as the last line:
+
+	execute-file S:PCQ-Error
+
+Finally, you need to create a dummy S:PCQ-Error file that will be
+replaced, when appropriate, by a series of commands to display
+errors.  I suggest creating an S:PCQ-Error file with the following
+contents:
+
+	show-line#
+
+
+
+ Using PCQ with MicroEMACS
+---------------------------
+
+If you use Daniel Lawrence's MicroEMACS, you don't even need
+Arexx.  Just attach the file EMACS.errors on to your EMACS.RC file
+(the MicroEMACS configuration file), and add the following line to
+your PCQ.CFG file:
+
+	CompilerError EMACS-ShowError \s \d \e
+
+EMACS-ShowError is just an AmigaDOS batch file that takes creates
+the error file that MicroEMACS expects, runs MicroEMACS, and
+deletes the temporary files.
+
+The other error handlers just display the first error.  This one,
+on the other hand, begins with the cursor on the first error.  If
+you press Shift-F9, it moves the cursor to the next error.  If
+there are no more errors, it will display the message "No more
+errors".  Note that if you make changes to the source file,
+especially if you add or delete lines, subsequent error messages
+will be misplaced.
+
+
+
+ Using PCQ with other editors
+------------------------------
+
+It should be very easy to convert the various ShowError files to
+work with UEdit with or without Arexx, but since I don't have
+the registered version and I'm not familiar with the unregistered
+version, I couldn't seem to make it work.
+
+Similarly, since TextEd supports Arexx it should be a simple task
+to convert one of the programs, but I don't know TextEd's Arexx
+command set.
+
+If you are using an editor that will not edit two files at once
+(like AmigaDOS's ED), you might try the following CompErrors file:
+
+	.key source,dest,error
+	type <error>
+	Ed <source>
+	delete <dest>
+	delete <error>
+
+That batch file just writes the errors to the CLI, then calls your
+editor.  It's not very useful, but then neither is ED.
+
+
+
+
+ Update History
+----------------
+
+Version 1.02 (September 18, 1991)
+
+  Enhancements:
+    o  Added the Discard and CCalls switches
+
+
+Version 1.01 (September 8, 1991)
+
+  Bug fixes:
+    o  Fixed an Enforcer hit caused by uninitialized Main_name
+
+  Enhancements:
+    o  Added the Force switch.
+
+
+Version 1.0 (August 10, 1991)
+
+    Initial release
+
+
+
+ Contacting the Author
+-----------------------
+
+I can be reached at the following address:
+
+
+        Patrick Quaid
+        2250 Clarendon Blvd, Apt #1209
+        Arlington, VA 22201
+        USA
+
+I can also be reached by phone (voice) at: (703) 524-8945
+
+Please note that my address and phone number have changed
+since April '92.
+
+If you have any problems with PCQ or the rest of the PCQ Pascal
+system, please let me know.
+
+

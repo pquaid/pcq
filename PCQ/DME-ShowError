@@ -1,0 +1,124 @@
+/*
+    DME-ShowError
+
+This is an Arexx program that displays the first error generated
+by the PCQ Pascal compiler using Matt Dillon's DME text editor.
+It is designed to be used with the PCQ make utility.  To use this
+program, you should include the following line as one of the last
+commands in your .EDRC file (that's the DME configuration file):
+
+	rx DME-ShowError
+
+You can include a full path if necessary.  If DME was invoked
+through PCQ, this command will load the source file that caused
+the error and display the error text.  If DME was invoked
+normally, not through PCQ, this program will do nothing and exit
+immediately.  You won't even notice it.
+
+To set up PCQ to use this system, you should include the following
+command in your PCQ.CFG file:
+
+	CompilerError DME-Error \s \d \e
+
+DME-Error is a batch file that is included in this distribution.
+It creates a temporary file that contains the source, destination
+and error file names, and also served to inform this program that
+there is an error to process.  DME-Error looks like this:
+
+	.key source,dest,error
+	echo >T:DME-Error-Files "<source> <dest> <error>"
+	dme
+
+This program deletes all the temporary files.
+
+To use this program you'll need Arexx, of course, as well as DME.
+DME is a shareware text editor written by Matt Dillon that is
+available on several Fred Fish disks and on lots of bulletin board
+systems.
+
+*/
+
+
+
+
+
+options results
+
+/* If we aren't looking at errors, quit immediately */
+
+if ~exists("T:DME-Error-Files") then exit
+
+/* Read the file names */
+
+if open(ErrorList, "T:DME-Error-Files", 'R') then do
+    InputLine = ReadLn(ErrorList)
+    parse var InputLine SourceFile OutputFile ErrorFile .
+    close(ErrorList)
+end; else exit
+
+/* Get the first error */
+
+if open(ErrorList, ErrorFile, 'R') then do
+
+    if eof(ErrorList) then do   /* There were no errors */
+	FileName = SourceFile
+	LineNo = 1
+	ColumnNo = 1
+	ErrorText = "No Errors"
+    end; else do
+	ErrorString = readln(ErrorList)
+
+	/* This first test is just a reminder, in case you want to */
+	/* process all errors.	"Abort" would never come first.    */
+
+	if ErrorString = "Compilation Aborted" then do
+	    address command 'delete >nil:' outputfile
+	    'okay1 Compilation Aborted'
+	    exit
+	end
+
+	if ErrorString ~= "" then do
+	    parse var ErrorString '"' FileName '" At ' LineNo,
+				       ',' ColumnNo ' :' ErrorText
+	end; else do
+	    FileName = SourceFileName
+	    LineNo = 1
+	    ColumnNo = 1
+	    ErrorText = "No Errors"
+	end
+    end
+    close(ErrorList)
+end; else exit
+
+
+/* Display the error text.  Because I can't seem to get MODIFIED to  */
+/* work for me, this bit here creates a temporary file and starts to */
+/* edit it.                                                          */
+
+if open(ErrorList,"T:DME-Error-Files",'W') then do
+    Writeln(ErrorList, ' Error:' || ErrorText)
+    close(ErrorList);
+end; else exit
+
+'NEWFILE T:DME-Error-Files'
+'RESIZE' Min(Length(ErrorText)+10,70) 3
+
+/* Now we'll display the source file, and move to the error position */
+
+'OPENWINDOW +0+50-0-0'
+'NEWFILE ' FileName
+'GOTO ' LineNo
+'FIRST'
+
+/* This properly handles tabs */
+
+do for ColumnNo
+    'RIGHT'
+end
+
+/* Delete the temporary files */
+
+address command 'delete >Nil:' ErrorFile
+address command 'delete >Nil:' OutputFile
+address command 'delete >Nil: T:DME-Error-Files'
+

@@ -1,0 +1,4 @@
+join Translator.o DiskFont.o DOSExtens.o MathIEEEDP.o MathFFP.o to t:Libraries1.lib
+join DOS.o DOS2.o MathTrans.o MathIEEEDPTrans.o Expansion.o IFF.o to t:Libraries2.lib
+join t:Libraries1.lib t:Libraries2.lib to Libraries.lib
+delete t:libraries?.lib

@@ -1,0 +1,7 @@
+*
+* This is a PCQ project file for the Extern example
+*
+
+Main Extern1.p
+External Extern2.p
+Exec Extern

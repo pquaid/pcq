@@ -1,0 +1,4 @@
+.key source,dest,errors
+ed <source> <errors>
+delete <errors>
+delete <dest>

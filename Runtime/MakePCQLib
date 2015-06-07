@@ -1,0 +1,4 @@
+join Extras/Extras.lib Writers/Writers.lib Readers/Readers.lib to t:PCQ1.lib
+join PCQ/Stuff.lib System/System.lib to t:PCQ2.lib
+join t:pcq1.lib t:pcq2.lib Small.lib to Work:Pascal/PCQ.lib
+delete t:pcq(1|2).lib
