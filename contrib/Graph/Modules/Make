@@ -1,0 +1,5 @@
+.key NAME/A
+Pascal <NAME>.PAS T:TMP.ASM
+Peep T:TMP.ASM T:TMP.s
+A68k T:TMP.s <NAME>.o
+

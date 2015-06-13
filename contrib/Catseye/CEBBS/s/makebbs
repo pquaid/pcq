@@ -1,0 +1,9 @@
+cd bbs:source
+Pascal iofuncs.X T:iofuncs.asm
+a68k T:iofuncs.asm LIBS:iofuncs.lib
+delete T:iofuncs.asm
+Pascal bbs.p T:bbs.a
+a68k T:bbs.a T:bbs.o
+delete T:bbs.a
+blink T:bbs.o to bbs lib LIBS:pcq.lib lib LIBS:iofuncs.lib
+delete T:bbs.o

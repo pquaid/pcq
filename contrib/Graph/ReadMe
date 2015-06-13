@@ -1,0 +1,259 @@
+
+
+				*********
+				* GRAPH *
+				*********
+
+
+
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      GRAPH is a first attempt to develop a graph unit for PCQ.
+      GRAPH is PUBLIC DOMAIN.
+
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	The original packet consists of:
+
+	    GRAPH.LIB	-> The library
+	    GRAPH.i	-> The include-file
+	    GRAPH.doc	-> An "AutoDocs"-styled documation
+	    ReadMe	-> This file
+	    Make	-> Skript to code a module
+	    *.PAS	-> Source to the library modules
+	    *.o 	-> Compiled and assembled modules
+	    Examples/	-> Directory with some examples
+
+
+
+
+PREFACE:
+¯¯¯¯¯¯¯¯
+    PCQ has become a compiler every programmer must have been waiting
+    for! If it's development continues as overwhelming as it did it
+    might reach Turbo-Pascal one day - the way isn't too far any more!
+    When someone looks at the "Improvements on the burner" (Pascal.doc)
+    he will see what I'm talking about.
+    One thing which makes Turbo Pascal so powerful is it's great
+    support by standard-units. One of them is "GRAPH.TPU" - an easy to
+    use packet of routines for all kinds of graphics . Of course, the
+    AMIGAs OS (OS2.0!) is much more powerful - but you have to
+    investe much more effort to get what you want.
+
+    GRAPH is a tiny little attempt to make programming easier and
+    compiling faster.
+
+    As I'm writting these lines I spend a lot of time in a very
+    exciting and interessing part of maths: Fractals and dynamical
+    systems. I could not learn or develop anything without my brave
+    computer. I always prefer to write mathematical programs in Pascal
+    because of it's well designed structuring. I have written some
+    things in C and Assembler to - but I always come back to Pascal.
+    Everyone who has worked a little with fractals will have
+    discovered that it is nice to have an operating-system which
+    offers fantastic solutions for every kind of problem but that it
+    is awful to do the whole initialisation-stuff when you just want
+    to "WritePixel" some points! AmigaOS is fantastic to develop
+    software but not for some math-experiments.
+
+    I soon started to write some silly routines which allowed me to save
+    time by including them in every program - well, time I used to spend
+    at the keyboard but not time I had to wait while the compiler
+    was including thousands of lines of intuition- and graphics-includes.
+    Therefore I decided to write them in a more general style and
+    link them to my programs. Time after time I developed some more
+    routines for that library - until I had the idea to thow'em all
+    away and to write a complete new Turbo-Pascal-Graph styled library.
+
+    The result is GRAPH - far away from beeing a "GRAPH.TPU" - but a
+    collection of easy to use tools.
+
+    For a long time I only used it for my own purpose - until it came
+    into my mind that it could be useful for other people to. So I
+    rewrote it again added some more Turbo routines and wrote a nasty
+    kind of documentation (a _VERY_ good example for bad english...)
+    and finaly send it to Patrick in order to place it in the
+    public domain and distribute it with his famous compiler as a
+    little extension.
+
+
+
+WHAT IT IS MENT FOR:
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    GRAPH should become an Amiga-version of Turbo-Pascals GRAPH.TPU
+     - with adjustments and perhabs some enhancements.
+
+    GRAPH is ment to be an output not an input. E.g. that it is nearly
+    unpossible to write an user-interface using GRAPH but that it is
+    easy to write some "rendering"-programs.
+
+
+
+HOW TO USE IT:
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    If you want to use GRAPH, include
+
+    » {$I "INCLUDE:GRAPH.i"} «
+
+    in your programs and link them like this:
+
+    » BLink <program>.o TO <program> LIB PCQ.LIB GRAPH.LIB «
+
+    Of course you must insert any paths. For example
+
+    » BLink MyOwnWarrior.o TO MyOwnWarrior LIB PL:PCQ.LIB PL:GRAPH.LIB
+
+    would link "MyOwnWarrior.o" if your pascal libs are in "PL:".
+    Easy, isn't it? The include-file defines all routines in GRAPH.LIB
+    and some additional ones (see below).
+
+    Your program should look like this:
+    _____________________________________________________________
+    program MyOwnWarrior;
+    {$I "INCLUDE:GRAPH.i"}
+
+    ... { procedures, functions, vars, consts, types }
+
+    begin
+      AttachGraph;
+      InitGraph(width,height,depth,mode);
+      if GraphResult<>0 then begin
+	writeln("Error! Could not initialize graphics-packet!");
+	exit(20);
+      end;
+
+      ... { your startup }
+    end.
+    ¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+
+    Note that you *MUST* call "AttachGraph" before any other routine
+    of Graph.
+    I strongly recommend calling it at the very beginning of your
+    program: AttachGraph will immediately halt your program if an
+    error occures (e.g. if it can't open "graphics.library")!
+
+
+
+THE ROUTINES AND DEFINITIONS:
+¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+    Please read the include-file to get an overview of the various
+    functions and procedures. Every routine is explained in "GRAPH.doc";
+    so I won't waste time explaining them here again.
+
+    If you have been working with Turbo Pascal before you will find
+    many known routines.
+
+    If you don't have experience with Turbo Pascal you will soon
+    discover that the routines are very easy to use.
+
+    The whole lot of routines can be devided up in 3 groups:
+	- graphics routines compatible with Turbo Pascal
+	    (GetColor, Line, PutPixel, Bar, Ellipse, ...)
+	- graphics routines replacing Turbo's
+	    (InitGraph, SetRGBPalette, AddPage, ...)
+	- additional stuff
+	    (PrintDisplay, SaveDisplay, ...)
+
+    Most routines are Turbo-like, but some Turbo-routines are nonsens
+    for an Amiga. For example, there are no graphic-drivers to detect.
+    Those are unimplemented or replaced by Amiga-like ones.
+    Example:
+      One would call:
+	Turbo :  InitGraph(VGA,VGAHi,'C:\TP\BGI');
+	PCQ   :  InitGraph(640,256,4,HiRes);
+
+
+    There are also some principle differences:
+
+    A PC has it's special video-RAM and therefore doesn't use any
+    memory available for programs. E.g. Turbo Pascal can simply
+    switch to an other page by the VGA-BIOS, for example, and does't
+    have to alloc any RAM. There is a known amount of video-RAM which
+    is divided up in several pages.
+    An Amiga has it's special chip-RAM which is available for all
+    custom chips including the video-hardware AND for programs.
+    Therefore you have to reserve memory from system if you want
+    to use another page. E.g every page alloced by GRAPH is no longer
+    available for other programs. It is your turn to tell GRAPH how
+    many pages you really need. GRAPH can handle upto 4 pages. After
+    calling InitGraph you have got your first. For most programs
+    this will be enough. If you need another page you must call AddPage.
+    There is another procedure called "RemPage" which removes an added
+    page again and gives the used memory back to the system.
+    If you don't need an added page anymore you should use the procedure
+    in order to give the unused memory back to the system and make
+    it available for other programs. But you don't have to do so:
+    CloseGraph will close all pages as well.
+
+    Another problem are "filling-routines". In order to use something
+    like "Flood" you would have to add a TmpRas to the window.
+    InitGraph can't do that: nobody knows if you really need it.
+    If not, it would restict your possibilities as less memory means
+    less colors, less resolutions ect. It would be possible to
+    implement an additional procedure like "AddFloodBuffer" but this
+    would not be save if Flood is called without checking the result
+     - and I want to write a very secure system! Until now I had no
+    idea which fits to all my goals. Therefore NO filling-routines
+    are implemented by now.
+
+
+    Note that I have implemented 2 additional routines:
+     - PrintDisplay
+     - SaveDisplay
+
+    PrintDisplay generates a HardCopy of the VISIBLE (need not be
+    active!) page ( which muts be part of GRAPH, of course - it does
+    not print the Workbench-screen for example ).
+    Note that PrintDisplay requires OS2.0!
+    A hint for producing high quality hardcopies:
+      Let's say you have written a fractal-generator and want to
+      print your picture.
+      Call InitGraph with very high resolutions: For example
+      InitGraph(1000,1000,5,LoRes);
+      Calculate your picture on that screen (takes time...)
+      And after that call PrintDisplay;
+      The A4 paper will now contain 1000*1000 pixels instead of
+      the usual 320*256.
+      It depends on your system (chip-RAM, Agnus-type) how big your
+      screen can become. The borders of the printer are far away:
+      width over 2800 is possible with an 360dpi A4 printer!
+
+    SaveDisplay is not ready yet. It works, but it doesn't pack the
+    image. E.g. the resulting files will be very fat.
+    I plan to rewrite it completely one day, using OS2.0's
+    iffparse.library and implementing a packer.
+    However it is still better than haveing no SaveDisplay at all
+     - and that's the only reason I included it.
+
+
+    There are various definitions in the include-file:
+      - colors :  Use them when calling SetColor or SetBkColor;
+      - modes  :  Use them when calling InitGraph; More modes are
+		  simply added. Example: InitGraph(640,512,4,HiRes+Lace);
+      - WBPage :  Use it when you want to pop the Workbench-screen;
+		  Example SetVisualPage(WBPage);
+
+      - ArcCoordsType :  Used by GetArcCoords (see there).
+
+
+    The include-file also makes references to "CheckBreak".
+    You can delete that you you feel like it. I included it because
+    I often make use of that function.
+
+
+
+TO DO:
+¯¯¯¯¯¯
+    I'm quite satisfied with GRAPH for my private purpose. But to make it
+    equivalent to Turbo Pascal's GRAPH.TPU there still would be much
+    to do: Access to fonts, filling-routines, some dummy implementations
+    for compatibility ect.
+    I really don't know if I will ever release an update as I'm busy
+    enough! But if there is an update to PCQV1.3 like discripted in
+    "Improvements on the burner" (Pascal.doc) (e.g. unit-syntax,
+    full set of Turbo-styled variables (word, integer, pointer, ...))
+    I'm quite sure that I will do.
+
+
+
+******************************** Enjoy it! **********************************
+

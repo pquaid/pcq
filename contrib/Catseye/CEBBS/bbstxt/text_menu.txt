@@ -1,0 +1,12 @@
+@L
+
+Windaria Text Section...
+
+(R)ead Text file
+(L)ist Text files in this branch
+(D)ownload Text file ... *NOT Implemented*
+
+(J)ump to different branch
+(Q)uit to Main Menu
+(?) This Menu
+

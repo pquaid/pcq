@@ -1,0 +1,64 @@
+September 14 AD 1991
+                            PCQMangle V0.90b
+                        A PCQ sourcecode mangler
+                      By Chris Pressey (Cat's Eye)
+
+WHAT IT IS:
+
+	PCQMangle V0.90b
+
+WHAT IT DOES:
+
+	For now, PCQMangle takes the source of any PCQ Pascal file and
+	will coalesce all it's Include statements {$I "file"}. In the
+	future, the program will be expanded to :
+
+		o De-comment source code in Pascal.
+		o Gather up the Procedure and Function headers
+			(handy for making .i files)
+
+SYNOPSIS:
+
+	PCQMangle
+
+	You will be prompted for the input and output filenames.
+
+EXAMPLE:
+
+	PCQMangle
+	
+	system.p
+	T:system_mangled.p
+
+WHY I DID THIS:
+
+	I have written a few programs which are comprised of a lot of
+	Include files. Before I wrote this, the only eay way to print them
+	out was to load each into my text editor, format them, and print
+	them seperately. Now I can join them in the order they appear.
+
+ENVIRONMENT:
+
+	PCQMangle was programmed in PCQ Pascal, by Pat Quaid.
+
+MY ADDRESS:
+
+	Chris Pressey
+	917 Wicklow Place
+	Winnipeg, MB, Canada
+	R3T 0J1
+	453-0561
+
+MY BBS:
+
+	Windaria
+	(204)-453-0561
+	1200/2400 baud, 8N1.	24 hrs a day
+	The software for Windaria was also programmed in PCQ.
+
+DISCLAIMER:
+
+	Hah! No copyright. Not shareware. Feel free to do what you
+	please with this. If used commercially (yeah right) make sure you
+	leave my name in or you will burn in H-E-double-hockey-sticks.
+	Distribute to the ends of the universe...

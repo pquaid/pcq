@@ -1,0 +1,72 @@
+Last update : Fri Nov 1 1991 14:49
+
+Handle                   Rank        Calls Posts Last Call
+------                   ----        ----- ----- ---------
+albertus magnus          Pte >         1     0  Sat Sep 21 1991 18:23
+ALL                      Recruit       0     0  Sun Sep 29 1991 11:06
+AMALGAM                  Cpl >>        4     2  Sat Oct 7 1978 5:18
+ANGEL EYES               MCpl *>>     26    88  Sun Oct 27 1991 21:37
+BENNY                    Pte >         1     0  Sun Oct 27 1991 1:49
+BRACK                    Pte >         3     1  Mon Oct 28 1991 19:37
+CAT'S EYE                Sysop ****    2   195  Fri Nov 1 1991 14:37
+CH'VAR                   Pte >         3     0  Sat Oct 19 1991 2:40
+DANCE MACHINE            Pte >         8     3  Mon Oct 28 1991 13:55
+DANDY                    Cpl >>       12   108  Fri Nov 1 1991 9:51
+DARK RIDER               Pte >         2     0  Sun Oct 27 1991 9:16
+DARKMAN                  Pte >         6     3  Tue Oct 29 1991 13:51
+Death Dealer             Pte >         1     0  Sun Sep 22 1991 15:32
+DILL                     Pte >         9     1  Wed Oct 30 1991 21:26
+DRAX                     Cpl >>       17    19  Fri Nov 1 1991 10:48
+ED PARK                  Pte >         2     0  Thu Sep 26 1991 23:17
+ELMINSTER                Pte >         2     0  Tue Oct 3 1978 21:11
+ELRIC                    Pte >         1     0  Fri Sep 27 1991 3:43
+FALKYRE                  Cpl >>        7     1  Wed Oct 30 1991 20:17
+FENRIS                   Pte >         2     0  Thu Sep 26 1991 21:13
+FESTER                   Pte >         2     0  Fri Oct 25 1991 23:48
+FIVE                     Pte >         3     4  Wed Oct 4 1978 11:13
+GENIUS THE RULER         Pte >         2     0  Sun Oct 20 1991 23:42
+GENO                     Pte >         1     0  Mon Oct 21 1991 23:43
+GEORGE BERNARD SHAW      Recruit       0     0  Sat Oct 26 1991 18:42
+GERALD BRANDT            Pte >         2     0  Sun Sep 29 1991 11:32
+Godiva                   Pte >         1     0  Sun Sep 22 1991 15:13
+Guest                    Recruit       0     0  Sun Jan 1 1978 0:00
+HAL                      Pte >         1     0  Mon Oct 28 1991 17:55
+I LOVE YOU               Recruit       1     0  Sat Oct 19 1991 3:11
+KASUGA                   Cpl >>       58    18  Thu Oct 31 1991 19:52
+KEN WOLFE                Pte >         2     0  Tue Sep 24 1991 20:57
+KEVIN                    Pte >         3     0  Fri Oct 6 1978 22:01
+L'KOS                    MCpl *>>     18    17  Fri Nov 1 1991 0:30
+LEMMING                  Pte >         2     0  Sat Oct 7 1978 19:29
+LES                      Pte >         1     0  Wed Oct 30 1991 21:19
+MARK TOPHAM              Cpl >>       14     3  Mon Oct 28 1991 15:47
+MICHAEL                  Pte >         2     3  Wed Oct 4 1978 2:17
+MISS MINX                Pte >         5    12  Tue Oct 29 1991 0:47
+MOONGLUM                 Pte >         2     0  Thu Oct 24 1991 23:39
+MOURNBLADE               Pte >         2     0  Wed Sep 25 1991 13:50
+NEXUS                    Pte >         7     3  Fri Nov 1 1991 13:02
+NIGHTSHADE               Pte >         1     0  Sun Sep 29 1991 22:48
+RAISTLIN                 Pte >         2     0  Fri Oct 6 1978 22:20
+SATANIC JOE              Pte >         2     0  Mon Sep 23 1991 18:43
+SCHRAPNEL                Sysop ****   14    72  Mon Oct 28 1991 0:23
+Scott Mann               Pte >         0     0  Sun Jan 1 1978 0:00
+SEXY BLONDE              Pte >         1     0  Fri Oct 18 1991 17:33
+SHADOW HAWK              Pte >         1     0  Fri Oct 25 1991 20:13
+SID VICIOUS              Pte >         1     7  Fri Oct 18 1991 23:16
+SIERRA                   Pte >         2     0  Tue Sep 24 1991 16:04
+SONIC BOOM               Pte >         8     4  Thu Oct 31 1991 19:24
+SONIC DISCIPLE           Sgt *>>>     17     2  Fri Nov 1 1991 1:54
+SONIC THE HEDGEHOG       Pte >        53    82  Wed Oct 30 1991 15:51
+SORVAN                   MCpl *>>     12    20  Sat Oct 7 1978 12:06
+SQUIGGY                  Cpl >>       50    32  Fri Nov 1 1991 8:24
+THANATOS                 Pte >         1     0  Sun Oct 27 1991 14:48
+THE DEMOLITIONIST        Pte >         1     0  Wed Oct 30 1991 0:44
+THE EAGLE                Pte >         1     0  Thu Oct 31 1991 21:32
+THE OVERLORD             Pte >         2     0  Thu Oct 31 1991 0:45
+THE SAINT                Pte >         1     0  Sun Sep 22 1991 22:39
+THE VINDICATOR           MCpl *>>     16    48  Thu Oct 31 1991 18:33
+TIM                      Pte >         1     0  Thu Oct 24 1991 23:22
+TIM LAVOIE               Pte >         2     0  Tue Oct 29 1991 0:42
+VELCRO                   Pte >         1     0  Wed Oct 30 1991 15:13
+VIC FAK                  Pte >         3    11  Thu Oct 17 1991 20:54
+WEEBLE                   Pte >         1     0  Tue Oct 1 1991 4:06
+WOLF                     Pte >         1     3  Fri Oct 6 1978 21:01

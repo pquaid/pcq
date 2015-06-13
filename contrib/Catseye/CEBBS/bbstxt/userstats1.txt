@@ -1,0 +1,9 @@
+@L
+@O+
+
+The IBM character set can be displayed by many sorts of computers. If this is a box ...
+  зд©
+  юды
+...then you can handle the IBM character set. If you see only garbage, you cannot.
+
+Can your computer display the IBM graphics character set ? (Y/N) 

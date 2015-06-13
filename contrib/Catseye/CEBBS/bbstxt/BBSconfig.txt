@@ -1,0 +1,73 @@
+; This is supposed to be a config file.
+R
+1
+P
+10
+C
+50
+M
+100
+S
+200
+Y
+
+; a menu consists of a list of menu items. a menu item consists of :
+; a function, a character, an access level, and possibly
+; a menu number, a file name
+
+; these menus are ALWAYS here :
+;	0 : Global (these commands work in every menu)
+;	1 : Main
+;	2 : Message
+;	3 : Mail
+
+; these menus are suggested/on Windaria
+;	4 : Stats
+;	5 : Chat
+;	6 : Files
+;	7 : Doors
+;	8 : Prefs
+;	9 : Text
+;	10 : Vote
+;	11 : Prune
+
+0. Global Menu
+
+	J	JB
+	H	SH
+	?	SM
+
+1. Main Menu
+
+	A	RP
+	B	LB
+	C	GO m5
+	E	EM	; ADBB
+	F	GO m5	; ADBB
+	G	LO
+	M	SM a10
+	N	NS	; ADBB
+	P	GO m11 a200
+	R	RM	; access determined by branch
+	T	GO m9
+	V	GO m10
+
+; function list
+
+EM		enter public message
+SM		send private mail
+RM		public reply
+PR		private reply
+LF		leave feedback
+TI		time info
+NS		new scan      |
+RM		read messages  } these are exceptions to the GO rule
+RP		read mail     |
+UL		user list
+JB		jump to branch
+SH		send help
+SM		send menu
+LO		log off
+LB		list branches
+SF (file)	send file
+GO (#)		move to a different menu

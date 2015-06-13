@@ -1,0 +1,33 @@
+PCQUtils:PCQUtils/Docs/MulLyr.Doc
+
+MulLyr V1.0 by Chris Pressey (Cat'sEye)
+¯¯¯¯¯¯ ¯¯¯¯ ¯¯ ¯¯¯¯¯ ¯¯¯¯¯¯¯  ¯¯¯¯¯¯¯¯
+WHAT IT IS
+¯¯¯¯ ¯¯ ¯¯
+A program written in PCQ Pascal 1.1d to execute a mathematical
+model. This particular model is designed to predict an illusion:
+how long a line looks in the case:
+
+				<-->
+				>--<	Which line is bigger?
+
+Okay, so the ordinary Amiga Joe isn't going to benefit from
+this program. I have just included it as a demonstration of
+how professional you can make programs written in Pascal
+look. The program was written for my father's research in
+visual perception.
+
+WHY IT IS
+¯¯¯ ¯¯ ¯¯
+To get money from my father, and an example of IntuiStuff.
+
+USAGE:
+¯¯¯¯¯
+	MulLyr (or click on icon)
+
+	Pretty straightforward, huh? Thought so.
+
+CREDITS
+¯¯¯¯¯¯¯
+This was derived, very indirectly, from an Apple ][ program called
+Prediction which I collaborated on with Bernd Kersten.

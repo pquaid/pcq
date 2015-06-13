@@ -1,0 +1,62 @@
+September 14 AD 1991
+                               Guru V1.00
+                        A custom Alert() Conjurer
+                      By Chris Pressey (Cat's Eye)
+
+WHAT IT IS:
+
+	Guru V1.00
+
+WHAT IT DOES:
+
+	Shows an Alert() (those funky red flashing Guru boxes at the top
+	of the screen) and waits for one of the mouse buttons to be pressed.
+	Sets the condition flag accordingly (see below.)
+
+SYNOPSIS:
+
+	Guru "string"
+
+	Where "string" is the string you wish to be displayed in the
+	Alert() (in double quotes.)
+
+	Do try to limit the string to less than 80 characters or you may
+	get some unexpected results.
+
+EXAMPLE:
+
+	Guru "Are you SURE ? (Left button Yes, Right button No)"
+
+WHY I DID THIS:
+
+	It's prettier (?) than the C: command "ASK" and does basically the
+	same thing. If the user presses the left button, it returns a flag
+	of 5 (WARN), otherwise (if the user presses the right button) it
+	returns 0 (OK.) I also find that Alerts() tend to scare jumpy Amiga
+	programmers! :)
+
+ENVIRONMENT:
+
+	Guru was programmed in PCQ Pascal, by Pat Quaid.
+
+MY ADDRESS:
+
+	Chris Pressey
+	917 Wicklow Place
+	Winnipeg, MB, Canada
+	R3T 0J1
+	453-0561
+
+MY BBS:
+
+	Windaria
+	(204)-453-0561
+	1200/2400 baud, 8N1.	24 hrs a day
+	The software for Windaria was also programmed in PCQ.
+
+DISCLAIMER:
+
+	Hah! No copyright. Not shareware. Feel free to do what you
+	please with this. If used commercially (yeah right) make sure you
+	leave my name in or you will burn in H-E-double-hockey-sticks.
+	Distribute to the ends of the universe...

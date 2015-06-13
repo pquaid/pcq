@@ -1,0 +1,14 @@
+@L
+
+Windaria, Chat Menu...
+
+Chat with :
+
+(C)at's Eye
+(S)chrapnel
+(A)nyone
+
+(J)ump to different branch
+(Q)uit to main menu
+(?) This menu
+

@@ -1,0 +1,41 @@
+
+
+
+
+    This directory contains some examples for using GRAPH.
+
+
+  *************************************************************************
+  *		ALL FILES IN THIS DIRECTORY ARE PUBLIC DOMAIN		  *
+  *************************************************************************
+
+
+    As expained in "ReadMe" GRAPH is very easy to use.
+    Simply "AttachGraph" and "InitGraph" and after that what you want.
+
+    However, an example always makes it easier to understand the theory.
+    Therefore I have written two silly ones which demonstrate how to use
+    the various GRAPH.LIB routines and two simple applications which
+    should give you an idea how to make sensible programs using GRAPH.
+
+    The silly ones:
+	- GraphTest:
+	    Just a collection of the most general GRAPH routines.
+	    A silly picture is draw by using them.
+
+	- PageTest:
+	    A demonstration of the page-stuff. Shows how to "AppPage"
+	    and "RemPage" and how to select pages as visible or active.
+
+
+    The applications:
+	- Lorenz:
+	    Shows how to create high-quality hardcopies.
+	    It draws the Lorenz-Attractor and after that prints the
+	    display.
+
+	- M_J_sets:
+	    Renders Mandelbrot- and Julia-sets.
+
+
+

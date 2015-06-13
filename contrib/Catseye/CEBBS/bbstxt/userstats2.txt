@@ -1,0 +1,6 @@
+@L
+@O+
+
+A feature has been added to CEBBS to filter out the non-ASCII character set. This may or may not reduce line noise (it will certainly stop most of it from getting in any messages you post, however.) With this on, though, one cannot use the IBM character set.
+
+Would you like non-ASCII characters (IBM graphics included) to be filtered out? (Y/N) 

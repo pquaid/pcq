@@ -1,0 +1,1263 @@
+TABLE OF CONTENTS
+
+Graph.lib/AddPage
+Graph.lib/Arc
+Graph.lib/AttachGraph
+Graph.lib/Bar
+Graph.lib/Circle
+Graph.lib/ClearDevice
+Graph.lib/CloseGraph
+Graph.lib/Ellipse
+Graph.lib/GetArcCoords
+Graph.lib/GetBkColor
+Graph.lib/GetColor
+Graph.lib/GetMaxX
+Graph.lib/GetMaxY
+Graph.lib/GetMaxColor
+Graph.lib/GetPixel
+Graph.lib/GetScreenPtr
+Graph.lib/GetWindowPtr
+Graph.lib/GetX
+Graph.lib/GetY
+Graph.lib/GTextHeight
+Graph.lib/GTextLength
+Graph.lib/GraphResult
+Graph.lib/HardCopy
+Graph.lib/InitGraph
+Graph.lib/Line
+Graph.lib/LineRel
+Graph.lib/LineTo
+Graph.lib/MoveRel
+Graph.lib/MoveTo
+Graph.lib/OutText
+Graph.lib/OutTextXY
+Graph.lib/Plot
+Graph.lib/PrintDisplay
+Graph.lib/PutPixel
+Graph.lib/Rect
+Graph.lib/RemPage
+Graph.lib/SaveDisplay
+Graph.lib/SetActivePage
+Graph.lib/SetColor
+Graph.lib/SetBkColor
+Graph.lib/SetRGBPalette
+Graph.lib/SetVisualPage
+Graph.lib/WriteIFF
+
+
+
+Graph.lib/AddPage					     Graph.lib/AddPage
+   NAME
+	AddPage -- add a page
+
+   SYNOPSIS
+	procedure AddPage(num: byte);
+
+   FUNCTION
+	GRAPH can handle upto 4 pages (like Turbo Pascal).
+	InitGraph allocates only 1 page for not to waste memory.
+	If you want more pages just call this function.
+	CloseGraph will close that pages too. You can remove a
+	page yourself by calling RemPage.
+
+	The result of that procedure can (an should!!!) be checked
+	by calling GraphResult.
+
+	Any new page will have the same size as defined with
+	InitGraph.
+
+	To select a page as visible or active call
+	SetVisualPage and SetActivePage.
+
+   INPUTS
+	The number you wish to use for your new page.
+	Be sure that 1<=num<=3;
+	As Turbo Pascal (e.g. the graphic boards supported by
+	Turbo Pascal) GRAPH can handle upto 4 pages. Page number 0
+	cannot be added or removed - that is the initial page.
+
+   RESULT
+	Use GraphResult to get it.
+
+   NOTES
+	This routine is NOT part of Turbo Pascal's GRAPH.TPU!
+
+   BUGS
+	The added page will immediately become visible.
+	This might change in future releases.
+	So be sure to call SetVisualPage after adding a page to ensure
+	that the page you expect to be visible is really visible.
+
+   SEE ALSO
+       RemPage, SetActivePage, SetVisualPage;
+
+
+Graph.lib/Arc							 Graph.lib/Arc
+   NAME
+	Arc -- draw part of circle
+
+   SYNOPSIS
+	procedure Arc(x,y,w0,w1,r: short);
+
+   FUNCTION
+	Draws a part of a circle between angle w0 and angle w1 with
+	radius r around the centerpoint (x,y).
+
+   INPUTS
+	x,y : Absolute cordinates for the centerpoint;
+	w0  : start-angle in degree;
+	w1  : target-angle in degree;
+	r   : radius;
+
+	w0,w1 values over 360 will be scaled down.
+
+	w0=w1 draws a circle (not a dot!).
+
+   BUGS
+	This procedure is very slow.
+	No XY-aspect is considered.
+
+   SEE ALSO
+	DrawCircle, DrawEllipse;
+
+
+Graph.lib/AttachGraph					 Graph.lib/AttachGraph
+   NAME
+	AttachGraph -- Startup for GRAPH
+
+   SYNOPSIS
+	procedure AttachGraph;
+
+   FUNCTION
+	Initializes internal structures and sets "ExitProc" to a
+	procedure which closes all resources allocated by GRAPH;
+
+	YOU MUST CALL THIS PROCEDURE BEFORE CALLING ANY OTHER ROUTINE
+	OF GRAPH.
+	YOU SHOULD CALL AttatchGraph AT THE VERY BEGINNING OF YOUR
+	PROGRAM because it halts the program if it can't do it's
+	initialisations.
+
+	After calling AttachGraph any opened screen will automatically
+	be closed at the end of your program - even if it terminates by
+	a runtime error.
+
+	In case you should modify "ExitProc" youself be sure to do it
+	in the right way. See Pascal.doc for more information.
+
+	In case you should wonder why AttachGraph terminates the
+	program if it can't do what it wants to (it could simply return
+	a boolean which indicates an error for example): It terminates
+	if it can't open the "graphics.library" what is a good reason to
+	force a break!
+
+	This might become a unit startup-code sometime.
+
+   INPUTS
+	None.
+
+   RESULTS
+	None - will terminate program if an error occurres.
+
+   BUGS
+
+   NOTES
+	This routine is NOT part of Turbo Pascal's GRAPH.TPU!
+
+   SEE ALSO
+	CloseGraph, InitGraph;
+
+
+Graph.lib/Bar							 Graph.lib/Bar
+   NAME
+	Bar -- draw a filled rectangle
+
+   SYNOPSIS
+	procedure Bar(x0,y0,x1,y1: short);
+
+   FUNCTION
+	Draws a filled rectangle.
+	If x0>x1 or y0>y1 it will be swaped.
+
+   INPUTS
+	(x0,y0) top left edge;
+	(x1,y1) buttom down edge;
+
+   BUGS
+
+   SEE ALSO
+	Rect;
+
+
+Graph.lib/Circle					      Graph.lib/Circle
+   NAME
+	Circle -- draw a circle
+
+   SYNOPSIS
+	procedure Circle(x,y,r: short);
+
+   FUNCTION
+	Draws a circle around the centerpoint (x,y) with radius r.
+
+   INPUTS
+	Absolute coordinates of the centerpoint(x,y),
+	the radius r.
+
+   BUGS
+	No XY-aspect is comsidered.
+
+   SEE ALSO
+	Ellipse, Arc;
+
+
+Graph.lib/ClearDevice					 Graph.lib/ClearDevice
+   NAME
+	ClearDevice -- Clears your graphics display
+
+   SYNOPSIS
+	procedure ClearDevice;
+
+   FUNCTION
+	Sets the current pen position to (0,0) and wipes the display
+	using the colors set by SetBkColor.
+
+   INPUTS
+	None.
+
+   BUGS
+
+   SEE ALSO
+	SetBkColor;
+
+
+Graph.lib/CloseGraph					  Graph.lib/CloseGraph
+   NAME
+	CloseGraph -- Closes the graphics display
+
+   SYNOPSIS
+	procedure CloseGraph;
+
+   FUNCTION
+	Closes all windows and screens opened by Graph;
+
+	CloseGraph will automatically be called at the termination of
+	your program by ExiProc. Nevertheless, you should call this
+	function youself as anything else doesn't fit to a good
+	programming style.
+
+	CloseGraph will clear the internal error variable so that
+	GraphResult will return null.
+
+   INPUTS
+	None.
+
+   BUGS
+
+   SEE ALSO
+	InitGraph, AttachGraph;
+
+
+Graph.lib/Ellipse					     Graph.lib/Ellipse
+   NAME
+	Ellipse -- draw a ellipse
+
+   SYNOPSIS
+	procedure Ellipse(x,y,r1,r2: short);
+
+   FUNCTION
+	Draws an ellipse around (x,y) with radii r1,r2.
+
+   INPUTS
+	(x,y) : centerpoint;
+	r1 : horizontal radius;
+	r2 : vertical radius;
+
+   BUGS
+
+   SEE ALSO
+	Circle, Arc;
+
+
+Graph.lib/GetArcCoords					Graph.lib/GetArcCoords
+   NAME
+	GetArcCoords -- read coords used by Arc
+
+   SYNOPSIS
+	procedure GetArcCoords(var Coords: ArcCoordsType);
+
+   FUNCTION
+	ArcCoordsType is defined in "GRAPH.i" like that:
+
+	type
+	    ArcCoordsType = record
+	      X,Y,
+	      Xstart,Ystart,
+	      Xend,Yend      : short;
+	    end;
+
+	After calling Arc you can get information about what Arc did
+	using that function.
+	    X,Y 	  : centerpoint;
+	    Xstart,Ystart : First pixel written by Arc (at w0);
+	    Xend,Yend	  : Last pixel written by Arc (at w1);
+	These values are not defined before Arc has been called.
+
+	You may use that procedure in order to connect other objects
+	(Lines ect) with the image produced by Arc.
+
+   INPUTS
+	ArcCoordsType-record as defined in in "GRAPH.i".
+
+   RESULTS
+	are written into the parameter.
+
+   BUGS
+
+   SEE ALSO
+	Arc;
+
+
+Graph.lib/GetBkColor					  Graph.lib/GetBkColor
+   NAME
+	GetBkColor -- read background color
+
+   SYNOPSIS
+	function GetBkColor: byte;
+
+   FUNCTION
+	Offers information about the currently set background color.
+
+   INPUTS
+	None.
+
+   RESULTS
+	Number of currently set background color.
+
+   BUGS
+
+   SEE ALSO
+	GetColor, SetBkColor, SetColor;
+
+
+Graph.lib/GetColor					    Graph.lib/GetColor
+   NAME
+	GetColor -- read drawing color
+
+   SYNOPSIS
+	function GetColor: byte;
+
+   FUNCTION
+	Offers information about the currently set drawing color.
+
+   INPUTS
+	None.
+
+   RESULTS
+	Number of currently set drawing color.
+
+   BUGS
+
+   SEE ALSO
+	GetBkColor, SetBkColor, SetColor;
+
+
+Graph.lib/GetMaxX					     Graph.lib/GetMaxX
+   NAME
+	GetMaxX -- get display width
+
+   SYNOPSIS
+	function GetMaxX: short;
+
+   FUNCTION
+	Offers information about the display's width in pixels.
+	This is the last x-position you can paint.
+
+   INPUTS
+	None.
+
+   RESULTS
+	pred(screen^.width);
+
+   BUGS
+
+   SEE ALSO
+	GetMaxY;
+
+
+Graph.lib/GetMaxY					     Graph.lib/GetMaxY
+   NAME
+	GetMaxY -- get display height
+
+   SYNOPSIS
+	function GetMaxY: short;
+
+   FUNCTION
+	Offers information about the display's height in pixels
+	This is the last y-position you can paint.
+
+   INPUTS
+	None.
+
+   RESULTS
+	pred(screen^.height);
+
+   BUGS
+
+   SEE ALSO
+	GetMaxX;
+
+
+Graph.lib/GetMaxColor					 Graph.lib/GetMaxColor
+   NAME
+	GetMaxColor -- get number of available colors
+
+   SYNOPSIS
+	function GetMaxColor: short;
+
+   FUNCTION
+	Offers information about the amount of colors.
+	This is the last color number you can use.
+
+   INPUTS
+	None.
+
+   RESULTS
+	The highest number you can request by anything like
+	SetColor.
+
+   BUGS
+	HAM and EHB are (hopefully) supported.
+	New modes (nobody knows what's next...) might cause
+	returning nonsens.
+
+   SEE ALSO
+	GetColor, GetBkColor, SetColor, SetBkColor;
+
+
+Graph.lib/GetPixel					    Graph.lib/GetPixel
+   NAME
+	GetPixel -- read a pixel
+
+   SYNOPSIS
+	function GetPixel(x,y: short): integer;
+
+   FUNCTION
+	Reads the color of the pixel at the requested position.
+
+   INPUTS
+	x,y : absolute position of pixel you want information about.
+
+   RESULTS
+	Color of Pixel at (x,y).
+
+   BUGS
+
+   SEE ALSO
+	PutPixel;
+
+
+Graph.lib/GetScreenPtr					Graph.lib/GetScreenPtr
+   NAME
+	GetScreenPtr -- get pointer to screen
+
+   SYNOPSIS
+	function GetScreenPtr: ^screen;
+
+   FUNCTION
+	Normally there is no reason to get the pointer to the screen
+	GRAPH uses. But if you wish to implement a function which is
+	not available by Graph but by graphics.library you might make
+	use of it.
+	Be sure not to modify anything in that structure. Atherwise
+	the system or GRAPH might get confused.
+	You are not allowed to close the screen yourself by using that
+	pointer.
+
+   INPUTS
+	None.
+
+   RESULTS
+	^screen. See include:intuition/screens.i for more information.
+	Will return NIL if there is none.
+
+   NOTES
+	This routine is NOT part of Turbo Pascal's GRAPH.TPU!
+
+   BUGS
+
+   SEE ALSO
+	GetWindowPtr, include:intuition/screens.i;
+
+
+Graph.lib/GetWindowPtr					Graph.lib/GetWindowPtr
+   NAME
+	GetWindowPtr -- get pointer to window
+
+   SYNOPSIS
+	function GetWindowPtr: ^window;
+
+   FUNCTION
+	Normally there is no reason to get the pointer to the window
+	GRAPH uses. But if you wish to implement a function witch is
+	not available by Graph but by graphics.library you might make
+	use of it.
+	Be sure not to modify anything in that structure. Atherwise
+	the system or GRAPH might get confused.
+	You are not allowed to close the window yourself by using that
+	pointer.
+
+   INPUTS
+	None.
+
+   RESULTS
+	^window. See include:intuition/intuition.i for more information.
+	Will return NIL if there is none.
+
+   BUGS
+
+   SEE ALSO
+	GetScreenPtr, include:intuition/intuition.i
+
+
+Graph.lib/GetX							Graph.lib/GetX
+   NAME
+	GetX -- get horizontal pen position
+
+   SYNOPSIS
+	function GetX: short;
+
+   FUNCTION
+	Offers information about the pen's x-position.
+
+   INPUTS
+	None.
+
+   RESULTS
+	RastPort.x: horizontal position of graphics cursor.
+
+   BUGS
+
+   SEE ALSO
+	GetY, MoveTo, MoveRel;
+
+
+Graph.lib/GetY							Graph.lib/GetY
+   NAME
+	GetY -- get vertical pen position
+
+   SYNOPSIS
+	function GetY: short;
+
+   FUNCTION
+	Offers information about the pen's y-position.
+
+   INPUTS
+	None.
+
+   RESULTS
+	RastPort.y: vertical postion of graphics cursor.
+
+   BUGS
+
+   SEE ALSO
+	GetY, MoveTo, MoveRel;
+
+
+Graph.lib/GraphResult					 Graph.lib/GraphResult
+   NAME
+	GraphResult -- indicates success of failure
+
+   SYNOPSIS
+	function GraphResult: short;
+
+   FUNCTION
+	Indicates wether InitGraph or AddPage could do it's work or not.
+	Be sure to ask GraphResult after every call of InitGraph.
+	Most GRAPH routines won't cause trouple if InitGraph could
+	not open a screen and a window - but do you want to draw
+	unvisible?
+
+	A correct program startup would be:
+
+	begin
+	  AttachGraph;
+	  InitGraph(width,height,depth,mode);
+	  if GraphResult<>0 then begin
+	    writeln("Error! Could not serve display!");
+	    exit(20);
+	  end;
+	  ...
+	end.
+
+	GraphResult will clear the internal error variable.
+	Therefore something like
+
+	    if GraphResult<>0 then
+		writeln("Error Nr.",GraphResult);
+
+	is wrong. Use somthing like
+
+	    err:=GraphResult;
+	    if err<>0 then
+		writeln("Error Nr.",err);
+
+
+	There are only 4 routines which affect the error variable:
+	InitGraph, AddPage, CloseGraph, RemPage;
+
+   INPUTS
+	None.
+
+   RESULTS
+	An integer type which indicates if an error has occured while
+	calling InitGraph.
+	If 0 then everything went well.
+	Any other number indicates an error.
+
+	As future releases of Graph might specify what kind of error
+	has appeared the result is not a simple boolean type.
+
+   BUGS
+
+   SEE ALSO
+	InitGraph, AddPage, RemPage;
+
+
+Graph.lib/GTextLength					 Graph.lib/GTextLength
+   NAME
+	GTextLength -- calculate Length(string) in pixel
+
+   SYNOPSIS
+	function GTextLength: short;
+
+   FUNCTION
+	Calculates length of string in pixel.
+	You may use this to center the string for example like this:
+
+	OutTextXY((GetMaxX - GTextLength(txt)) div 2,20,txt);
+
+   INPUTS
+	Pointer to string.
+	PCQV1.2b treats strings like pointers; Turbo Pascal doesn't!
+	Like all GRAPH routines using strings this will have to be
+	rewritten in later versions of PCQ.
+
+   RESULTS
+	Spaces required to print string.
+	For the default topaz8 font this will be strlen(txt)*8;
+
+   NOTES
+	This function is compatible with Turbo Pascal's TextLength
+	 - but as "TextLength" is already used in PCQ.LIB we rename it.
+
+   BUGS
+	Note the name ~G~TextLenght.
+
+   SEE ALSO
+	OutTextXY, GTextHeight;
+
+
+Graph.lib/GTextHeight					 Graph.lib/GTextHeight
+   NAME
+	GTextHeight -- calculate string's height in pixels
+
+   SYNOPSIS
+	function TextHeight(txt: string): short;
+
+   FUNCTION
+	Get height of string;
+	This function has only be included as "partner" of
+	GTextLength.
+	Actually it does not use the string at all but read
+	the YSize of the default font.
+	For compatibility to Turbo Pascal that parameter as
+	been defined.
+
+   INPUTS
+	Pointer to string.
+	Actually txt may be anything - it as no effect on
+	the result.
+
+   NOTES
+	~G~TextHeight is used instead of Turbo Pascals
+	TextHeight so that the function fits to ~G~TextLenght.
+
+   RESULT
+	Height of string. In reality screen^.Font^.YSize;
+
+   BUGS
+	Does not really calculate the height.
+	Note the name ~G~TextHeight.
+
+   SEE ALSO
+	GTextLength;
+
+
+Graph.lib/HardCopy					    Graph.lib/HardCopy
+   NAME
+	HardCopy -- prints a screen
+
+   SYNOPSIS
+	procedure HardCopy(scr: ^screen);
+
+   FUNCTION
+	Prints the given screen.
+	THIS PROCEDURE REQUIRES OS2.0!!!
+	The routine is an assemly implementation which calls new
+	V37 functions of the systems OS.
+
+	For use with GRAPH you should prefer to use PrintDisplay
+	instead.
+
+   INPUTS
+	pointer to screen to print.
+
+   RESULTS
+	None. Later releases might return an error indication variable.
+	It is already returned by the assembly code but not
+	interpreted yet.
+
+   NOTES
+	This routine is NOT part of Turbo Pascal's GRAPH.TPU!
+
+   BUGS
+
+   SEE ALSO
+	PrintScreen;
+
+
+Graph.lib/InitGraph					   Graph.lib/InitGraph
+   NAME
+	InitGraph -- initialize GRAPH
+
+   SYNOPSIS
+	procedure InitGraph(width,height,depth,mode: short);
+
+   FUNCTION
+	Initializes internal variables and opens screen and window;
+
+	YOU MUST CALL THIS FUNCTION BEFORE ANY OTHER GRAPH ROUTINE
+	EXPEPT "AttachGraph".
+
+   INPUTS
+	width,height: display dimensions in pixel;
+	depth: number of bitplanes for screen: indicates
+	  number of available color: 2^depth;
+	mode: DisplayMode (E.g LoRes, HiRes, Lace, HAM, Brite);
+
+	See Amiga-Manuals and include:intuition/screens.i for
+	more information.
+
+	If OS2.0 is available, InitGraph will tell him to
+	"AUTOSCOLL" and "OVERSCAN" screens which are too big to
+	fit on a display.
+
+	Examples: InitGraph(1000,1000,1,HiRes+Lace);
+		  InitGraph(320,256,6,Brite);
+
+	InitGraph opens only one window. If you want to get another
+	use AddPage.
+
+    RESULTS
+	See GraphResult.
+
+    NOTES
+	The parameters of this routines are not compatible to
+	Turbo Pascal's InitGraph.
+	See "Turbo Pascal 6.0 Referenzhandbuch" page 75.
+
+    BUGS
+
+    SEE ALSO
+	GraphResult, CloseGraph, AddPage;
+
+
+Graph.lib/Line							Graph.lib/Line
+   NAME
+	Line -- draw a line
+
+   SYNOPSIS
+	procedure Line(x0,y0,x1,y1: short);
+
+   FUNCTION
+	MoveTo(x0,y0) and Draw(x1,y1);
+
+   INPUTS
+	Absolute coordinates of line end and beginning.
+
+   BUGS
+
+   SEE ALSO
+	LineTo, LineRel;
+
+
+Graph.lib/LineRel					     Graph.lib/LineRel
+   NAME
+	LineRel -- draw a line
+
+   SYNOPSIS
+	procedure LineRel(dx,dy: short);
+
+   FUNCTION
+	Draw(GetX+dx,GetY+dy);
+	Draws a line relative to the current position.
+
+   INPUTS
+	Relative Line-End coordinates.
+
+   BUGS
+
+   SEE ALSO
+	Line, LineTo;
+
+
+Graph.lib/LineTo					      Graph.lib/LineTo
+   NAME
+	LineTo - draw a line
+
+   SYNOPSIS
+	procedure LineTo(x,y: short);
+
+   FUNCTION
+	Draw(x,y);
+	Draws a line from (GetX,GetY) to (x,y);
+
+   INPUTS
+	Absolute Line-End coordinates.
+
+   BUGS
+
+   SEE ALSO
+	Line, LineRel, GetX, GetY;
+
+
+Graph.lib/MoveRel					     Graph.lib/MoveRel
+   NAME
+	MoveRel -- move pen
+
+   SYNOPSIS
+	procedure MoveRel(dx,dy: short);
+
+   FUNCTION
+	Sets the graphics cursor to (GetX+dx,GetX+dy).
+
+   INPUTS
+	Relative coordinates of pen.
+
+   BUGS
+
+   SEE ALSO
+	MoveTo, GetX, GetY;
+
+
+Graph.lib/MoveTo					      Graph.lib/MoveTo
+   NAME
+	MoveTo -- move pen
+
+   SYNOPSIS
+	procedure MoveTo(x,y: short);
+
+   FUNCTION
+	Sets the graphics cursor to (x,y).
+
+   INPUTS
+	Absolute coordinates of pen.
+
+   BUGS
+
+   SEE ALSO
+	MoveRel, GetX, GetY;
+
+
+Graph.lib/OutText					     Graph.lib/OutText
+   NAME
+	OutText -- write a string
+
+   SYNOPSIS
+	procedure OutText(txt: string);
+
+   FUNCTION
+	Prints a string to the display.
+
+   INPUTS
+	Pointer to text to print. The actual version of PCQ (V1.2b)
+	treats strings as pointers; Turbo Pascal doesn't.
+	Acording to Patrick that problem will be fixed. After that
+	this routine will have to be rewritten or you call it like
+	OutText(@txt);
+
+   BUGS
+	Fits to (depends on) PCQ's C like string handling.
+
+   SEE ALSO
+	OutTextXY;
+
+
+Graph.lib/OutTextXY					   Graph.lib/OutTextXY
+   NAME
+	OutTextXY -- write a string
+
+   SYNOPSIS
+	procedure OutTextXY(x,y: short; txt: string);
+
+   FUNCTION
+	Prints a string to the display at (x,y).
+
+   INPUTS
+	Absolute (x,y) coordinates of string to print to.
+
+	Pointer to text to print. The actual version of PCQ (V1.2b)
+	treats strings as pointers; Turbo Pascal doesn't.
+	Acording to Patrick that problem will be fixed. After that,
+	this routine will have to be rewritten or you call it like
+	OutTextXY(@txt);
+
+   BUGS
+	Fits to (depends on) PCQ's C like string handling.
+
+   SEE ALSO
+	OutText;
+
+
+Graph.lib/Plot							Graph.lib/Plot
+   NAME
+	Plot -- WritePixel
+
+   SYNOPSIS
+	procedure Plot(x,y: short);
+
+   FUNCTION
+	Puts a pixel to (x,y);
+	If you often want to do that without changing color you should
+	use this procedure instead of PutPixel for speed.
+
+   INPUTS
+	Absolute coordinates of pixel to plot.
+
+   NOTES
+	This routine as not part of Turbo Pascal's GRAPH.TPU but
+	it is implemented in the old GRAPH3.TPU.
+
+   BUGS
+
+   SEE ALSO
+	PutPixel, GetPixel;
+
+
+Graph.lib/PrintDisplay					Graph.lib/PrintDisplay
+   NAME
+	PrintDisplay -- give printer something to do
+
+   SYNOPSIS
+	procedure PrintDisplay;
+
+   FUNCTION
+	This is only a programmer-friendly implementation of
+	"HardCopy". See there for more information.
+
+   INPUTS
+	None.
+
+   RESULTS
+	See HardCopy.
+
+   NOTES
+	This routine is not part of Turbo Pascal's GRAPH.TPU!
+
+   BUGS
+
+   SEE ALSO
+	HardCopy;
+
+
+Graph.lib/PutPixel					    Graph.lib/PutPixel
+   NAME
+	PutPixel -- WritePixel
+
+   SYNOPSIS
+	procedure PutPixel(x,y: short, colot: byte);
+
+   FUNCTION
+	Plots a pixel at (x,y) using color;
+	Putpixel DOES change the current APen; E.g it calls
+	"SetColor"
+	If you don't want to change color all the time you should
+	prefer to use "Plot" for speed.
+	This function is ideal for something like fractals.
+
+   INPUTS
+	Absolute coordinates of pixel to write.
+
+   BUGS
+
+   SEE ALSO
+	Plot, GetPixel;
+
+
+Graph.lib/Rect							Graph.lib/Rect
+   NAME
+	Rect -- draw a rectangle
+
+   SYNOPSIS
+	procedure Rect(x0,y0,x1,y1: short);
+
+   FUNCTION
+	Draw a rectangle.
+
+   INPUTS
+	x0,y0 are the top left coordinates of the rectangle;
+	x1,y1 are the buttom right coordinates of the rectangle;
+	if (x0>x1) or (y0>y1) this changes.
+
+   NOTES
+	Rect is used instead of Turbo Pascals Rectangle because
+	"Rectangle" is already defined by the PCQ.LIB.
+
+   BUGS
+	Note the expression "Rect" instead of "Rectangle"
+
+   SEE ALSO
+	Line;
+
+
+Graph.lib/RemPage					     Graph.lib/RemPage
+   NAME
+	RemPage -- remove a page
+
+   SYNOPSIS
+	procedure RemPage(num: byte);
+
+   FUNCTION
+	Removes a page added by AddPage.
+	Be sure that 1<num<=3.
+	Page 0 cannot be removed!
+	See AddPage for more information.
+
+	You don't have to remove added pages: CloseGraph will do that.
+
+   INPUTS
+	Number of page to remove.
+	Be sure that 1<num<=3.
+
+   RESULTS
+	Use GraphResult to see what's wrong.
+
+   NOTES
+	This routine is NOT page of Turbo Pascals GRAPH.TPU!
+
+   BUGS
+
+   SEE ALSO
+	AddPage, CloseGraph;
+
+
+Graph.lib/SaveDisplay					 Graph.lib/SaveDisplay
+   NAME
+	SaveDisplay -- Save screen as an IFF picture
+
+   SYNOPSIS
+	function SaveDisplay(filename: string): integer;
+
+   FUNCTION
+	Writes the display data into an IFF file named "filename";
+	This function isn't what it should be yet.
+	Actually it does not pack the image. Therefore the files
+	are very fat.
+	Future releases will REQUIRE OS2.0; This one doesn't yet.
+
+	This is a programmer-friendly implementation of "WriteIFF".
+
+   INPUTS
+	Name of file to write IFF to.
+
+   RESULTS
+	Any non-zero value will indicate an error. The values are
+	not defined yet but might be in future versions.
+
+   NOTES
+	This routine is NOT part of Turbo Pascal's GRAPH.TPU!
+
+   BUGS
+	Doesn't pack data.
+
+   SEE ALSO
+	WriteIFF;
+
+
+Graph.lib/SetActivePage 			       Graph.lib/SetActivePage
+   NAME
+	SetActivePage -- define page used for output
+
+   SYNOPSIS
+	procedure SetActivePage(num: byte);
+
+   FUNCTION
+	Defines the page GRAPH uses for any output.
+	In order to use that procedure in a sensible way you
+	must first call AddPage first (see there).
+
+   INPUTS
+	Number of page you wish to draw to.
+	Note that 0<=num<=3;
+
+   RESULTS
+	If you select a not existing page nothing will change.
+
+   BUGS
+
+   SEE ALSO
+       SetVisualPage, AddPage;
+
+
+Graph.lib/SetColor					    Graph.lib/SetColor
+   NAME
+	SetColor -- set draw color
+
+   SYNOPSIS
+	procedure SetColor(num: byte);
+
+   FUNCTION
+	SetAPen.
+	The color set by SetColor will be use for any drawing routines.
+	For Example: Line, Plot, OutText ect.
+	Note that PutPixel also changes color.
+	SetColor only affects the "SetActivePage" - not the whole lot.
+
+   INPUTS
+	Number of color for drawing.
+
+   RESULTS
+	None.
+
+   NOTES
+	Turbo Pascal's SetColor affects ALL pages.
+
+   BUGS
+
+   SEE ALSO
+	SetBkColor, SetRGBPalette, GetColor, GetBkColor, PutPixel;
+
+
+Graph.lib/SetBkColor					  Graph.lib/SetBkColor
+   NAME
+	SetBkColor -- set background color
+
+   SYNOPSIS
+	procedure SetBkColor(num: byte);
+
+   FUNCTION
+	SetBPen.
+	The color set by SetBkColor will be used by ClearDevice for
+	example.
+	SetBkColor only affects the "SetActivePage" - not the whole lot.
+
+   INPUTS
+	Number of color to paint background if affected by
+	any routine.
+
+   RESULTS
+	None.
+
+   NOTES
+	Turbo Pascal's SetBkColor affects ALL pages.
+
+   BUGS
+
+   SEE ALSO
+	SetColor; SetRGBPalette, GetColor, GetBkColor;
+
+
+Graph.lib/SetRGBPalette 			       Graph.lib/SetRGBPalette
+   NAME
+	SetRGBPalette -- define color
+
+   SYNOPSIS
+	procedure SetRGBPalette(num: short; r,g,b: byte);
+
+   FUNCTION
+	Defines a color-register value.
+	The change will immediately be visible for anything painted
+	with num.
+
+   INPUTS
+	Number of color to define and
+	(r)ed, (g)reen, (b)lue value of color register;
+	See Amiga-Manuals for more information.
+	Examples:
+	    r:=0;  g:=0;  b:=0;  => black
+	    r:=15; g:=0;  b:=0;  => red
+	    r:=15; g:=15; b:=15; => white
+	    r:=0;  g:=10; b:=10; => dark cyan
+	    r:=15; g:=0;  b:=15; => light magenta
+	    r:=12; r:=1;  b:=15; => violette
+
+	Note that num is always: 0<=num<=31; even if you are
+	using HAM or EHB;
+
+   RESULTS
+	None.
+
+   NOTES
+	The values of the parameters are not compatible to
+	Turbo Pascal (e.g. to the graphic-boards it supports).
+
+   BUGS
+
+   SEE ALSO
+	SetColor, SetBkColor;
+
+
+Graph.lib/SetVisualPage 			       Graph.lib/SetVisualPage
+   NAME
+	SetVisualPage -- pop page
+
+   SYNOPSIS
+	procedure SetVisualPage(num: byte);
+
+   FUNCTION
+	define visible page.
+
+   INPUTS
+	Number of page you wan't to see.
+	"WBpage"=255 repesents the Workbench screen.
+	Be sure that 0<=num<=3 if you what a GRAPH page.
+	See AddPage for more information.
+
+   RESULTS
+	None.
+
+   BUGS
+	This procedure is too slow to use it for double-buffering.
+
+   SEE ALSO
+
+
+Graph.lib/WriteIFF					    Graph.lib/WriteIFF
+   NAME
+	WriteIFF -- Save a display
+
+   SYNOPSIS
+	function WriteIFF(filename: string; scr: ^screen): integer;
+
+   FUNCTION
+	More general routine than SaveDisplay.
+	See SaveDisplay for more Information.
+	If you want to save your GRAPH display you should prefer
+	SaveDisplay.
+
+   INPUTS
+	filename to Write IFF to.
+	pointer to screen to save.
+
+   RESULTS
+	Any non-zero value indicates an error! Sometime they might
+	be defined.
+
+   BUGS
+	Doesn't pack data.
+
+   SEE ALSO
+	SaveDisplay;
+
+
+

@@ -1,0 +1,360 @@
+Oct 29 AD 1991
+
+                               CEBBS V1.11
+                        A BBS jury-rigged in PCQ
+                      By Chris Pressey (Cat's Eye)
+             With loads of help and stuff from Kerry Paulson
+
+
+WHAT IT IS:
+
+	CEBBS V1.11 (executable : BBS)
+
+WHAT IT DOES:
+
+	Runs a bulletin board system on the Amiga. As of this "release" it
+	is still somewhat customized to my system (modem, HD) and is a !@#$%
+	to change, but it's being worked on.
+
+SYNOPSIS:
+
+	CLI :
+
+	BBS {L}
+
+	Command Line Options :
+
+	none	will evoke the BBS, allowing it to answer external calls
+
+	L	will evoke the BBS in local mode. Someone must actually be
+		on the local console to do anything.
+
+
+	WorkBench :
+
+	Double-click BBS icon (runs as "none" above)
+
+
+WHY I DID THIS:
+
+	I didn't want to set up yet another BBS software system that's
+	already been overused, like Paragon, etc, ETC. So I decided I was
+	mentally ill enough to tackle the job of writing my own. I found
+	out that I was mostly right - except for the occasional crash,
+	CEBBS, if NOTHING else, works.
+
+ENVIRONMENT:
+
+	CEBBS was programmed in PCQ Pascal, by Patrick Quaid. This version
+	is in 1.2b, but I do plan to register PCQ and hopefully future
+	versions will be easier to compile...
+
+SETUP ENVIRONMENT:
+
+	Well, it works with MY system. (1 down, 83 thousand to go... ;)
+	My system consists of :
+
+		Amiga 500
+		Avatex 2400 modem (external)
+		Trumpcard 500
+		49M Seagate HD
+		1 external floppy drive
+		1084 (This REALLY matters! ;)
+
+	Before the advent of my HD, CEBBS _did_ run off of the floppies.
+	However, I would not suggest this setup, as it is slow, and does
+	take quite a bit of space... but it might still work.
+
+	As for modem - as far as I know, one that will auto-answer, and
+	send you different strings according to what baud rate you connected
+	at, should work fine. (IE, if you have an AA'ing Hayes, Bob's
+	your uncle.) I had to junk my GVC SuperModem recently as it would
+	not answer 1200 baud callers. But that has nothing to do with the
+	BBS (I'm 99.99% sure.) As of this 'release,' CEBBS ONLY uses the
+	serial port. So if you have an internal modem, you're SOL.
+
+	As for running on a 2000, 3000, 1000... who knows?
+
+SETUP EXAMPLE:
+
+	>assign
+
+	Volumes:
+	RAM DISK [Mounted]
+	CEHD [Mounted]
+
+	Directories:
+	RESULT         CEHD:CEBBS/result
+	VOTE           CEHD:CEBBS/vote
+	DOOR           CEHD:CEBBS/door
+	BBSTXT         CEHD:Text/BBStxt
+	TXT            CEHD:Text
+	MESS           CEHD:CEBBS/message
+	MAIL           CEHD:CEBBS/mail
+	USER           CEHD:CEBBS/user
+	BBS            CEHD:CEBBS
+	CE             CEHD:pascal/Include/CEUtils
+	Include        CEHD:pascal/Include
+	System         CEHD:System
+	WBC            CEHD:System
+	CLIPS          CEHD:Empty
+	ENV            CEHD:Empty
+	T              CEHD:Empty
+	S              CEHD:s
+	L              CEHD:l
+	C              CEHD:c
+	FONTS          CEHD:fonts
+	DEVS           CEHD:devs
+	LIBS           CEHD:libs
+	SYS            CEHD:
+
+	>cd BBS:
+	>dir all
+
+	     message (dir)
+	        (dirs A to Z, each containing message files)
+	     mail (dir)
+	        Cat's Eye (dir)
+		...etc.
+	     whitelist (dir)
+	        anachronous enmity               Angel Eyes
+	        ...
+	        Wretched Roller                  Yoda
+	     door (dir)
+	     blacklist (dir)
+	     vote (dir)
+		01. Opinion on Windaria          02. Opinion on CEBBS
+	        ...
+	        56. Alcohol                      57. Personal Happiness
+	     result (dir)
+	     source (dir)
+		ansied.p
+		bbs                              bbs.i
+		bbs.info                         bbs.m
+		BBS.p                            bbsfuncs.x
+		bbsfwds.p                        bbsintui.p
+		chat.x                           iofuncs.i
+		iofuncs.m                        iofuncs.x
+		mail.p                           main.p
+		main_menu.p                      message.p
+		prune.p                          show_menu.p
+		user.p                           userlister
+		userlister.p                     vote.p
+		xfrs.p                           
+	     user (dir)
+		Cat's Eye
+		...etc.
+
+NOTES for SYSOP USE:
+
+	TO DELETE A USER:
+	Go to _S_ysop Access
+	_K_ill
+	then enter USER:(user's name)
+					eg. USER:Sonic The Hedgehog
+
+
+	TO DELETE A USER'S MAILBOX: (so they can't receive mail)
+	Go to _S_ysop Access
+	_K_ill
+	then enter MAIL:(user's name)
+					eg. MAIL:Sonic The Hedgehog
+
+
+	TO DEMOTE/PROMOTE A USER:
+	Go to _S_ysop Access
+	_A_lter
+	then enter user's name
+					eg. Sonic The Hedgehog
+	then enter
+	_R_ for recruit
+	_P_ for private
+	_C_ for cpl
+	_M_ for master cpl
+	_S_ for sargeant
+	_Y_ for sysop
+
+
+	TO SEE A USER'S REAL LIFE DATA:
+	Go to _S_ysop Access
+	_S_noop
+	then enter user's name
+					eg. Sonic The Hedgehog
+
+
+	TO DELETE A MESSAGE:
+	Go to _R_ead messages
+	_K_ill message
+
+
+	TO READ MAIL:
+	Go to _S_ysop Access
+	_R_ead
+	then enter MAIL:(user's name)/x
+					eg. MAIL:Sonic The Hedgehog/1
+					eg. MAIL:Sonic The Hedgehog/2
+					eg. MAIL:Sonic The Hedgehog/3 etc.
+
+	TO DELETE MAIL:
+	Go to _S_ysop Access
+	_K_ill
+	then enter MAIL:(user's name)/x
+					eg. MAIL:Sonic The Hedgehog/1
+					eg. MAIL:Sonic The Hedgehog/2
+					eg. MAIL:Sonic The Hedgehog/3 etc.
+
+	TO UPDATE THE USER LIST:
+	Go to _S_ysop Access
+	_U_ser list
+
+HISTORY:
+
+v1.00	Original set up; really, really icky. Ancient history.
+v1.01	Mostly bug fixes. Changed the menu handler and added MGB.
+v1.02	Mail handled better, more menus, word wrap in chat.
+v1.03	Modem interface handled better. (?!) I now read strings in instead
+	of single characters (ie, "1" for "1200".) However, either my
+	BBS or my modem is chopping off the first letter. So the set up is
+	now for it to answer on "ONNECT". :>
+v1.09	Bugs fixed; less global variables (because they are brainwashing us
+	that they are dangerous in my compsci class). Added flags to
+	ReadString : however, there may be bugs (How very odd. ;)
+	But you can now get string that theoretically echo back
+	only uppercase (eg, for handles a la SearchLight.)
+	Also added Intuition menus (although "About" won't get you anything),
+	the ability to embed ANSI codes in text (^P##, this will be expanded
+	in the future).
+v1.09b	OK, I don't know WHY, but now it's sending "CONNECT"... I added
+	some menial baud rate stuff, maybe that's what did it?!?!
+v1.1	Contains Kerry Paulson's SList as a procedure for much (?)
+	cleaner execution of directories. Also has some more stuff jammed
+	into it; the userlister is now internal, for example. This is
+	incredibly bad timing for a leap to version number 1.1; actually
+	very few things are resolved.
+v1.1a	_Should_ handle loss of carrier more eloquently (ie crash less)
+	Cohesive lines in MGB, so that 40-column messages will look 80
+	columns when viewed by a person with 80.
+	Added 'Edit' command to MGB.
+v1.1b	BUG! Maybe my modem got fried because of power surges today (I hate
+	Manitoba winters!) but it certainly seems to not want to talk to
+	the computer. Actually Jr-Comm, YES, CEBBS, NO. So maybe not.
+	Working on it before the actualy release of the next release.
+v1.1c   Guess what folks? We're back to ONNECT...
+v1.1d   Actually, we're back to either CONNECT or ONNECT. Looks like there
+	aren't any garbled messes yet though (a good sign.) I _think_ I've
+	changed SetBaud to just pay attention to the last 4 characters of
+	what it reads in (so we really don't have to deal with a C, or no
+	C) There is a new bug popping up now - (R)eplying privately...
+v1.11	First copyrighted version. Added 'Insert Line' and 'Delete Line' to
+	MGB. Changed the mail so that it _should_ prompt you if you want
+	to read the mail you've been sent. Also fixed a small bug if someone
+	drops carrier on the login screen.
+
+PLANS:
+
+	...should add :
+
+	* NON-busy wait()ing.
+
+	* INPUT BUFFER - for macros and the like.
+
+	Event-based time limits (ie. an event, such as your time
+	running out, or FIDO-only hours, kicks you off the board)
+
+	Make the @-command scripting pretty extensive, and document it
+	fully.
+
+	A better way to do CD and TR (insensitive of .device; right now,
+	CEBBS will ONLY use the serial.device)
+
+	An option for read/new scan
+
+	More editing commands for MGB (Fix typo)
+
+	Place the Voting questions in a message base, using @ scripts.
+
+	Not only have voting questions, but also : quiz (variant of voting
+	question), "petition" (just something users can put their name on
+	to let everyone know that they belong in that group)
+
+	A tap return prompt after "lines" number of lines have been sent
+	in send_file
+
+	A way to handle files (if not download them!)
+
+	A CLI sometime (can't be too hard) : would like to
+	contain something similar to :
+
+	help			{ read help file }
+	go #			{ go to message number }
+	head			{ go to start of messages }
+	tail			{ go to end of messages }
+	next			{ next message }
+	back			{ previous message }
+	reply			{ reply to this message }
+	enter			{ enter a message }
+	send			{ send a message you have entered }
+	post			{ post a message }
+	jump <branch>		{ jump to different branch }
+	read #			{ read text file }
+	list <TEXT|FILES>	{ list textfiles/files }
+	mail <user>		{ ? }
+	menu			{ gobacktoa menus }
+	bye			{ log off }
+	down <TEXT|FILES> <#/name>	{ download textfile/file }
+	up <name>		{ upload file }
+	users			{ read user list }
+	page			
+	deny
+	quiet
+	listen
+	crumple
+	thread
+	unthread
+	proto <choice>
+	ansi <choice>
+	password <choice>
+
+MY ADDRESS:
+
+	Chris Pressey
+	917 Wicklow Place
+	Winnipeg, MB, Canada
+	R3T 0J1
+	(204)-453-0561
+
+	Bug reports (hah! BUGS? WHAT ARE BUGS?), flames, praise, cash,
+	software, jazz tapes, letters, Christmas cards, anime, manga,
+	etc. welcome.
+
+MY BBS:
+
+	Windaria
+	(204)-452-8847
+	1200/2400 baud, 8N1.	24 hrs a day (unless it's crashed, down,
+				on the fritz, on the blink, being repaired,
+				in the shop, being improved, being looked
+				at, or between versions ;)
+
+	New users are always welcome. The main purpose for Windaria is
+	to provide an outlet for local people interested in Japanese
+	Animation, however, we also deal in many other topics.
+
+	The software for Windaria is, no kidding, CEBBS. ;)
+
+LEGAL STUFF:
+
+	The executable and source for CEBBS v1.11 are all :
+
+		copyright (c) 1991 Chris Pressey
+
+	They may not be distributed freely. I only give permission for
+	the following people to use/have CEBBS in their possession :
+
+		Kerry Paulson of Winnipeg, MB
+		Kalyna Zazelenchuk of Winnipeg, MB
+		Patrick Quaid of Scottsdale, AZ
+		myself, of course.
+
+	When the crippleware demo comes out, it will be freely
+	redistributable.

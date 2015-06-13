@@ -1,0 +1,67 @@
+September 14 AD 1991
+                                ShellAC V1.01
+                       A Shell or CLI window mutilator
+                        By Chris Pressey (Cat's Eye)
+
+WHAT IT IS:
+
+	ShellAC V1.01
+
+WHAT IT DOES:
+
+	Changes your Shell or CLI window's colours and window limits, if
+	run from the Shell or CLI (the only recomended environment.)
+
+SYNOPSIS:
+
+	ShellAC <colour 1><colour 2>
+	
+	Where :
+	colour 1 is the BlockPen of the window
+	colour 2 is the DetailPen
+
+	Make sure there is no space between the two digits.
+
+	ShellAC automatically destroys the window limits, which I find
+	handy because I like to resize my windows into nothingness in the
+	upper left hand corner.
+
+EXAMPLE:
+
+	ShellAC 01 resets the window colours to normal.
+	ShellAC 00 makes the window nearly invisible.
+	Etc...
+
+WHY I DID THIS:
+
+	I like to play with other people's windows!
+
+HOW IT WORKS:
+
+	It opens a small window on the workbench screen, and gets the
+	window's parent (W^.Parent) and changes that window. That's why you
+	could get unexpected results if run from the workbench.
+
+	ShellAC was programmed in PCQ Pascal, by Pat Quaid.
+
+MY ADDRESS:
+
+	Chris Pressey
+	917 Wicklow Place
+	Winnipeg, MB, Canada
+	R3T 0J1
+	453-0561
+
+MY BBS:
+
+	Windaria
+	(204)-453-0561
+	1200/2400 baud, 8N1.	24 hrs a day
+	The software for Windaria was also programmed in PCQ.
+
+DISCLAIMER:
+
+	Hah! No copyright. Not shareware. Feel free to do what you
+	please with this. If used commercially (yeah right) make sure you
+	leave my name in or you will burn in H-E-double-hockey-sticks.
+	Distribute to the ends of the universe...

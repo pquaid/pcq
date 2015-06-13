@@ -1,0 +1,24 @@
+@L
+@O+
+
+Windaria, File Transfers...
+
+*(L)ist files in this branch
+
+ (D)ownload file in this branch
+ (U)pload file to this branch
+
+*(S)earch for files (wildcards)
+*(N)ew files
+*(V)iew file (archive) in this branch
+
+*(K)ill file in this branch
+*(P)rotect file in this branch
+
+ (J)ump to different branch
+ (Q)uit file xfers
+ (H)elp file
+ (?) This menu
+
+* = don't even bother
+

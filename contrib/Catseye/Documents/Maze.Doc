@@ -1,0 +1,21 @@
+PCQUtils:PCQUtils/Docs/Maze.Doc
+
+Maze V1.0 by Chris Pressey (Cat'sEye)
+¯¯¯¯ ¯¯¯¯ ¯¯ ¯¯¯¯¯ ¯¯¯¯¯¯¯  ¯¯¯¯¯¯¯¯
+WHAT IT IS
+¯¯¯¯ ¯¯ ¯¯
+A program written in PCQ Pascal 1.1d to draw a huge complex maze
+with no start and no end.
+
+WHY IT IS
+¯¯¯ ¯¯ ¯¯
+Something to do.
+
+USAGE:
+¯¯¯¯¯
+	Maze (or click on icon)
+
+	Pretty straightforward, huh? Thought so.
+
+	Press the left mouse button to exit when the maze is fully
+	drawn.

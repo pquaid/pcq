@@ -1,0 +1,19 @@
+@L
+
+Windaria Change Current Stats...
+
+(V)iew current stats
+
+(P)assword
+
+(A)NSI compatibility
+(T)ransfer Protocol
+(C)olumns and rows of screen
+(X)pert mode toggle
+(I)BM Character set
+(F)ilter
+
+(J)ump to branch
+(?) Show Menu
+(Q)uit to Main Menu
+

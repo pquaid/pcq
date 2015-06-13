@@ -1,0 +1,433 @@
+                                                                                    {
+
+               Strings.i.doc     by Frank J. Perricone
+
+PCQ Pascal includes a string data type, which is a very useful addition to
+Pascal.  If you are familiar with C's strings, PCQ strings should look
+familiar.  Or, to put it another way, along with the power of C strings, you
+have all the heartaches.  And if you aren't familiar with C strings, you
+could be in for some trouble.
+
+However, this include file should clear that up.  In addition to providing a
+fairly thorough collection of string operations, including parsing,
+conversion to and from numbers, substrings and substring replacement,
+concatenation, etc., it also takes care of the tricky parts of C strings:
+dealing with memory allocation.  In C, a string is not really a string, but
+a pointer to a character which is followed by many more characters.  The
+memory these characters are in has to be allocated, and deallocated when
+the string is no longer used.  Some string operations change the allocation,
+while others don't.  You have to make sure you don't forget to allocate or
+deallocate strings; since most every operation on strings requires
+allocation or deallocation, this can be tricky.  The end result is that you
+have to treat strings very carefully, and more importantly, you do NOT use
+the same techniques you use with other types of variables.
+
+It would be nice to be able to deal with strings as you do in BASIC; i.e., a
+string is the whole string, and allocation and deallocation are taken care
+of by someone else.  This library intends to let you do that.  Using this
+library, you really don't need to know anything about how strings are put
+together, except a very few things, and you don't have to allocate or
+deallocate anything.  However, there are a few little inconveniences with
+which you pay for this:
+
+· You cannot use the standard operators or other Pascalian punctuation to
+  perform operations on strings.  To compare strings, you need to call a
+  function (instead of using = or < or >, for instance).  To assign a
+  value to a string, you call a procedure (instead of using := (the
+  assignment, or "gets," operator)).  In fact, using any normal operators
+  is reserved for people skilled with C strings and using pointers.
+
+· Some things that would normally be functions are, unfortunately,
+  procedures.  Particularly, there are *NO* functions returning strings.
+  If you want to do something like take a substring, you have to assign it
+  to some string variable.  It might be nice to be able to use string
+  functions in expressions or procedures like writeln, but you can't.  The
+  simple reason: in order to return a string, the procedure has to allocate
+  it.  If the pointer to this newly-allocated area isn't stored somewhere,
+  but only used in some expression or suchlike, there's no way your program
+  (or any of these functions) can deallocate it, and you've created a little
+  bubble in memory, which cannot be regained until the program terminates.
+  (If it weren't for AmigaDOS, you wouldn't be able to regain that memory
+  until you rebooted!)  If you assign the newly-created string to some
+  variable, however, every time you use that variable in any of these
+  procedures or functions, any unnecessary parts are deallocated, so all
+  is well.
+
+
+* USING Strings.i *
+
+In order to use this library in your program, you need to place these lines
+in your program at the top, probably immediately after the first line (the
+line which names the program):                                                   }
+
+{$I "Include/StringLib.i"}
+{$I "Include/Math.i"}
+{$I "Include/Strings.i"}                                                         {
+
+This assumes that you have a subdirectory of your working directory named
+Include, and that you keep your include files there, and that you have
+copied the Strings.i file there.  StringLib.i is Patrick Quaid's string
+library.  It contains a few of his string functions, mostly replaced by
+other functions used here, and two important functions used by Strings.i:
+AllocString and FreeString.  Since it uses them, you don't have to.  Math.i
+includes a few functions used by the relatively exotic SEvalFloat function.
+If you really are sure you won't be using SEvalFloat, you may wish to edit
+the Strings.i file and delete it (or surround it in curlybrackets to make it
+a comment), and then stop including Math.i (unless you need it for something
+else); this should cut some size off your program.
+
+
+* WHAT YOU GET *
+
+Including the files as described above gives you all the functions and
+procedures, and the type declarations and such, in StringLib.i and Math.i;
+see these files for more information.  It also gives you all the functions
+and procedures to be described below.  Finally, it defines a couple of
+constants for you, equal to the ordinal value of some chars which are
+unprintable "escape"-type characters: TAB, EOLN (end of line), CARRET
+(carriage return), SPACE, ESC (escape), and ENDSTRING (a null character, or
+chr(0)).  These constants are *NOT* the characters, but just the ordinal
+values; to refer to a tab character, therefore, you should use chr(TAB), not
+just TAB.
+
+
+* WHAT YOU SHOULD KNOW ABOUT STRINGS *
+
+Hopefully, as little as possible to use them well.  Well, here's a few
+salient facts you should keep in mind:
+
+· Strings may include any character *EXCEPT* chr(0) (a.k.a. chr(ENDSTRING)).
+  As that moniker would suggest, chr(0) is used to delimit the string, and
+  putting a chr(0) inside a string will cause all the functions here to get
+  confused about where the string ends.  In spite of this, the SSpecialChars
+  procedure gives you a way to put the chr(0) character into your strings.
+  Why?  I don't know.  He's on third, and I don't give a darn.
+
+· Strings may be any length, if you have the memory.  If you are low on
+  memory, or if you are trying to make your program memory-efficient, you
+  may want to call FreeString() on your strings when you don't need them
+  any more.  Be warned: thereafter, their contents are trash.
+
+· A string holds meaningless garbage until you use one of these functions to
+  initialize it.  SBlank() will set a string to "" (the "null" string).
+
+· String constants are delimited with quotes, *NOT* apostrophes, and can
+  include special backslash sequences; see PCQ's docs for more details.
+  (This library provides its own set of special sequences using tildes (~);
+  see the SSpecialChars function for more info.)
+
+· In case you're interested: the first character in the string is pointed to
+  by the string variable itself, and subsequent characters are consecutive
+  bytes in memory.  One consequence of this is that a shortcut (though not a
+  horribly clear one) to reading the first character in the string is to
+  follow its name with an up-arrow, i.e., FileName^.  It also means that if
+  you use the assignment operator on two strings, all you do is make both
+  pointers point to the SAME CHARACTERS.  At first this will seem to work
+  the same as SAssign, but then you'll notice that any changes made to one
+  of the strings will affect the other as well.  Also, if the assigned
+  string (the one on the left of the operator) had anything in it before,
+  you've lost it and created a memory bubble.  However, if you want to
+  play with pointers, go ahead!
+
+
+* THE FUNCTIONS AND PROCEDURES *
+
+--- String Creation and Management ---
+
+procedure SAssign (var s1: string; s2: string);
+
+   This procedure sets s1 to s2, eliminating whatever s1 was before, just
+   like the normal assignment operator (:=) and should be used just like
+   said operator.  The order of the parameters is by analogy to the
+   assignment operator.
+
+procedure SBlank (var s1: string);
+
+   A more efficient way of blanking a string, equivalent to SAssign (s1,"").
+
+--- String Translations and Non-Numerical Conversions ---
+
+procedure SSpecialChars (var s1: string);
+
+   This procedure changes s1 by replacing special sequences with unprintable
+   characters, or at least untypeable ones.  These sequences are formed with
+   a tilde (~) followed by a single character.  For instance, to include a
+   TAB in your string, you would put ~t and then make sure you call
+   SSpecialChars on it to translate that into a tab.  Unlike PCQ's backslash
+   sequences, tilde sequences are not translated unless you explicity call
+   this procedure.  The following sequences are valid:
+   ~t  TAB        ~n  EOLN          ~~  TILDE         ~c  CARRET
+   ~e  ESC        ~f  formfeed      ~0  ENDSTRING     ~q  quote
+   These are case sensitive (i.e., ~T will not produce a tab character).
+   There is one special sequence that can be used to create any other
+   character at all.  Use a tilde, then a number sign (#), then a two-digit
+   hexadecimal value representing the ASCII of the code you want.  For
+   instance, the paragraph sign (¶) is ASCII code 182 (hex B6), and would be
+   generated with the sequence ~#B6.  Any character immediately after a
+   tilde that is not recognized as one of the above will be passed on
+   immediately, i.e. ignored.  It should be easy to add new sequences, if
+   you find you need them.  For instance, to make ~b make a bullet
+   character, you need only add a single line to the Strings.i file (there
+   are instructions there to tell you where, and in what format) that looks
+   like this:
+              else if c='b' then SAppendChar(temp,'·')
+   (If the character you were using was untypeable, replace it (and the
+   apostrophes around it) with a call to chr(); for instance, chr(26) for
+   the Ctrl-Z sequence.)  REMEMBER: if you do not call SSpecialChars, your
+   tilde sequences are not translated!!!
+
+procedure SAlphaNumerics (var s1: string);
+
+   This procedure removes everything except letters and numbers from the
+   string, including spaces.  It is mostly used for the SDictionary
+   function, but if you can put it to good use, good for you.
+
+procedure SFilter (var s1: string; fromchar, tochar: char);
+
+   Replaces all occurrences of fromchar with tochar in string; very
+   efficient if you are only translating one character into another.
+   Very useful to make two characters functionally equivalent.  For
+   instance, you may wish to allow commas or white space to be used as
+   delimiters; you can simply SFilter(s1,',',' ') to turn all the commas
+   into spaces and then not worry about commas anymore.
+
+procedure STrim (var s1: string);
+
+   Removes all leading or trailing white space.  White space includes
+   spaces, tabs, carriage returns, and end-of-lines.
+
+procedure STidy (var s1: string);
+
+   Like STrim but even more so.  In addition to trimming spaces, it also
+   collapses all internal white space (as above) into a single space.
+   So, for instance, if the user types a command using a combination of
+   spaces, tabs, and carriage returns as delimiter, STidy turns the whole
+   mess into one single space between each word, making parsing much
+   easier.  See also SParse.
+
+procedure SArgs (var s1: string; CommandLine: array [1..128] of char);
+
+   This converts the CommandLine universal variable into a string.  For no
+   adequately explained reason, CommandLine does not start out as a string,
+   but as an old-fashioned array of char; once you call SArgs, you can
+   then use all these functions on it, like SParse, for instance.
+
+--- Substrings ---
+
+function SChar (s1: string; position: short): char;
+
+   Returns the character at the given position, or chr(ENDSTRING) if the
+   position you gave is longer than the string's length.
+
+procedure SPlaceChar (var s1: string; position: short; character: char);
+
+   If the position given is actually in the string, this procedure
+   replaces whatever is at that position with the supplied character.
+
+procedure SSlice (s1: string; left, right: short; var s2: string);
+
+   Slices characters from left to right, inclusive, from the string and
+   returns the result in s2.  Leaves s1 unchanged.  Note that positions
+   in the string are numbered from 1 up; i.e., 1 is the first character,
+   2 the second, etc. (rather than starting at zero).
+
+procedure SMid (s1: string; start, length: short; var s2: string);
+
+   Just like SSlice, but you call this if you know the starting location
+   and the length of the desired substring, rather than the starting and
+   ending locations.
+
+function SSearch (s1, s2: string; start: short): short;
+
+   Searches for a complete copy of s2 in s1, starting no earlier than
+   start; returns the location it begins, or 0 if no match is found.
+   For instance, SSearch ("Red, white, and blue","white",1) would return
+   6, SSearch ("Red, white, and blue","white",7) would return 0, and
+   SSearch ("Red, white, and blue","yellow",1) would return 0.
+
+function SSearchChar (s1: string; c1: char; start: short): short;
+
+   Just like SSearch except only searches for one character.  Much more
+   efficient if you are only searching for one character.
+
+procedure SReplace (var s1: string; left, right: short; s2: string);
+
+   Replaces characters left through right inclusive in string s1 with the
+   characters in string s2.  These need not be the same size.
+
+procedure SCutOut (var s1: string; left, right: short);
+
+   Cuts out characters left through right in the string.
+
+procedure SAppend (var s1: string; s2, s3: string);
+
+   Sets s1 equal to s2 and s3 concatenated together.  Note that, just as you
+   can write x:=x+1, you can write SAppend (s1, s1, "...") if you like.
+
+procedure SAppendChar (var s1: string; character: char);
+
+   Attaches a single character to the end, as SAppend but more efficient.
+
+
+--- Case Conversion ---
+
+procedure SUpper (var s1: string);
+
+   Turns a string to all upper case, leaving non-alphabetic characters
+   untouched.
+
+procedure SLower (var s1: string);
+
+   As SUpper but all to lower case, of course.
+
+
+--- String length ---
+
+function SLen (s1: string): short;
+
+   Returns the total number of characters in the string (not including
+   the chr(ENDSTRING) terminator).
+
+function SLonger (s1, s2: string): boolean;
+
+   Tells you if s1 is longer than s2; if they are equal in length, it
+   will say FALSE.  Not sure why I included this, as it is functionally
+   identical to (SLen(s1)>SLen(s2)).
+
+
+--- String Comparisons ---
+
+function SEqual (s1, s2: string): boolean;
+
+   Tells if two strings are exactly equal, in every character.  If one is
+   longer than the other, they are not equal.
+
+function SNoCaseEqual (s1, s2: string): boolean;
+
+   Tells if two strings are equal if you ignore case; i.e., "AlphA" is
+   SNoCaseEqual to "alpHa" but not to "Alph A".
+
+function SAlpha (s1, s2: string): short;
+
+   Compares s1 and s2 in alphabetical order, considering only the ASCII
+   values of the characters (i.e. 'a' > 'Z' > 'A' > '#').  Returns -1 if
+   s1<s2, 0 if s1=s2, and 1 if s1>s2.  Note that "arg" is less than
+   "argyle".
+
+function SNoCaseAlpha (s1, s2: string): short;
+
+   As SAlpha, but treats all alphabetical characters as uppercase, so
+   it essentially ignores case.
+
+function SDictionary (s1, s2: string): short;
+
+   As SAlpha, but compares according to a form of "dictionary order."  In
+   dictionary order, only letters and digits count; significantly, spaces
+   and punctuations do not.  Therefore, "i.e." comes between "id" and "If I
+   Were A Rich Man," which might be followed by "I found it" and then by
+   "ignorance."  Digits are always earlier than letters, but unfortunately,
+   a string of digits is not treated as a number; so 278 comes before 32,
+   and 1492 comes before 149B.  However, in spite of this, SDictionary is
+   often the sorting method of choice when sorting data like names,
+   filenames, words, and other mostly-alphabetical data to be viewed and
+   scanned by human eyes, not by computer algorithms, since it is easiest
+   and most intuitive for humans (as hundreds of years of dictionary
+   writing has proven).  It's a shame more database systems and programming
+   languages don't make this function readily available.
+
+
+--- Numerical strings ---
+
+function SEval (s1: string): short;
+
+   Assuming the string (once run through STidy) begins with a string
+   resembling a short integer (up to MAXSHORT), returns that number.  The
+   number in string form may be preceded by a plus or minus (only one) to
+   show the sign.  SEval stops paying attention at the first invalid
+   character.  Therefore, SEval("123") is 123, and SEval("123 and a half")
+   is also 123.  Decimal points are invalid characters: SEval("123.45") is
+   also 123.  You cannot include mathematical operators, so SEval("123+45")
+   is (you guessed it) 123.  If there is no valid number at the beginning,
+   SEval returns 0.  If the number is too large, you'll probably crash the
+   system and conjure the Guru.
+
+function SValidNum (s1: string): boolean;
+
+   This tells if SEval is unable to find a valid number at the beginning of
+   the string.  You might want to use it to see if SEval returned 0 because
+   the string was invalid or just because it had a zero in it.
+
+function SEvalFloat (s1: string): real;
+
+   Since PCQ Pascal 1.0, for which this is written, has beyond-bare-minimum
+   support for real numbers, this function is iffy at best, and mostly
+   untested.  Since you're unlikely to need it, feel free to delete it and
+   thus remove the need to include Math.i as well.  It works like SEval but
+   the number can also include a decimal point followed by a decimal part.
+   Warning: if the non-fractional part is larger than MAXSHORT, or if
+   the part after the decimal would be larger than MAXSHORT if it weren't
+   after a decimal, or if there are enough digits after the decimal that
+   10 to the power of that many digits is larger than MAXSHORT, you are
+   going to crash.  This could be easily fixed if you want to change it
+   and SEval to use integers, or if you're using a version of PCQ that
+   has more support for reals.  Have caution with this function, and be
+   warned: use of this function voids your warranty!  :)
+
+procedure SEnscribe (number: short; var s1: string);
+
+   This procedure creates a string that looks like the provided number.
+   SEval would have no trouble converting that string back into the
+   number.  There are no leading or trailing spaces or anything, and
+   the number is only preceded with a minus sign if negative, but not
+   with a plus sign if non-negative.
+
+
+--- Parsing functions ---
+
+procedure SParse (s1: string; wordnum: short; var s2: string);
+
+   Finds the wordnum-th word in s1, and returns it in s2.  Words are
+   separated by white space (*NOT* by punctuation!  Use SFilter firts if you
+   want punctuation to work too!).  Leading and/or trailing white space is
+   ignored, as well.  The returned string is null if there aren't that many
+   words.  There will be no leading or trailing spaces in the returned
+   string.  E.g., SParse (" This is   a   stick-up!    ",3,s2) yeilds "a";
+   if a 4 were used in place of the 3, "stick-up!" would be returned.
+
+function SNumOfWords (s1: string): short;
+
+   Tells how many words are in the string.  Words are as defined in SParse.
+   You're guaranteed SParse will be able to find this many words and no
+   more.
+
+
+* AUTHOR'S NOTE *
+
+This library was written by Frank J. Perricone, and is freely
+redistributable.  Of course, it is of no value without a copy of PCQ Pascal,
+a freely redistributable, almost-complete-with-additions Pascal compiler for
+the Amiga written by Patrick Quaid.  Send any comments, complaints,
+suggestions, corrections, bug reports, etc. to:
+
+Frank J. Perricone
+2132 Lawson Creek Road
+Douglas, AK  99824
+
+In case you need to know, Patrick Quaid, the author of PCQ Pascal, can be
+reached at the following address:
+
+Pat Quaid
+8320 E. Redwing
+Scottsdale, AZ  85253
+
+The author assumes no responsibility for the contents, or consequences of
+use of, any of this material.  However, the author welcomes comments and
+complaints, no matter how negative they may be.  The author expects no
+"shareware" or other payments, so if you need to give money to someone, send
+it to another public domain software developer, or to the Nature Conservancy
+(1815 North Lynn Street, Arlington, VA 22209) or some other worthy charity,
+or give it to someone you know who is down on his/her luck, or something
+else like that.
+
+The Computer says Happiness is Mandatory!  Are YOU Happy?
+

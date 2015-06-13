@@ -1,0 +1,90 @@
+PCQUtils:PCQUtils/Docs/Cat'sPaw.Doc
+
+Cat'sPaw V1.02 by Chris Pressey (Cat'sEye)
+¯¯¯¯¯¯¯¯ ¯¯¯¯¯ ¯¯ ¯¯¯¯¯ ¯¯¯¯¯¯¯  ¯¯¯¯¯¯¯¯
+WHAT IT IS
+¯¯¯¯ ¯¯ ¯¯
+A program written in PCQ Pascal 1.1d, to give you a gadget-based
+multipurpose menu selection control, used in, say, a script file,
+or the startup-sequence.
+
+WHY IT IS
+¯¯¯ ¯¯ ¯¯
+I wrote this because I have a few utility disks full of similar
+programs (eg FixDisk, DiskSalv, DiskX) that I really don't like
+to run from Workbench. In my S:Startup-Sequence I use a loop like
+this :
+
+	lab here
+		Cat'sPaw S:Cat'spaw.conf -s
+	skip here back
+
+By the way, a cat's-paw, in Brit slang, is "a person used as a
+tool or dupe." Fitting?
+
+USAGE:
+¯¯¯¯¯
+	Cat'sPaw "configuration file" [-b] [-s]
+
+Takes it's input from the file until it finds "end"
+and a blank line. The configuration file
+should look like:
+
+	Title for the selection menu
+	Displayed name for first gadget
+	Executed name for first gadget
+	Displayed name for second gadget
+	Executed name for second gadget
+	etc...
+	end
+	(blank line)
+
+Special commands:
+¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯¯
+	Command Line :
+	¯¯¯¯¯¯¯ ¯¯¯¯
+	-b switch
+	will put Cat'sPaw in 'boring' mode, ie no
+bouncy balls, but multitasking improves +++.
+
+	-s switch
+	forces Cat'sPaw to open a new screen for it's
+windows. Normally it appears over all the other windows
+on the Workbench screen, which may be inconvenient.
+
+	In Configuration File:
+	¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯
+	Name of More gadget
+	»more
+	will create a new page of gadgets, so that
+	you can have more than you can fit on one screen.
+	Five pages are available, 40 gadgets maximum (in total.)
+	note that you need a »more on each page you
+	create if you have > 1.
+
+	Name of About gadget
+	»about
+	will invoke the "About" routine.
+
+	Name of Quit Gadget
+	»quit
+	will end Cat'sPaw without executing anything.
+
+	Name of Requester Gadget
+	»req
+	will open up a File Reqeuster and execute what you choose.
+	____________________________
+	Warning! »req does not work!
+	¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+	Name of Wait Gadget
+	»wait
+	will cause Cat'sPaw to non-busy wait until you
+	click a gadget. Helps multitasking immensely,
+	especially in the circumstances in which I set up
+	Cat'sPaw on one of my disks. (Everything was RUNBACKed)
+
+EXAMPLE USAGE:
+¯¯¯¯¯¯¯ ¯¯¯¯¯
+	cd PCQUtils:PCQUtils/Compiled
+	CatsPaw PCQUtils:PCQUtils/Scripts/CatsPaw.conf
+

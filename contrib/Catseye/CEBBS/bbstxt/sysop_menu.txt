@@ -1,0 +1,12 @@
+@L
+
+Windaria Sysop Access (ooh!)...
+
+(X)ecute Command   (K)ill File
+(R)ead File        (A)lter User's Rank
+(U)ser List        (S)noop
+
+(J)ump to different branch
+(Q)uit to Main Menu
+(?) This Menu
+

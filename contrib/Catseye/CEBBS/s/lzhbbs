@@ -1,0 +1,9 @@
+.key ver
+failat 10
+cd txt:
+lharc -x a dg:<ver>.LZH bbstxt/#?
+cd bbs:
+lharc -x a dg:<ver>.LZH source/#?
+cd sys:
+lharc -x a dg:<ver>.LZH libs/iofuncs.lib s/makebbs s/lzhbbs
+cd dg:

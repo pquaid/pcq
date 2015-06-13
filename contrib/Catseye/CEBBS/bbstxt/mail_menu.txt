@@ -1,0 +1,2 @@
+(A)gain (R)eply (E)nter (K)ill (N)ext (B)ack
+(J)ump (Q)uit (?) Help

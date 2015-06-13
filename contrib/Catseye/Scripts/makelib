@@ -1,0 +1,8 @@
+.key source
+Echo "*EcCompiling <source> library (LIBS:<source>.lib)..."
+copy <source>.X RAM:
+Pascal RAM:<source>.X RAM:<source>.asm
+Echo "*EcAssembling <source> library (LIBS:<source>.lib)..."
+a68k RAM:<source>.asm LIBS:<source>.lib
+delete RAM:<source>.asm
+Echo "Done."

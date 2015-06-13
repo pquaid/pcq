@@ -1,0 +1,15 @@
+@L
+
+Windaria Voting Booth...
+
+(L)ist polls      (V)ote on poll
+(R)esults of poll (N)ew polls
+@BY
+(K)ill poll       (A)dd poll
+@BY
+(S)noop - detailed results
+
+(J)ump to different branch
+(Q)uit to Main Menu
+(?) This Menu
+

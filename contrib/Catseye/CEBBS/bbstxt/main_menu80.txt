@@ -1,0 +1,23 @@
+@L
+
+                         -----------------------
+                          Windaria Root Menu...
+                         -----------------------
+
+          (E)nter Public Message     *(N)ew scan public messages
+          (R)ead Public Messages      (L)eave Feedback to Sysops
+          (C)all a Sysop to Chat      (V)oting Booth
+          (M)ail Chute (Send Mail)   *(P)rune Current Branch
+          (Y)our Stats (Change/View)  (O)btain Time Info
+          (G)oodbye (Log Off)         (A)nswer (Read) Private Mail
+          (T)ext Section             *(D)oors (none done yet, sorry!)
+          (U)ser List                 (B)ranches which you can use
+          (J)ump to Branch           *(F)ile Xfers
+@BY
+          (S)YSOP Access
+
+          (?) Show this menu          (H)elp file
+
+            Please note commands marked * are not even worth
+         the effort it takes to press the key to invoke them...
+

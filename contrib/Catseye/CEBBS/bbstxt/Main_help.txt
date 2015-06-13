@@ -1,0 +1,63 @@
+@O+
+@L
+
+Windaria Main Help File
+-----------------------
+
+This file describes the different parts of Windaria, what use they are, and how to use them from the main menu.
+
+GLOBAL COMMANDS
+------ --------
+
+The following commands work in almost all menus of the BBS.
+
+To see a list of commands you can use : (?) (as in, (Wha?))
+
+To see the help file : (H)elp!
+
+To return to the previous menu (usually, the Root, or main menu) : (Q)uit to the last menu.
+
+To move yourself to a certain branch : (J)ump to branch, then specify the letter name.
+
+BRANCHES
+--------
+
+Branches are a way of splitting a BBS into more manageable sections. Each branch is a part of the "tree" Windaria which deals with a different subject. Branches contain MESSAGES, FILE TRANSFERS, and TEXT FILES. Branches are labeled A-Z.
+
+To move yourself to a certain branch : (J)ump to branch, then specify the letter name.
+
+To list all the branches available to you : (B)ranch list. Please note that there are 26 branches on Windaria; however, all 26 are only available to the Sysop and most are redundant. The ones available to you are dictated by your rank.
+
+To examine/change the current branch : (P)rune Branch. Sysops and Sargeants will be able to "prune" (edit) the attributes of a branch, such as the maximum number of messages, rank required for access, etc. All others will only be allowed to view the branch attributes.
+
+MESSAGES
+--------
+
+Messages are the lifeblood of Windaria; without them this BBS would be pretty redundant. The formal definition of a message is a hunk of text which is directed at a certain person/people, but which anyone can read. Messages are public property to the board. All validated users can post messages in any branch they have access to. Anyone can delete messages that they themselves have posted on any branch, and Sysops and Sargeants can delete anyone's messages as they see fit.
+
+To read messages on the current branch : (R)ead messages. This takes you to the "read message" menu.
+
+To post a message on the current branch : (E)nter message.
+
+FILE TRANSFERS
+---- ---------
+
+None yet. They are restricted to Sgt *>>> for testing purposes only.
+
+TEXT FILES
+---- -----
+
+Text files are basically hunks of text which should be of interest to all. They are posted in the text file section in each branch, and their content is based upon the branch (ie. technical information would be in the CERTS branch.)
+
+To enter the Text section of the current branch : (T)ext section.
+
+TIME
+----
+
+To see the current time (if you don't have a watch) : (O)btain time information.
+
+LOGGING OFF
+------- ---
+
+To log off the system properly and see the logging-off text : (G)oodbye.
+

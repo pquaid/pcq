@@ -1,0 +1,18 @@
+@L
+
+Windaria, Prune Branch...
+
+(V)iew Branch stats
+(M)aximum # of Messages
+(N)ame Branch
+(T)ype of Branch
+
+(A)ccess Level
+(P)osting Access Level
+(X) Text File Access Level
+(F)ile Access Level
+
+(J)ump to different branch
+(Q)uit Pruning Branches
+(?) This Menu
+

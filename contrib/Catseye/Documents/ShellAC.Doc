@@ -1,0 +1,58 @@
+PCQUtils:PCQUtils/Docs/ShellAC.Doc
+
+ShellAC V1.0 by Chris Pressey (Cat'sEye)
+¯¯¯¯¯¯¯ ¯¯¯¯ ¯¯ ¯¯¯¯¯ ¯¯¯¯¯¯¯  ¯¯¯¯¯¯¯¯
+WHAT IT IS
+¯¯¯¯ ¯¯ ¯¯
+A program written in PCQ Pascal 1.1d to allow me and everyone else
+to screw around with Shell and CLI windows.
+
+WHY IT IS
+¯¯¯ ¯¯ ¯¯
+Something to do. I like nonconformist Shell windows.
+
+USAGE:
+¯¯¯¯¯
+	ShellAC <BlockPen> <DetailPen> [t "stringwin" "stringscr"] [h/x]
+
+	<blockpen> : Colour for drawing the Shell window's borders
+
+	<detailpen> : Colour for drawing the Shell window's details
+
+	Option : t
+
+	Change the titles of the window and screen. NB due
+	to my strange programming practices you lose some
+	memory permanently that way. I don't really care. If
+	you do, fix it and tell me about it.
+
+	"Stringwin" is the string you want displayed in the
+	window's drag bar.
+
+	"Stringscr" is the string you want displayed in the
+	screen's drag bar when the window is active.
+
+	Option : h/x
+
+	Use one of these only. h will hide the window (change it's size
+	to (1,1) and put it in the upper left corner. x will expand the
+	window from that to the full screen.
+
+EXAMPLE USAGE:
+¯¯¯¯¯¯¯ ¯¯¯¯¯
+	ShellAC 3 0
+
+	Changes just the colours.
+
+	ShellAC 1 2 h
+
+	Hides the window.
+
+	ShellAC 1 3 t "The Shell From Hell" "The Shell From Hell Rules!" x
+
+	Expands the window and changes it's titles.
+
+NB
+¯¯
+I use a really innovative and VERY HACKY method to get the address of
+the Shell/CLI window.

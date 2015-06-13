@@ -1,0 +1,51 @@
+@L
+@O+
+
+These commands can be used by MGB.  All commands can be invoked by typing a period (.), a slash (/) or a backslash (\) as the first character on a fresh line.
+
+.A bort               Forget it - abort the message.
+@BY
+.B 
+@BY
+.C heck               Check spelling/grammar.
+.D elete line         Delete a specified line from the message.
+.E dit line           Edit a specified line from the message.
+@BY
+.F ix typo            Search and replace a typo.
+@BY
+.G 
+.H elp                This.
+.I nsert line         Insert a line before an existing line.
+@BY
+.J 
+@BY
+.K nock flat & save   PowerPack the message and save.
+@BY
+.L ist                List the message so far.
+@BY
+.M acro               Insert your macro here.
+@BY
+.N 
+@BY
+.O 
+@BY
+.P review             Preview the message.
+@BY
+.Q uote               Quote from the message you are replying to.
+.R edraw screen       Redraws the screen (in case you lost something)
+.S ave                Saves the message to it's destination and quits
+@BY
+.T 
+@BY
+.U pload              Upload a message.
+@BY
+.V 
+@BY
+.W ord redo
+@BY
+.X 
+@BY
+.Y 
+@BY
+.Z ap                 Start all over again.
+.? Help               This.

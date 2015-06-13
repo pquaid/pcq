@@ -1,0 +1,11 @@
+.key source
+Echo "*Ec*N    Welcome to Cat'sEye's PCQ 'make' script!!*n"
+Echo "    Compiling <source>...*N"
+Pascal <source>.p RAM:<source>.asm
+Echo "*Ec*N    Assembling <source>...*N"
+a68k RAM:<source>.asm RAM:<source>.o
+delete RAM:<source>.asm
+Echo "*Ec*N    Linking <source>...*N"
+blink RAM:<source>.o to <source> lib SYS:LIBS/pcq.lib lib SYS:LIBS/ce.lib
+delete RAM:<source>.o
+Echo "*N    Done.*N"

@@ -1,0 +1,40 @@
+PCQUtils:PCQUtils/Docs/CEView.Doc
+
+CEView V1.0 by Chris Pressey (Cat'sEye)
+¯¯¯¯¯¯ ¯¯¯¯ ¯¯ ¯¯¯¯¯ ¯¯¯¯¯¯¯  ¯¯¯¯¯¯¯¯
+WHAT IT IS
+¯¯¯¯ ¯¯ ¯¯
+A program written in PCQ Pascal 1.1d to display IFF ILBM pictures.
+Not useful in itself, because the PD market is already overloaded
+with picture viewers. It's just an example of how to use my graphics
+routines to load ILBMs in Pascal.
+
+WHY IT IS
+¯¯¯ ¯¯ ¯¯
+Testing my theory that you can do anything if you have enough
+routines in your linker .lib (In my case, CE.lib)
+
+USAGE:
+¯¯¯¯¯
+	CEView "picture file"
+
+	Pretty straightforward, huh? Thought so.
+
+EXAMPLE USAGE:
+¯¯¯¯¯¯¯ ¯¯¯¯¯
+	cd PCQUtils:PCQUtils/Compiled
+	CEView PCQUtils:PCQUtils/Pics/AmigaMascot
+
+CREDITS
+¯¯¯¯¯¯¯
+This was derived, very indirectly, from my old View.p, which
+was in turn derived from a program called
+
+	VIEW.C - tiny ILBM viewer (c) 1986 DJH
+
+I believe DJH is John Hodgson. His address :
+
+		P.O. Box 1643
+		Pebble Beach, Ca. 93953-1643
+
+                (408) 624-2971

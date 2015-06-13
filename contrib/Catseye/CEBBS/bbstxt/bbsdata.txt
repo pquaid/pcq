@@ -1,0 +1,151 @@
+Windaria
+CAT'S EYE
+SCHRAPNEL
+ATZ S2=2 S0=1 M0 &C1
+
+ATH0
+
+
+(A)gain (R)eply (E)nter (N)ext (B)ack (Q)uit (?) Help
+(A)gain (R)eply (E)nter (K)ill (Q)uit (?) Help
+(L)ist (S)end (A)bort > 
+(R)ecruit (P)te (C)pl (M)cpl (S)gt S(Y)sop > 
+Windaria, Voting Booth
+
+
+Tap a key whenever you get the urge...
+Password > 
+¹Greetings, Earthling. <Cat's Eye in chat>¹¹
+¹¹...so long, and thanks for all the fish. <Cat's Eye left>¹
+¹HIT THE DIRT!! (Schrapnel in chat)¹¹
+¹¹...okay, you can get up now. (Schrapnel no longer in chat)¹
+frack
+
+To   > 
+From > 
+Re   > 
+Date > 
+User does not exist...!¹
+NECT
+1200
+2400
+9600
+
+
+
+
+
+
+
+
+¹(No new messages on this base)¹¹
+You are at the first (unpurged) message.¹
+No more messages on this base.¹
+Can't kill this message : not yours¹
+¹Did not want to die... (can't kill it)¹
+¹Killed.¹
+Kill this message : are you sure ? 
+
+¹Enter text now. Type '.' (period) on a blank line to end.¹
+,¹who didn't have a whole lot to say.
+¹¹You have been sent mail...¹¹
+¹¹Read which piece of mail (Q to quit ) ? 
+Kill this piece of mail : are you sure ? 
+¹Wrong...!¹
+Recruit    
+Private    
+Corporal   
+Master Cpl 
+Sargeant   
+Sysop      
+
+¹Please enter your handle, or NEW if you wish to log on as a new user :¹> 
+That name is not found in the user directory. Please try again.¹
+¹Current Users of Windaria :¹¹
+Enter your REAL FULL name              > 
+Enter the handle you wish to use       > 
+Enter your password                    > 
+Enter your phone number (xxx-xxx-xxxx) > 
+Enter your year of birth (xxxx)        > 
+¹¹Ok, here is what you gave me :¹
+Real Name  > 
+Handle     > 
+Password   > 
+Phone      > 
+Birth Year > 
+¹¹Is this information correct ? (Y/N) 
+That handle is already used on this board; please choose a different handle.¹
+¹Welcome back to Windaria, 
+You are caller # 
+You have called 
+ times (including this one.)¹
+¹The SYSOP is being paged.... If one's around they'll break into chat.¹¹
+¹Log off ? Are you sure ? 
+ANSI mode ON.¹
+ANSI mode OFF.¹
+Expert mode ON.¹
+Expert mode OFF.¹
+Enter a new password > 
+Enter your new password for verification > 
+Password accepted.¹
+Password rejected - not changed¹
+Read > 
+Execute > 
+Kill > 
+Snoop > 
+Alter User's Rank > 
+Change User's Stats > 
+¹Text files in this branch :¹¹
+¹¹Windaria's Polls :¹¹
+Choose poll to vote on > 
+
+
+Windaria's branches (sub-boards) to which you have access :¹¹
+See results of poll number > 
+
+Scratch something into the bark of Windaria for the next user to ponder :¹> 
+¹¹Jump to which branch (A - Z, (?) for list) > 
+(Ctrl-C or space to break, Ctrl-S or P to pause)¹
+
+No file by that number.¹
+Go to message number > 
+¹The last person to visit Windaria was 
+,¹who scratched this on the bark :¹"
+a figment of your imagination
+Hey! Snowflakes really ARE beautiful in the winter!
+¹¹Question 
+¹Your choice ? 
+You cannot post publicly on this branch.¹
+You cannot reply publicly on this branch.¹
+You do not have enough rank to read messages on this branch.¹
+Logging you in on 
+¹Leave Feedback¹¹
+¹Enter Public Message¹¹
+¹Send Private Mail¹¹
+¹Enter Public Reply¹¹
+¹Send Private Reply¹¹
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

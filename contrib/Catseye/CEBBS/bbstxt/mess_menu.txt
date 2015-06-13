@@ -1,0 +1,25 @@
+@L
+
+Windaria Read Message Help...
+
+(A)gain; Read same message again
+(R)eply to message publicly
+(E)nter a public message
+(N)ext message
+(B)ack one message
+(K)ill this message (only works if this message is yours)
+(G)o to message number...
+(J)ump to different branch
+(M)y messages; search forward for message to you
+
+Not implemented yet :
+
+        (T)hread;   search forward for a message on the same topic as the
+                    current message
+        (U)nthread; search backwards for a message on the same topic as the
+                    current message
+        (C)opy this message to another board
+
+(Q)uit reading messages
+(?) This Help
+

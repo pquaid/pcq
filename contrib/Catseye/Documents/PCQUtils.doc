@@ -1,0 +1,122 @@
+PCQUtils:PCQUtils/Docs/PCQUtils.Doc
+
+PCQUtils V1.0 by Cat'sEye		March 31st, AD 1991
+¯¯¯¯¯¯¯¯ ¯¯¯¯
+WHAT THEY ARE
+¯¯¯¯ ¯¯¯¯ ¯¯¯
+Various programs (compiled versions, no source) written in PCQ Pascal
+V1.1d by me. This also includes the source for the external files that
+make up my custom linker .lib, CE.lib. And scripts for 'make' and
+'makelib' And a picture to test CEView with. Just loads of stuff.
+
+CAUTIONARY WARNING
+¯¯¯¯¯¯¯¯¯¯ ¯¯¯¯¯¯¯
+My theory is that the more you test something, the more bugs it gets.
+Therefore the routines in CE.lib are not all tested. I haven't tested
+the ListDir() things in DOSStuff.x. However, I will and report on their
+use next release. The stuff with the proportional gadgets is now beyond me.
+Maybe. I don't know. In the next few weeks I will try to catch up with it.
+
+Also, pardon my spartan use of comments. Some functions just seem too
+straightforward to bother to type up a whole paragraph on them. If
+you're as skilled as you think you are, you can figure them out.
+
+As I'm constantly debugging and making these routines more efficient,
+they are constantly getting antiquated. See below for how to get the
+source for the examples. Don't worry, I'll include the source in the next
+release (I hope.)
+
+WHAT THEY ARE (more specifically)
+¯¯¯¯ ¯¯¯¯ ¯¯¯  ¯¯¯¯ ¯¯¯¯¯¯¯¯¯¯¯¯
+PCQUtils:PCQUtils
+		Compiled/
+		Documents/
+		External/
+		Include/
+		Libraries/
+		Pics/
+		Scripts/
+
+PCQUtils:PCQUtils/Documents
+		PCQUtils.doc
+		CEView.doc
+		Cat'sPaw.doc
+		Guru.doc
+		Maze.doc
+		ShellAC.doc
+		MulLyr.doc
+
+PCQUtils:PCQUtils/Compiled
+		CEView
+		Cat'sPaw
+		Guru
+		Maze
+		ShellAC
+		MulLyr
+
+PCQUtils:PCQUtils/Include/CEUtils
+		CEBorders.i
+		CEFReq.i
+		CEGadgets.i
+		CEILBM.i
+		CEIText.i
+		CEMenus.i
+		CEOpenThe.i
+		CEProp.i
+		CEStrGad.i
+		CESuper.i
+		CETypes.i
+		DOSStuff.i
+		gfxstuff.i
+		GText.i
+		IFF.i
+		IntuiStuff.i
+		Stick.i
+		StrDosError.i
+
+PCQUtils:PCQUtils/External
+		CE.X
+		DosStuff.X
+		gfxstuff.x
+		IntuiStuff.x
+		Stick.x
+
+PCQUtils:PCQUtils/Scripts
+		catspaw.conf
+		make
+		makelib
+
+PCQUtils:PCQUtils/Pics
+		AmigaMascot
+
+PCQUtils:PCQUtils/Libraries
+		PCQ.lib
+		CE.lib
+
+WHO I AM
+¯¯¯ ¯ ¯¯
+If you want to write to me :
+
+	Cat'sEye
+	917 Wicklow Place
+	Winnipeg, MB (Canada)
+	R3T 0J1
+
+You can get the newest source from me if you send a 3½ to me and I feel
+like sending it back. Canadians should send a SASE to get on my good
+side. (No, I'm really more jovial than this. Ha ha ha.)
+
+If you want to write me a cheque, use Chris Pressey. I don't like to
+fiddle with aliases when it comes to money. Not like you have to
+write me a cheque, but just a thought.
+
+No, I do not, of this writing have a modem. Well, OK, I have a modem
+but I still need a modem cable and about 6 metres of phone cable to
+get it hopping. I should be on some 'nets by next release.
+
+DESIGNATION
+¯¯¯¯¯¯¯¯¯¯¯
+Public Domain. Share and Enjoy, you hoopy froods. However, I do request
+that if use any of these things for commercial uses that you give
+credit where credit is due (IE Cat'sEye, yup, that's me.)
+

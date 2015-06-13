@@ -1,0 +1,6 @@
+@L
+@O+
+
+Expert mode turns off menus. If you know the commands used to control CEBBS this makes using the system much quicker. As a new user, though, I would suggest you leave this off until you feel comfortable with the system.
+
+Do you want expert mode on ? (Y/N) 

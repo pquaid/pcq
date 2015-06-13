@@ -1,0 +1,59 @@
+September 14 AD 1991
+                                LED V1.0
+                        A very silly little hack
+                            By Chris Pressey
+
+WHAT IT IS:
+
+	LED V1.0
+
+WHAT IT DOES:
+
+	Changes the status of the power Light-Emitting Diode on the Amiga
+	computer. This also controls the audio filter; when the LED is off,
+	the audio output is unfiltered.
+
+SYNOPSIS:
+
+	LED <number>
+
+	Where <number> is either 1 or 0, 1 dictating ON and 0 dictating OFF.
+
+EXAMPLE:
+
+	LED 0
+
+WHY I DID THIS:
+
+	I have no idea. I was bored tonight. Yes that's right, I have done
+	this all in one night! A possible could be : you have left your
+	Amiga on all day to raytrace a picture or something, and gone off
+	to school, and you don't want your parents to know that your Amiga
+	is on as then they will make you pay a higher percentage of the
+	electricity bill!
+
+ENVIRONMENT:
+
+	LED was programmed in PCQ Pascal, by Pat Quaid.
+
+MY ADDRESS:
+
+	Chris Pressey
+	917 Wicklow Place
+	Winnipeg, MB, Canada
+	R3T 0J1
+	453-0561
+
+MY BBS:
+
+	Windaria
+	(204)-453-0561
+	1200/2400 baud, 8N1.	24 hrs a day
+	The software for Windaria was also programmed in PCQ.
+
+DISCLAIMER:
+
+	Hah! No copyright. Not shareware. Feel free to do what you
+	please with this. If used commercially (yeah right) make sure you
+	leave my name in or you will burn in H-E-double-hockey-sticks.
+	Distribute to the ends of the universe...

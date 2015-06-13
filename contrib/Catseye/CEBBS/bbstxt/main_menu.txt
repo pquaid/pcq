@@ -1,0 +1,23 @@
+@O+
+@L
+.......................................
+:                                     :
+:       Windaria Root Menu...         :
+:.....................................:
+
+(E)nter Message   (R)ead Messages
+(L)eave Feedback  (C)hat
+(V)oting Booth    (M)ail Chute
+(N)ew Scan       *(P)rune Branch
+(Y)our Stats      (O)btain Time Info
+(G)oodbye         (A)nswer (Read) Mail
+(T)ext section   *(D)oors
+(U)ser list       (B)ranches
+(J)ump to branch *(F)ile Xfers (test)
+@BY
+(S)ysop Access
+
+(H)elp!           (?) Show this menu
+
+Commands marked * aren't worth the effort of pressing the key to invoke.
+

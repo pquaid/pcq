@@ -1,0 +1,13 @@
+@L
+
+Windaria, Preferences...
+
+(A)NSI colours
+(I)gnore branch (new scan)
+(R)ecognize branch (new scan)
+(P)rompt
+
+(J)ump to branch
+(Q)uit
+(?) This Menu
+

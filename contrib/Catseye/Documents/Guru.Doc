@@ -1,0 +1,47 @@
+PCQUtils:PCQUtils/Docs/Guru.Doc
+
+Guru V1.0 by Chris Pressey (Cat'sEye)
+¯¯¯¯ ¯¯¯¯ ¯¯ ¯¯¯¯¯ ¯¯¯¯¯¯¯  ¯¯¯¯¯¯¯¯
+WHAT IT IS
+¯¯¯¯ ¯¯ ¯¯
+A program written in PCQ Pascal 1.1d to give the user an Alert,
+to, well, alert him/her to something. Useful, especially in
+a script file.
+
+WHY IT IS
+¯¯¯ ¯¯ ¯¯
+Something to do.
+
+USAGE:
+¯¯¯¯¯
+	Guru "string" [-r]
+
+	"String" is the string you want displayed in the Alert().
+	Limit it to under 80 characters or you'll get some pretty
+	funky results.
+
+	Switch : -r
+	If you use this, it will actually reset the Amiga. Use this
+	only if you are feeling sadistic or in an emergency.
+
+EXAMPLE USAGE:
+¯¯¯¯¯¯¯ ¯¯¯¯¯
+	Guru "There's always one more bug"
+
+	Guru is actually more useful in a script, such as...
+	.
+	.
+	FailAt 20 (or lower)
+	Guru "Do you want to be insulted? (Left button Yes, Right button No)"
+	If Fail
+	    Guru "Alright, I won't insult you"
+	Else
+	    Guru "You are an absolute yutz"
+	EndIf
+	.
+	.
+	The possibilities are endless...
+NB
+¯¯
+Left button is affirmative - it exits at 0, while the negative right
+button exits at 20.
