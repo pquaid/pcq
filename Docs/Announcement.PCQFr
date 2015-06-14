@@ -1,0 +1,77 @@
+                    Annonce de PCQ Pascal version 1.2d
+
+  Un des mes amis m'a récemment fait remarquer  que  non  seulement  je  ne
+gagnais pas d'argent avec PCQ Pascal, mais en fait avec les disquettes, les
+frais de port, les enveloppes, les factures de téléphone, la documentation,
+etc...,  je  dépensais  en  réalité  beaucoup  plus  d'argent  que  je n'en
+recevais. Afin de réduire cet  écart,  je  propose  désormais  une  version
+enregistrée  de  PCQ Pascal pour 25$ US. A partir de maintenant, la version
+librement distribuable de PCQ Pascal restera la version 1.2b, bien  que  je
+corrigerai  encore  les  bogues  lorsqu'elles  apparaîtront  (le  numéro de
+version restera 1.2b, mais la date  sera  mise  à  jour).  La  version  non
+enregistrée comprend:
+
+        Pascal          La version 1.2b du compilateur
+        Pascal.DOC      Le fichier documentation
+        Peep            L'optimiseur peephole
+        Include         Les fichiers include 1.3
+        Examples        Plusieurs programmes d'exemple
+        Make            Un script simple 'make'
+        PCQ.lib         La bibliothèque d'exécution 1.3
+
+  En échange des 25$ d'inscription, vous recevrez:
+
+        Pascal          La version 1.2d du compilateur, qui inclut
+                        désormais des enregistrements avec variante, un
+                        profileur d'exécution, les mots-clé CHIP et FAST,
+                        l'accès à la mathtrans.library pour Cos(), Sin(),
+                        etc..., les commentaires entre (* et *), les
+                        conventions d'appels C, un nombre variable de
+                        paramètres, et beaucoup d'autres nouvelles
+                        caractéristiques
+        PCQ             Un utilitaire 'make' très flexible avec beaucoup
+                        d'options, y compris l'aptitude à définir des
+                        'projets' multi-fichiers
+        Peep            L'optimiseur peephole
+        Pascal.DOC      Le fichier principal de documentation
+        PCQ.doc         La documentation pour l'utilitaire PCQ
+        PCQ.lib.DOC     La documentation pour toutes les routines définies
+                        dans le répertoire Include:Utils, dans un format
+                        compatible avec la caractéristique REF de DME
+        Include         Les fichiers include 1.3, plus les fichiers include
+                        2.0 lorsqu'ils seront disponibles
+        Examples        Plusieurs programmes d'exemple
+        PCQ.lib         La bibliothèque d'exécution 1.3, plus la
+                        bibliothèque d'exécution 2.0 lorsqu'elle sera
+                        disponible
+        Source          Le code source de la bibliothèque d'exécution
+
+
+  Pour 15$ supplémentaires, vous recevrez une version imprimée et reliée de
+Pascal.DOC et  de  PCQ.lib.DOC.  Cependant,  ce  ne  sont  pas  de  simples
+impressions  des  fichiers  -  ils  sont complètement reformatés pour tirer
+avantage de l'imprimante. Ils ont aussi des index complets.
+
+  Les utilisateurs enregistrés recevront les mises  à  jour  pour  le  prix
+d'une  disquette et des frais d'envoi, y compris les fichiers include et la
+bibliothèque d'exécution 2.0 dès qu'ils seront disponibles (la mise  à jour
+pour  l'AmigaDOS  2.0  fait  partie des dépenses importantes qui m'ont fait
+envisager une version enregistrée). Si vous m'avez envoyé de l'argent  dans
+le  passé  je  serais  ravi  de  le  considérer  comme frais d'inscription.
+Cependant, vous devrez me le rappeler, parce que jusqu'à présent je n'avais
+aucune raison d'en garder une trace.
+
+  Pour recevoir la dernière version enregistrée de PCQ Pascal, envoyez  25$
+sous  une  forme  que  ma  banque  peut comprendre (c'est à dire à peu près
+n'importe laquelle) à:
+
+        Patrick Quaid
+        2250 Clarendon Blvd, Apt #1209
+        Arlington, VA 22201
+        USA
+        Téléphone: (703) 524-8945
+
+  Si vous ajoutez les 15$  supplémentaires,  je  vous enverrai également la
+documentation  imprimée. S'il vous plait, pensez à écrire soigneusement vos
+nom et adresse à l'intérieur de l'enveloppe si possible.
+

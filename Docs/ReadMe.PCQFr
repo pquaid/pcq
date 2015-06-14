@@ -1,0 +1,53 @@
+                        Compilateur PCQ Pascal 1.2b
+                     Copyright (c) 1989 Patrick Quaid.
+
+  PCQ Pascal est un simple compilateur Pascal pour l'Amiga. La distribution
+complète comprend les fichiers suivants,  mais  certains  fichiers  peuvent
+manquer dans certaines versions. Si vous avez obtenu une archive incomplète
+(et si vous voulez la complète), envoyez moi juste une disquette.
+
+
+        Pascal          Le compilateur lui-même
+        Peep            L'optimiseur peephole
+        Pascal.DOC      Le fichier documentation
+        Readme.PCQ      Ce fichier
+        Announcement    Une description de la version enregistrée
+        PCQ.lib         La bibliothèque d'exécution
+        Include.LZH     La collection de fichiers include, compactés avec
+                        le programme LHArc
+        Examples.LZH    Plusieurs programmes d'exemple, aussi compactés
+                        avec LHArc
+        IDList.LZH      Un catalogue pour les fichiers include
+        PCQ.ced         Un programme ARexx qui vous permet de compiler les
+                        programmes PCQ depuis CygnusEd Professional
+        A68k            L'Assembleur de Charlie Gibbs
+        A68k.doc        La documentation pour A68k
+        A68k2do.txt     Améliorations planifiées d'A68k
+        History.log     Changements version par version de A68k
+
+        Blink           Relieur de The Software Distillery
+        Blink.doc       La documentation de Blink
+
+  Puisque A68k et Blink sont disponibles sur la plupart des BBS, en général
+je ne les inclus pas dans l'archive destinée aux BBS.
+
+  La version 1.2d de PCQ Pascal est actuellement disponible,  mais,  hélas,
+seulement  pour  les utilisateurs enregistrés. Les frais d'inscription sont
+de 25$ US, ce qui vous donne droit à la dernière version du compilateur (il
+a beaucoup de nouvelles options), un utilitaire make flexible, et bien plus
+encore. Consultez Announcement pour plus de détails.
+
+  Si vous avez une version incomplète ou si vous avez des  questions,  vous
+pouvez m'écrire à l'adresse suivante:
+
+   Pat Quaid
+   2250 Clarendon Blvd, #1209
+   Arlington, VA 22201
+   (703) 524-8945
+
+  La documentation, le compilateur, la bibliothèque d'exécution et le  code
+source   du  compilateur  et  de  la  bibliothèque  d'exécution  sont  tous
+"copyrightés" par moi-même, mais vous  êtes  autorisé  à  distribuer  cette
+version.  S'il  vous  plait,  incluez  autant  que  possible  le maximum de
+l'archive que vous avez reçue.
+
